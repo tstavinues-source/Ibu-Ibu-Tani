@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buku Catatan Kebun Ibu - Tani Rumahan Mandiri</title>
+    <!-- Tailwind CSS untuk Desain Kebun Cantik dan Bersih -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font-Awesome untuk Ikon Kebun Cantik -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 min-h-screen flex flex-col">
+
+    <!-- Header & Navigasi -->
+    <header class="bg-gradient-to-br from-emerald-800 via-emerald-700 to-green-600 text-white px-4 py-4 shadow-lg sticky top-0 z-40 rounded-b-[2rem]">
+        <div class="max-w-5xl mx-auto flex flex-col space-y-3">
+            
+            <!-- Jam Digital & Sapaan Kebun -->
+            <div class="flex items-center justify-between border-b border-white/10 pb-2">
+                <div class="flex items-center space-x-2 text-xs text-lime-300 font-bold">
+                    <i class="fa-regular fa-clock"></i>
+                    <span id="headerJamDigital">00:00:00 WIB</span>
+                </div>
+                <div class="text-[11px] text-emerald-100 font-semibold" id="headerSapaanIbu">
+                    Selamat pagi, Ibu Cantik!
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-11 h-11 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/10 shadow-inner">
+                        <i class="fa-solid fa-leaf text-2xl text-lime-300"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg tracking-tight">Catatan Kebun Ibu</h1>
+                        <p class="text-xs text-emerald-100 flex items-center">
+                            <span class="w-2 h-2 bg-green-400 rounded-full mr-1.5 animate-pulse"></span>
+                            Asisten Kebun Cantik Aktif
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-1.5">
+                    <button onclick="segarSemuaData()" class="bg-white/10 hover:bg-white/20 active:scale-95 transition-all p-2.5 rounded-xl border border-white/5" title="Segarkan Catatan">
+                        <i class="fa-solid fa-rotate text-sm"></i>
+                    </button>
+                    <button onclick="openModalTambah()" class="bg-lime-300 hover:bg-lime-400 active:scale-95 text-emerald-950 font-bold px-3 py-2 rounded-xl text-xs flex items-center space-x-1 shadow-md transition-all">
+                        <i class="fa-solid fa-plus text-xs"></i> <span>Tanam Baru</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab Navigasi Sederhana -->
+            <div class="flex bg-emerald-900/40 backdrop-blur-md p-1 rounded-xl border border-emerald-500/10 text-xs">
+                <button onclick="switchTab('kebun')" id="tab-kebun" class="flex-1 py-2.5 rounded-lg font-bold text-center bg-white text-emerald-900 shadow-sm transition-all flex items-center justify-center space-x-1">
+                    <i class="fa-solid fa-seedling"></i> <span>Tanaman Saya</span>
+                </button>
+                <button onclick="switchTab('tugas')" id="tab-tugas" class="flex-1 py-2.5 rounded-lg font-bold text-center text-emerald-100 hover:text-white transition-all flex items-center justify-center space-x-1">
+                    <i class="fa-solid fa-shower"></i> <span>Jadwal Siram Air</span>
+                </button>
+                <button onclick="switchTab('ai')" id="tab-ai" class="flex-1 py-2.5 rounded-lg font-bold text-center text-emerald-100 hover:text-white transition-all flex items-center justify-center space-x-1">
+                    <i class="fa-solid fa-wand-magic-sparkles text-lime-300"></i> <span>Tanya Obat & Tips AI</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Konten Utama (Scrollable) -->
+    <main class="flex-1 max-w-5xl w-full mx-auto p-4 space-y-6 pb-24">
+
+        <!-- ================= PANEL INFORMASI CUACA HARIAN IBU (Fitur Baru) ================= -->
+        <section id="panelCuacaIbu" class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-4 rounded-[2rem] shadow-md relative overflow-hidden flex flex-col md:flex-row md:items-center md:justify-between space-y-3 md:space-y-0">
+            <div class="flex items-center space-x-4 relative z-10">
+                <div class="text-4xl text-amber-300" id="cuacaIkon">
+                    <i class="fa-solid fa-cloud-sun animate-pulse"></i>
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-sm flex items-center">
+                        <span id="cuacaDeskripsi">Memeriksa cuaca halaman rumah Ibu...</span>
+                    </h3>
+                    <p class="text-[11px] text-blue-100 mt-0.5 flex items-center space-x-2">
+                        <span><i class="fa-solid fa-temperature-high mr-1"></i>Suhu: <b id="cuacaSuhu">--°C</b></span>
+                        <span>•</span>
+                        <span><i class="fa-solid fa-droplet mr-1"></i>Kelembapan: <b id="cuacaKelembapan">--%</b></span>
+                    </p>
+                </div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 text-[11px] text-blue-50 leading-relaxed max-w-md relative z-10" id="cuacaSaranTani">
+                Sistem sedang meneropong awan di atas atap rumah Ibu...
+            </div>
+        </section>
+
+        <!-- ================= TAB 1: KEBUN PEMBIBITAN ================= -->
+        <div id="section-kebun" class="space-y-5">
+            <!-- Buku Laporan Kebun Ibu -->
+            <section class="grid grid-cols-4 gap-2 md:gap-4">
+                <div class="bg-white p-3 rounded-2xl shadow-sm border border-stone-200/50 flex flex-col items-center justify-center text-center">
+                    <div class="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center text-emerald-600 mb-1.5">
+                        <i class="fa-solid fa-seedling text-sm"></i>
+                    </div>
+                    <span class="text-[10px] text-stone-400 font-bold uppercase">Semua Pot</span>
+                    <p id="dashTotal" class="text-base md:text-lg font-bold text-stone-800 mt-0.5">0</p>
+                </div>
+                <div class="bg-white p-3 rounded-2xl shadow-sm border border-stone-200/50 flex flex-col items-center justify-center text-center">
+                    <div class="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center text-amber-600 mb-1.5">
+                        <i class="fa-solid fa-hourglass-half text-sm"></i>
+                    </div>
+                    <span class="text-[10px] text-stone-400 font-bold uppercase">Baru Tumbuh</span>
+                    <p id="dashSemai" class="text-base md:text-lg font-bold text-amber-600 mt-0.5">0</p>
+                </div>
+                <div class="bg-white p-3 rounded-2xl shadow-sm border border-stone-200/50 flex flex-col items-center justify-center text-center">
+                    <div class="w-8 h-8 bg-lime-50 rounded-lg flex items-center justify-center text-lime-600 mb-1.5">
+                        <i class="fa-solid fa-arrows-up-to-line text-sm"></i>
+                    </div>
+                    <span class="text-[10px] text-stone-400 font-bold uppercase">Siap Pindah Pot</span>
+                    <p id="dashSiap" class="text-base md:text-lg font-bold text-lime-600 mt-0.5">0</p>
+                </div>
+                <div class="bg-white p-3 rounded-2xl shadow-sm border border-stone-200/50 flex flex-col items-center justify-center text-center">
+                    <div class="w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center text-red-600 mb-1.5">
+                        <i class="fa-solid fa-face-frown text-sm"></i>
+                    </div>
+                    <span class="text-[10px] text-stone-400 font-bold uppercase">Layu/Gagal</span>
+                    <p id="dashGagal" class="text-base md:text-lg font-bold text-red-600 mt-0.5">0</p>
+                </div>
+            </section>
+
+            <!-- Filter Sederhana Tanaman -->
+            <section class="flex space-x-2 overflow-x-auto hide-scrollbar pb-1">
+                <button onclick="filterPlants('Semua')" id="filter-Semua" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-emerald-800 text-white shadow-sm shrink-0 transition-all border border-emerald-900/10">Semua Tanaman</button>
+                <button onclick="filterPlants('Semai')" id="filter-Semai" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-stone-600 hover:bg-stone-100 shrink-0 transition-all border border-stone-200">🌱 Baru Tumbuh</button>
+                <button onclick="filterPlants('Tumbuh Daun')" id="filter-Tumbuh" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-stone-600 hover:bg-stone-100 shrink-0 transition-all border border-stone-200">🌿 Banyak Daun</button>
+                <button onclick="filterPlants('Siap Pindah')" id="filter-Siap" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-stone-600 hover:bg-stone-100 shrink-0 transition-all border border-stone-200">🪴 Siap Pindah Pot Gede</button>
+                <button onclick="filterPlants('Gagal')" id="filter-Gagal" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-stone-600 hover:bg-stone-100 shrink-0 transition-all border border-stone-200">❌ Layu/Gagal</button>
+            </section>
+
+            <!-- Loading & Halaman Kosong -->
+            <div id="plantLoading" class="text-center py-20 text-stone-400">
+                <i class="fa-solid fa-circle-notch animate-spin text-4xl text-emerald-600 mb-3"></i>
+                <p class="text-sm font-semibold">Membuka buku catatan kebun ibu...</p>
+            </div>
+
+            <div id="plantEmpty" class="hidden bg-white text-center p-12 rounded-3xl border border-stone-200/60 max-w-md mx-auto shadow-sm">
+                <div class="w-16 h-16 bg-stone-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-stone-100">
+                    <i class="fa-solid fa-leaf text-3xl text-stone-300"></i>
+                </div>
+                <h3 class="font-bold text-stone-700 text-base">Buku Catatan Masih Kosong</h3>
+                <p class="text-xs text-stone-400 mt-1.5 leading-relaxed">Ibu belum mencatat tanaman apa pun. Yuk, catat tanaman pertama Ibu seperti cabai, tomat, atau kangkung dengan mengklik tombol kuning "Tanam Baru" di atas!</p>
+            </div>
+
+            <!-- Grid Tempat Kartu Pembibitan Muncul -->
+            <div id="plantGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+
+        <!-- ================= TAB 2: JADWAL SIRAM AIR ================= -->
+        <div id="section-tugas" class="hidden space-y-4">
+            <div class="bg-white p-4 rounded-3xl shadow-sm border border-stone-200/60">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-9 h-9 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-shower text-base"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-sm text-stone-800">Daftar Tanaman yang Harus Disiram</h2>
+                        <p class="text-[11px] text-stone-400">Pastikan tanaman Ibu mendapatkan air yang cukup hari ini ya</p>
+                    </div>
+                </div>
+
+                <!-- List Penyiraman Otomatis -->
+                <div id="wateringList" class="space-y-3">
+                    <p class="text-xs text-center text-stone-400 py-6">Memeriksa daftar siram...</p>
+                </div>
+            </div>
+
+            <!-- Tips Kebun Ibu -->
+            <div class="bg-gradient-to-br from-amber-50 to-orange-50/60 p-4 rounded-3xl border border-amber-100 flex items-start space-x-3">
+                <div class="text-amber-500 text-lg mt-0.5">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <div class="text-xs space-y-1">
+                    <h4 class="font-bold text-amber-900">Tips Ringan dari Kebun Ibu:</h4>
+                    <p class="text-amber-800 leading-relaxed">Penyiraman paling bagus dilakukan pada **pagi hari sebelum matahari terlalu terik (jam 7 sampai 9 pagi)** atau **sore hari (setelah jam 4 sore)**. Menyiram siang hari saat cuaca panas bisa membuat akar kaget dan daun tanaman menjadi layu lho, Bu!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 3: ASISTEN & KLINIK DIAGNOSIS AI ================= -->
+        <div id="section-ai" class="hidden space-y-5">
+            <!-- Fitur Asisten Ibu AI -->
+            <div class="bg-gradient-to-br from-emerald-900 to-green-800 text-white p-5 rounded-[2rem] shadow-md relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-[10rem]">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="relative z-10 space-y-2">
+                    <span class="bg-lime-300 text-emerald-950 font-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">Asisten Kebun Ibu Aktif</span>
+                    <h3 class="font-bold text-base leading-tight">Dokter Tanaman & Tanya Jawab AI</h3>
+                    <p class="text-xs text-emerald-100 leading-relaxed">Ibu bisa foto daun yang menguning/berulat untuk dicarikan solusi obat alami dari dapur, atau mengobrol langsung untuk menanyakan tips menanam apa saja yang praktis dan murah meriah!</p>
+                </div>
+            </div>
+
+            <!-- Pilihan Sub Tab AI -->
+            <div class="flex space-x-2 bg-stone-200/50 p-1 rounded-xl text-xs">
+                <button onclick="switchSubAi('chat')" id="btn-sub-chat" class="flex-1 py-2.5 rounded-lg font-bold text-center bg-white text-stone-800 shadow-sm transition-all">💬 Jurnal Tanya Jawab Ibu (Disimpan)</button>
+                <button onclick="switchSubAi('doctor')" id="btn-sub-doctor" class="flex-1 py-2.5 rounded-lg font-bold text-center text-stone-600 hover:text-stone-800 transition-all">🔬 Kirim Foto Daun Sakit</button>
+            </div>
+
+            <!-- SUB-TAB A: CHAT ASISTEN AI (RIWAYAT PERSISTEN DARI SUPABASE) -->
+            <div id="ai-sub-chat" class="bg-white p-4 rounded-3xl shadow-sm border border-stone-200/60 space-y-4">
+                <div class="flex items-center justify-between border-b border-stone-100 pb-2.5">
+                    <span class="text-[10px] text-stone-400 font-bold uppercase tracking-wider"><i class="fa-solid fa-clock-rotate-left mr-1"></i>Riwayat Percakapan Bersama Ibu-Ibu</span>
+                    <button onclick="loadChatHistory()" class="text-emerald-700 hover:text-emerald-800 text-xs font-bold flex items-center space-x-1">
+                        <i class="fa-solid fa-arrows-rotate text-[10px]"></i> <span>Segarkan Chat</span>
+                    </button>
+                </div>
+
+                <!-- Input Nama Ibu Pengirim -->
+                <div class="flex items-center space-x-2 bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
+                    <span class="text-xs font-bold text-stone-500 uppercase tracking-wider">Panggilan Ibu:</span>
+                    <input type="text" id="chatSenderName" value="Ibu Gungun" class="bg-transparent text-xs text-stone-700 font-bold focus:outline-none w-full" placeholder="Ketik nama Ibu...">
+                </div>
+
+                <!-- Area Percakapan -->
+                <div id="chatAiLogs" class="space-y-4 max-h-[380px] overflow-y-auto p-3 bg-stone-50 rounded-2xl border border-stone-100 text-xs flex flex-col">
+                    <div id="chatLoadingState" class="text-center py-8 text-stone-400">
+                        <i class="fa-solid fa-spinner animate-spin text-lg text-emerald-600 mr-2"></i> Memuat riwayat mading chat...
+                    </div>
+                </div>
+
+                <!-- Input Chat -->
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="chatAiInput" class="flex-1 bg-stone-50 border border-stone-300 rounded-xl px-3 py-3 text-xs font-semibold focus:outline-emerald-600 focus:bg-white" placeholder="Ketik pertanyaan Ibu di sini...">
+                    <button onclick="sendAiChat()" id="btnSendAiChat" class="bg-emerald-600 hover:bg-emerald-700 text-white p-3 rounded-xl shadow-md transition-all">
+                        <i class="fa-solid fa-paper-plane" id="aiChatIcon"></i>
+                        <i class="fa-solid fa-circle-notch animate-spin hidden" id="aiChatLoading"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SUB-TAB B: DOKTER FOTO DAUN AI -->
+            <div id="ai-sub-doctor" class="hidden bg-white p-5 rounded-3xl shadow-sm border border-stone-200/60 space-y-4 text-xs">
+                <div class="flex items-center space-x-3 border-b border-stone-100 pb-3">
+                    <div class="w-9 h-9 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center text-base">
+                        <i class="fa-solid fa-kit-medical"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-stone-800">Cek Daun Tanaman yang Sakit</h4>
+                        <p class="text-[10px] text-stone-400">Unggah foto daun atau ulat tanaman, nanti AI akan mencarikan obat alaminya</p>
+                    </div>
+                </div>
+
+                <!-- Pemilihan Gambar Diagnosis -->
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 bg-stone-50 p-3 rounded-xl border border-stone-200">
+                        <label class="cursor-pointer bg-white border border-stone-300 hover:bg-stone-50 text-stone-700 px-3 py-2 rounded-lg font-bold flex items-center space-x-1.5 shadow-sm transition-all text-xs">
+                            <input type="file" id="doctorImageFile" accept="image/*" class="hidden" onchange="previewDoctorImage(event)">
+                            <i class="fa-solid fa-camera text-rose-500"></i> <span>Pilih / Ambil Foto</span>
+                        </label>
+                        <span id="doctorImgLabel" class="text-[10px] text-stone-400 truncate max-w-[200px]">Belum ada foto terpilih</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-center mt-3 bg-stone-50 p-2 rounded-2xl border border-dashed border-stone-200 hidden" id="doctorImgContainer">
+                        <img id="doctorImgPreview" src="" alt="Foto Diagnosis" class="max-h-48 rounded-xl object-contain shadow-sm">
+                    </div>
+                </div>
+
+                <button onclick="diagnosePlantImage()" id="btnDiagnose" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-xl transition-all shadow-md flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Mulai Cek Kesehatan Tanaman</span>
+                </button>
+
+                <!-- Hasil Diagnosis AI -->
+                <div id="diagnosisResult" class="hidden bg-white p-5 rounded-3xl border border-stone-200 text-xs text-stone-700 space-y-4 shadow-sm">
+                    <div class="flex items-center space-x-2 text-rose-800 font-extrabold text-sm border-b border-stone-100 pb-2">
+                        <i class="fa-solid fa-prescription-bottle-medical"></i>
+                        <span>Saran Obat Alami dari Dokter Kebun AI</span>
+                    </div>
+                    <div id="diagnosisText" class="text-stone-700 text-[11.5px] leading-relaxed space-y-3">
+                        Hasil analisis akan muncul di sini...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= MODAL 1: TAMBAH / EDIT BIBIT TANAMAN ================= -->
+    <div id="modalTambah" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-stone-200 flex flex-col max-h-[90vh]">
+            <!-- Header Modal -->
+            <div class="px-5 py-4 bg-emerald-800 text-white flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-leaf text-lime-300"></i>
+                    <h3 id="modalTitle" class="font-bold text-sm tracking-tight">Catat Tanaman Baru Ibu</h3>
+                </div>
+                <button onclick="closeModalTambah()" class="text-white/80 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Body Modal (Scrollable) -->
+            <div class="p-5 overflow-y-auto space-y-4 text-xs">
+                <input type="hidden" id="editPlantId" value="">
+
+                <div>
+                    <label class="block font-bold text-stone-600 mb-1">Nama Tanaman (Contoh: Cabai Rawit, Tomat) *</label>
+                    <div class="flex space-x-2">
+                        <input type="text" id="formPlantName" class="flex-1 bg-stone-50 border border-stone-300 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-emerald-600 focus:bg-white" placeholder="Contoh: Cabai Merah Teras">
+                        <button onclick="generateAiGuide()" id="btnAiGuide" type="button" class="bg-emerald-100 hover:bg-emerald-200 active:scale-95 text-emerald-800 font-bold px-3.5 rounded-xl border border-emerald-300 flex items-center space-x-1" title="Dapatkan saran cara tanam otomatis dari AI">
+                            <i class="fa-solid fa-wand-magic-sparkles" id="btnAiGuideIcon"></i>
+                            <i class="fa-solid fa-circle-notch animate-spin hidden" id="btnAiGuideLoading"></i>
+                            <span>Saran AI</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-stone-600 mb-1">Tanggal Mulai Tanam/Semai *</label>
+                        <input type="date" id="formSowingDate" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-emerald-600 focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-stone-600 mb-1">Wadah / Media Tanam</label>
+                        <input type="text" id="formMedium" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-emerald-600 focus:bg-white" placeholder="Contoh: Tanah Kebun, Kapas, Pot Gantung">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-stone-600 mb-1">Tahapan Tumbuh Saat Ini</label>
+                        <select id="formStatus" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-emerald-600 focus:bg-white">
+                            <option value="Semai">🌱 Baru Tumbuh (Kecambah)</option>
+                            <option value="Tumbuh Daun">🌿 Sudah Banyak Daun</option>
+                            <option value="Siap Pindah">🪴 Siap Pindah ke Pot Besar</option>
+                            <option value="Gagal">❌ Layu / Mati</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-stone-600 mb-1">Jenis Tanaman</label>
+                        <select id="formCategory" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-emerald-600 focus:bg-white">
+                            <option value="Sayuran Daun">🥬 Sayuran Daun (Bayam, Sawi, Selada)</option>
+                            <option value="Sayuran Buah">🍅 Sayuran Buah (Cabai, Tomat, Terong)</option>
+                            <option value="Buah Pohon">🥭 Buah & Pohon (Mangga, Jambu, Jeruk)</option>
+                            <option value="Hias / Bunga">🌸 Tanaman Hias / Bunga</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Catatan Tambahan -->
+                <div>
+                    <label class="block font-bold text-stone-600 mb-1">Tips Merawat / Catatan Tambahan</label>
+                    <textarea id="formNotes" rows="3" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2 text-xs font-semibold focus:outline-emerald-600 focus:bg-white" placeholder="Tulis catatan pupuk, micin, atau kapan harus diteduhkan di sini..."></textarea>
+                </div>
+
+                <!-- Bagian Foto -->
+                <div>
+                    <label class="block font-bold text-stone-600 mb-1">Foto Perkembangan Tanaman</label>
+                    <div class="flex items-center space-x-3 bg-stone-50 p-2.5 rounded-xl border border-stone-200">
+                        <label class="cursor-pointer bg-white border border-stone-300 hover:bg-stone-50 text-stone-700 px-3 py-2 rounded-lg font-bold flex items-center space-x-1 shadow-sm transition-all text-[11px]">
+                            <input type="file" id="formImageFile" accept="image/*" class="hidden" onchange="previewFormImage(event)">
+                            <i class="fa-solid fa-camera"></i> <span>Ambil / Pilih Foto</span>
+                        </label>
+                        <span id="formImgLabel" class="text-[10px] text-stone-400 truncate max-w-[200px]">Belum ada foto</span>
+                    </div>
+                    <div class="flex items-center justify-center mt-3 bg-stone-50 p-2 rounded-2xl border border-dashed border-stone-200 hidden" id="formImgPreviewContainer">
+                        <img id="formImgPreview" src="" alt="Pratinjau Foto" class="max-h-36 rounded-xl object-contain shadow-sm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Modal -->
+            <div class="px-5 py-4 bg-stone-50 border-t border-stone-200 flex space-x-2">
+                <button onclick="closeModalTambah()" class="flex-1 py-2.5 rounded-xl border border-stone-300 font-bold text-stone-600 hover:bg-stone-100 transition-colors text-xs text-center">Batal</button>
+                <button id="modalSaveBtn" onclick="simpanBibit()" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 font-bold text-white shadow-md transition-colors text-xs text-center flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-floppy-disk"></i> <span id="modalSaveText">Simpan Tanaman</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL 2: JURNAL & DETAIL PERKEMBANGAN TANAMAN ================= -->
+    <div id="modalDetail" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-stone-200 flex flex-col max-h-[90vh]">
+            <!-- Header Modal -->
+            <div class="px-5 py-4 bg-emerald-800 text-white flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-book-open text-lime-300"></i>
+                    <h3 class="font-bold text-sm tracking-tight">Catatan Harian Tanaman</h3>
+                </div>
+                <button onclick="closeModalDetail()" class="text-white/80 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Detail Jurnal Body (Scrollable) -->
+            <div class="p-5 overflow-y-auto space-y-4 text-xs" id="detailBodyContent"></div>
+
+            <!-- Footer Modal Detail -->
+            <div class="px-5 py-3 bg-stone-50 border-t border-stone-200 flex space-x-2">
+                <button onclick="closeModalDetail()" class="flex-1 py-2 rounded-xl border border-stone-300 font-bold text-stone-600 hover:bg-stone-100 transition-colors text-xs text-center">Tutup</button>
+                <button id="detailHapusBtn" class="py-2 px-3 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 font-bold border border-rose-200 transition-colors text-xs text-center" title="Hapus Catatan Ini">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL 3: MODAL KONFIRMASI HAPUS KUSTOM ================= -->
+    <div id="modalHapusKonfirmasi" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl border border-stone-100">
+            <div class="w-14 h-14 bg-rose-50 rounded-full flex items-center justify-center text-rose-600 mx-auto text-2xl">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-sm text-stone-800">Hapus Catatan Tanaman?</h4>
+                <p class="text-xs text-stone-500 mt-1">Apakah Ibu yakin ingin menghapus catatan tanaman ini secara permanen dari buku catatan digital?</p>
+            </div>
+            <div class="flex space-x-2">
+                <button onclick="closeModalHapus()" class="flex-1 py-2 rounded-xl border border-stone-300 font-bold text-stone-600 text-xs hover:bg-stone-50 transition-colors">Batal</button>
+                <button id="btnHapusKonfirmasiMurni" class="flex-1 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md transition-colors">Iya, Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifikasi Mengambang -->
+    <div id="toast" class="fixed top-5 left-1/2 transform -translate-x-1/2 bg-stone-900 text-white text-xs px-4 py-2.5 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 flex items-center space-x-2">
+        <span id="toastIcon"></span>
+        <span id="toastMessage">Pesan sistem</span>
+    </div>
+
+    <!-- Logika Supabase Backend & UI Interactivity & Gemini AI API -->
+    <script>
+        const SUPABASE_BASE_URL = "https://zaueuvplevtgkthqifsk.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_27mT7S6Eo9cBKN6xmujYqg_y2T20wSf";
+
+        // Konfigurasi Gemini API dengan key kosong (Injeksi otomatis platform runtime)
+        const apiKey = ""; 
+
+        // State Global Aplikasi
+        let allPlants = [];
+        let filteredPlants = [];
+        let currentTab = 'kebun';
+        let currentSubAi = 'chat';
+        let currentFilterStatus = 'Semua';
+        let formSelectedFile = null;
+        let doctorSelectedFile = null;
+        let activeHapusId = null;
+
+        // Inisialisasi Halaman
+        window.onload = function() {
+            document.getElementById('formSowingDate').value = new Date().toISOString().split('T')[0];
+            loadPlants();
+            loadChatHistory();
+            startJamSapaan();
+            ambilDataCuacaMeteo(); // Memanggil cuaca otomatis
+        };
+
+        function segarSemuaData() {
+            loadPlants();
+            loadChatHistory();
+            ambilDataCuacaMeteo();
+            tunjukkanToast("Catatan kebun, cuaca & riwayat tanya jawab segar kembali!", "success");
+        }
+
+        // ================= FITUR BARU: JAM DIGITAL & SAPAAN IBU HARIAN =================
+        function startJamSapaan() {
+            setInterval(() => {
+                const sekarang = new Date();
+                
+                // Jam Digital
+                const opsiJam = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+                document.getElementById('headerJamDigital').innerText = sekarang.toLocaleTimeString('id-ID', opsiJam) + " WIB";
+                
+                // Sapaan Kebun Sesuai Jam
+                const jam = sekarang.getHours();
+                let sapaan = "Selamat pagi, Ibu Cantik!";
+                if (jam >= 11 && jam < 15) {
+                    sapaan = "Selamat siang, Ibu! Sudah cek air tanaman?";
+                } else if (jam >= 15 && jam < 19) {
+                    sapaan = "Selamat sore, Ibu! Waktunya menyiram kebun.";
+                } else if (jam >= 19 || jam < 4) {
+                    sapaan = "Selamat malam, Ibu! Selamat beristirahat.";
+                }
+                document.getElementById('headerSapaanIbu').innerText = sapaan;
+            }, 1000);
+        }
+
+        // ================= FITUR BARU: AMBIL DATABASE CUACA REALTIME (OPEN-METEO) =================
+        async function ambilDataCuacaMeteo() {
+            const ikonDiv = document.getElementById('cuacaIkon');
+            const deskripsiText = document.getElementById('cuacaDeskripsi');
+            const suhuText = document.getElementById('cuacaSuhu');
+            const kelembapanText = document.getElementById('cuacaKelembapan');
+            const saranText = document.getElementById('cuacaSaranTani');
+
+            // Koordinat default Jakarta/Indonesia agar instan berjalan
+            let lat = -6.2088;
+            let lon = 106.8456;
+
+            // Deteksi GPS HP Ibu-ibu jika diizinkan browser
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    lat = position.coords.latitude;
+                    lon = position.coords.longitude;
+                    panggilMeteoAPI(lat, lon);
+                }, error => {
+                    // Jika GPS ditolak, jalankan dengan koordinat default
+                    panggilMeteoAPI(lat, lon);
+                });
+            } else {
+                panggilMeteoAPI(lat, lon);
+            }
+
+            async function panggilMeteoAPI(latitude, longitude) {
+                try {
+                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,weather_code&timezone=auto`;
+                    const res = await fetch(url);
+                    if (!res.ok) throw new Error();
+                    const data = await res.json();
+                    
+                    const temp = Math.round(data.current.temperature_2m);
+                    const humidity = data.current.relative_humidity_2m;
+                    const code = data.current.weather_code;
+
+                    suhuText.innerText = `${temp}°C`;
+                    kelembapanText.innerText = `${humidity}%`;
+
+                    // Menerjemahkan kode cuaca Open-Meteo ke bahasa ibu-ibu
+                    let cuacaSaran = "";
+                    let cuacaIconHTML = "";
+                    let cuacaTeks = "";
+
+                    if (code === 0) {
+                        cuacaTeks = "Cerah Benderang";
+                        cuacaIconHTML = '<i class="fa-solid fa-sun text-amber-300 animate-spin-slow"></i>';
+                        cuacaSaran = "Matahari cerah sekali hari ini, Bu! Cek media semai Ibu, pastikan disiram cukup agar bibit tidak kepanasan dan mengering.";
+                    } else if (code >= 1 && code <= 3) {
+                        cuacaTeks = "Cerah Berawan";
+                        cuacaIconHTML = '<i class="fa-solid fa-cloud-sun text-amber-200"></i>';
+                        cuacaSaran = "Awan teduh menyenangkan hari ini, Bu. Cuaca yang sangat pas untuk memindahkan bibit muda ke wadah pot pembesaran!";
+                    } else if (code >= 45 && code <= 48) {
+                        cuacaTeks = "Berkabut Teduh";
+                        cuacaIconHTML = '<i class="fa-solid fa-smog text-stone-300"></i>';
+                        cuacaSaran = "Udara berkabut sejuk, Bu. Tanaman tidak kehilangan banyak air, namun tetap periksa kebasahan medianya ya.";
+                    } else if (code >= 51 && code <= 67) {
+                        cuacaTeks = "Gerimis Tipis";
+                        cuacaIconHTML = '<i class="fa-solid fa-cloud-rain text-blue-200"></i>';
+                        cuacaSaran = "Gerimis manis di luar, Bu. Jika bibit Ibu masih sangat kecil (kecambah), sebaiknya diteduhkan dulu agar tidak patah tertimpa tetesan air.";
+                    } else if (code >= 71 && code <= 99) {
+                        cuacaTeks = "Hujan Deras / Badai";
+                        cuacaIconHTML = '<i class="fa-solid fa-cloud-showers-heavy text-slate-300 animate-bounce"></i>';
+                        cuacaSaran = "Hujan turun deras, Bu! Jangan menyiram tanaman sore ini, dan pastikan pot-pot kecil tidak terendam banjir air hujan.";
+                    } else {
+                        cuacaTeks = "Berawan Teduh";
+                        cuacaIconHTML = '<i class="fa-solid fa-cloud text-stone-200"></i>';
+                        cuacaSaran = "Cuaca teduh berawan manis hari ini, Bu. Sangat nyaman untuk sekadar merapikan tanaman hias di teras rumah.";
+                    }
+
+                    ikonDiv.innerHTML = cuacaIconHTML;
+                    deskripsiText.innerText = `Saat Ini: ${cuacaTeks}`;
+                    saranText.innerText = cuacaSaran;
+
+                } catch (e) {
+                    deskripsiText.innerText = "Gagal memuat prakiraan cuaca otomatis.";
+                    saranText.innerText = "Tetap sayangi dan periksa kebutuhan air tanaman Ibu hari ini ya!";
+                }
+            }
+        }
+
+        // ================= FORMATTER MARKDOWN PINTAR =================
+        function formatAiResponse(text) {
+            if (!text) return "";
+            
+            let cleanedText = text
+                .replace(/HSS/gi, "Hari Sejak Sebar Benih")
+                .replace(/PPM/gi, "Takaran Kekuatan Pupuk")
+                .replace(/Damping-off/gi, "Penyakit Batang Busuk Layu Semai")
+                .replace(/Vegetatif/gi, "Masa Tumbuh Daun")
+                .replace(/Generatif/gi, "Masa Berbunga dan Berbuah")
+                .replace(/Media tanam/gi, "Wadah tanah/media tanam")
+                .replace(/pH/gi, "Kadar keasaman tanah")
+                .replace(/Nitrogen/gi, "Pupuk Daun (Nitrogen)")
+                .replace(/Fosfor/gi, "Pupuk Akar & Bunga (Fosfor)");
+
+            let formatted = cleanedText.replace(/\*\*\*([^*]+)\*\*\*/g, '<strong class="font-bold text-stone-900">$1</strong>');
+            formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-extrabold text-emerald-800 bg-emerald-50 px-1 rounded-md">$1</strong>');
+            
+            formatted = formatted.replace(/^### (.*$)/gim, '<h4 class="font-extrabold text-sm text-emerald-900 mt-4 mb-2 pb-1 border-b border-stone-100 flex items-center"><i class="fa-solid fa-circle-chevron-right text-[10px] text-emerald-500 mr-2"></i> $1</h4>');
+            formatted = formatted.replace(/^## (.*$)/gim, '<h3 class="font-black text-sm text-emerald-950 mt-5 mb-2.5 flex items-center"><i class="fa-solid fa-leaf text-emerald-600 mr-2"></i> $1</h3>');
+            formatted = formatted.replace(/^# (.*$)/gim, '<h2 class="font-black text-base text-emerald-950 mt-6 mb-3 border-l-4 border-emerald-600 pl-2">$1</h2>');
+            
+            formatted = formatted.replace(/^\s*[\-\*]\s+(.*$)/gim, '<div class="flex items-start space-x-2 my-2 pl-2"><span class="text-emerald-500 mt-1 font-bold">•</span><span class="flex-1 text-stone-600 font-medium">$1</span></div>');
+            
+            const paragraphs = formatted.split(/\n\n+/);
+            formatted = paragraphs.map(p => {
+                const trimmed = p.trim();
+                if (trimmed.startsWith('<h') || trimmed.startsWith('<div')) {
+                    return trimmed;
+                }
+                return `<p class="my-3 leading-relaxed text-stone-600 font-medium text-[11.5px]">${trimmed.replace(/\n/g, '<br>')}</p>`;
+            }).join('');
+
+            return formatted;
+        }
+
+        // Fungsi Memanggil API Gemini dengan Backoff Eksponensial
+        async function callGemini(payload) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            let delay = 1000;
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (response.ok) {
+                        return await response.json();
+                    }
+                } catch (e) {}
+                await new Promise(resolve => setTimeout(resolve, delay));
+                delay *= 2;
+            }
+            throw new Error("Gagal terhubung dengan asisten AI. Mohon tunggu sebentar lalu dicoba lagi ya, Bu.");
+        }
+
+        // Helper konversi file ke base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    const base64String = reader.result.split(',')[1];
+                    resolve(base64String);
+                };
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Tab Navigasi
+        function switchTab(tabId) {
+            currentTab = tabId;
+            const sections = ['section-kebun', 'section-tugas', 'section-ai'];
+            sections.forEach(sec => {
+                document.getElementById(sec).classList.add('hidden');
+            });
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+
+            const tabs = ['kebun', 'tugas', 'ai'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tabId) {
+                    btn.className = "flex-1 py-2.5 rounded-lg font-bold text-center bg-white text-emerald-900 shadow-sm transition-all flex items-center justify-center space-x-1";
+                } else {
+                    btn.className = "flex-1 py-2.5 rounded-lg font-bold text-center text-emerald-100 hover:text-white transition-all flex items-center justify-center space-x-1";
+                }
+            });
+
+            if (tabId === 'tugas') {
+                renderWateringList();
+            } else if (tabId === 'ai') {
+                loadChatHistory();
+            }
+        }
+
+        // Sub Navigasi AI Tab
+        function switchSubAi(subId) {
+            currentSubAi = subId;
+            const subs = ['chat', 'doctor'];
+            subs.forEach(s => {
+                document.getElementById(`ai-sub-${s}`).classList.add('hidden');
+                document.getElementById(`btn-sub-${s}`).className = "flex-1 py-2.5 rounded-lg font-bold text-center text-stone-600 hover:text-stone-800 transition-all";
+            });
+            document.getElementById(`ai-sub-${subId}`).classList.remove('hidden');
+            document.getElementById(`btn-sub-${subId}`).className = "flex-1 py-2.5 rounded-lg font-bold text-center bg-white text-stone-800 shadow-sm transition-all";
+        }
+
+        // ================= FITUR AI 1: LOAD & SEND CHAT HARIAN PERSISTEN (SUPABASE) =================
+        async function loadChatHistory() {
+            const logs = document.getElementById('chatAiLogs');
+            try {
+                const response = await fetch(`${SUPABASE_BASE_URL}/rest/v1/farm_chat?select=*&order=id.asc`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+
+                if (!response.ok) throw new Error("Gagal mengambil riwayat mading.");
+
+                const chats = await response.json();
+                
+                if (chats.length === 0) {
+                    logs.innerHTML = `
+                        <div class="bg-emerald-50 text-emerald-900 p-3 rounded-2xl border border-emerald-100 leading-relaxed max-w-[85%]">
+                            👋 Halo Ibu! Belum ada riwayat tanya jawab di sini. Yuk, jadi yang pertama bertanya mengenai tanaman Ibu ke asisten Mbak Ayu!
+                        </div>
+                    `;
+                    return;
+                }
+
+                let chatHTML = '';
+                chats.forEach(chat => {
+                    const timeStr = new Date(chat.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                    
+                    if (chat.is_ai) {
+                        chatHTML += `
+                            <div class="flex flex-col items-start space-y-0.5 max-w-[85%]">
+                                <span class="text-[9.5px] font-bold text-emerald-700 ml-1.5">${chat.sender}</span>
+                                <div class="bg-emerald-50 text-stone-700 p-3.5 rounded-2xl border border-emerald-100/60 leading-relaxed space-y-1 shadow-sm">
+                                    ${formatAiResponse(chat.message)}
+                                    <span class="text-[8px] text-stone-400 block mt-1 text-right">${timeStr}</span>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        chatHTML += `
+                            <div class="flex flex-col items-end space-y-0.5 max-w-[85%] ml-auto">
+                                <span class="text-[9.5px] font-bold text-stone-500 mr-1.5">${chat.sender}</span>
+                                <div class="bg-white text-stone-800 p-3 rounded-2xl leading-relaxed border border-stone-200/50 shadow-sm font-semibold">
+                                    ${chat.message}
+                                    <span class="text-[8px] text-stone-400 block mt-1 text-right">${timeStr}</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+
+                logs.innerHTML = chatHTML;
+                logs.scrollTop = logs.scrollHeight;
+
+            } catch (e) {
+                console.error(e);
+                logs.innerHTML = '<p class="text-xs text-center text-stone-400 py-6">Aduh, gagal mengambil mading chat Ibu.</p>';
+            }
+        }
+
+        async function sendAiChat() {
+            const input = document.getElementById('chatAiInput');
+            const prompt = input.value.trim();
+            const senderName = document.getElementById('chatSenderName').value.trim() || "Ibu Kebun";
+            
+            if (!prompt) return;
+
+            const btn = document.getElementById('btnSendAiChat');
+            const icon = document.getElementById('aiChatIcon');
+            const loading = document.getElementById('aiChatLoading');
+
+            btn.disabled = true;
+            icon.classList.add('hidden');
+            loading.classList.remove('hidden');
+
+            try {
+                const userMsgResponse = await fetch(`${SUPABASE_BASE_URL}/rest/v1/farm_chat`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        sender: senderName,
+                        message: prompt,
+                        is_ai: false
+                    })
+                });
+
+                if (!userMsgResponse.ok) throw new Error("Gagal mengirimkan pesan Ibu ke mading.");
+
+                await loadChatHistory();
+                input.value = "";
+
+                const systemPrompt = "Anda adalah asisten tani rumahan profesional yang sangat ramah bernama 'Mbak Ayu Asisten Kebun Ibu'. Jawablah setiap pertanyaan seputar kebun ibu-ibu dengan bahasa Indonesia yang sangat ramah, hangat, seperti tetangga yang pintar bercocok tanam. Selalu hindari istilah ilmiah asing yang rumit (seperti PPM, pH, klorosis, damping-off, vegetatif, dll). Jika terpaksa menggunakan istilah tersebut, jelaskan langsung dengan sebutan sederhana dapur, seperti 'Kepekatan air pupuk', 'tanah asam/basa', 'daun menguning', 'batang semai busuk', atau 'masa tumbuh daun'. Sangat rekomendasikan bahan-bahan dapur murah meriah seperti micin, air cucian beras, cangkang kulit telur, bawang merah, bawang putih, atau sabun cuci piring.";
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                };
+
+                const resultJson = await callGemini(payload);
+                const aiResponse = resultJson.candidates?.[0]?.content?.parts?.[0]?.text || "Aduh mohon maaf Bu, Mbak Ayu sedang agak sibuk di belakang rumah. Nanti dicoba tanya lagi ya, Bu.";
+
+                const aiMsgResponse = await fetch(`${SUPABASE_BASE_URL}/rest/v1/farm_chat`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        sender: "Mbak Ayu (Asisten AI)",
+                        message: aiResponse,
+                        is_ai: true
+                    })
+                });
+
+                if (!aiMsgResponse.ok) throw new Error("Gagal mengamankan jawaban Mbak Ayu.");
+
+                await loadChatHistory();
+
+            } catch (error) {
+                tunjukkanToast(error.message, "error");
+            } finally {
+                btn.disabled = false;
+                icon.classList.remove('hidden');
+                loading.classList.add('hidden');
+            }
+        }
+
+        // ================= FITUR AI 2: DOKTER FOTO DAUN AI =================
+        function previewDoctorImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            doctorSelectedFile = file;
+            document.getElementById('doctorImgLabel').innerText = file.name;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('doctorImgPreview');
+                img.src = e.target.result;
+                document.getElementById('doctorImgContainer').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function diagnosePlantImage() {
+            if (!doctorSelectedFile) {
+                tunjukkanToast("Pilih atau ambil foto daun tanaman yang sakit terlebih dahulu!", "error");
+                return;
+            }
+
+            const btn = document.getElementById('btnDiagnose');
+            const resultDiv = document.getElementById('diagnosisResult');
+            const textDiv = document.getElementById('diagnosisText');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> <span>Menganalisis Visual Gejala Daun...</span>';
+
+            try {
+                const base64Data = await fileToBase64(doctorSelectedFile);
+                const prompt = "Lakukan pemeriksaan visual terhadap bagian tanaman pada gambar ini. Sebutkan nama masalahnya dengan istilah bahasa Indonesia yang sangat sederhana untuk ibu-ibu rumah tangga (contoh: 'Serangan Kutu Putih', 'Daun Menguning karena Kurang Pupuk', atau 'Busuk Akar karena Kebasahan'). Berikan penjelasan yang hangat dan berikan 3 cara penanganan paling praktis menggunakan bahan-bahan dapur sederhana yang murah meriah.";
+
+                const payload = {
+                    contents: [{
+                        role: "user",
+                        parts: [
+                            { text: prompt },
+                            { inlineData: { mimeType: doctorSelectedFile.type, data: base64Data } }
+                        ]
+                    }]
+                };
+
+                const resultJson = await callGemini(payload);
+                const aiDiagnosis = resultJson.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf Ibu, gambar tidak terbaca jelas. Tolong fotokan dengan cahaya terang ya, Bu.";
+
+                textDiv.innerHTML = formatAiResponse(aiDiagnosis);
+                resultDiv.classList.remove('hidden');
+                tunjukkanToast("Pemeriksaan AI Selesai!", "success");
+
+                resultDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
+
+            } catch (error) {
+                tunjukkanToast(error.message, "error");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Mulai Cek Kesehatan Tanaman</span>';
+            }
+        }
+
+        // ================= FITUR AI 3: AUTO GENERATE PANDUAN TANAM =================
+        async function generateAiGuide() {
+            const plantName = document.getElementById('formPlantName').value.trim();
+            if (!plantName) {
+                tunjukkanToast("Ketik nama tanaman terlebih dahulu agar AI bisa membuatkan panduan!", "error");
+                return;
+            }
+
+            const btn = document.getElementById('btnAiGuide');
+            const icon = document.getElementById('btnAiGuideIcon');
+            const loading = document.getElementById('btnAiGuideLoading');
+            const mediumInput = document.getElementById('formMedium');
+            const notesInput = document.getElementById('formNotes');
+
+            btn.disabled = true;
+            icon.classList.add('hidden');
+            loading.classList.remove('hidden');
+
+            try {
+                const prompt = `Berikan panduan menanam yang sangat singkat dan super sederhana untuk tanaman: "${plantName}". 
+                Gunakan bahasa Indonesia yang ramah, hindari istilah asing rumit. 
+                Sediakan output teks ringkas berupa:
+                1. Media tanam terbaik untuk ibu rumah tangga (contoh: tanah humus campur kompos dapur / kapas basah)
+                2. Berapa hari perkiraan biji pecah (tunas tumbuh)
+                3. Saran pupuk dapur murah meriah (contoh: air cucian beras, micin sasa)
+                4. Penyiraman berapa kali sehari.`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }]
+                };
+
+                const resultJson = await callGemini(payload);
+                const guideText = resultJson.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+                let mediaSaran = "Tanah Kebun + Kompos";
+                if (guideText.toLowerCase().includes("tanah")) mediaSaran = "Tanah Humus Sederhana";
+                else if (guideText.toLowerCase().includes("rockwool")) mediaSaran = "Kapas Basah / Rockwool";
+
+                mediumInput.value = mediaSaran;
+                notesInput.value = guideText;
+                tunjukkanToast("Saran Tanam AI Berhasil Dituliskan!", "success");
+
+            } catch (error) {
+                tunjukkanToast(error.message, "error");
+            } finally {
+                btn.disabled = false;
+                icon.classList.remove('hidden');
+                loading.classList.add('hidden');
+            }
+        }
+
+        // ================= JALUR UTAMA SUPABASE DATABASE BACKEND =================
+
+        async function loadPlants() {
+            document.getElementById('plantLoading').classList.remove('hidden');
+            document.getElementById('plantGrid').innerHTML = '';
+            document.getElementById('plantEmpty').classList.add('hidden');
+
+            try {
+                const response = await fetch(`${SUPABASE_BASE_URL}/rest/v1/plant_farm?select=*&order=id.desc`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+
+                if (!response.ok) throw new Error("Gagal mengambil data dari Supabase.");
+
+                allPlants = await response.json();
+                document.getElementById('plantLoading').classList.add('hidden');
+
+                updateDashboardStats();
+                filterPlants(currentFilterStatus);
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('plantLoading').classList.add('hidden');
+                tunjukkanToast("Gagal memuat catatan tanaman.", "error");
+            }
+        }
+
+        function updateDashboardStats() {
+            let total = allPlants.length;
+            let semai = 0;
+            let siap = 0;
+            let gagal = 0;
+
+            allPlants.forEach(p => {
+                if (p.status === 'Semai') semai++;
+                else if (p.status === 'Siap Pindah') siap++;
+                else if (p.status === 'Gagal') gagal++;
+            });
+
+            document.getElementById('dashTotal').innerText = total;
+            document.getElementById('dashSemai').innerText = semai;
+            document.getElementById('dashSiap').innerText = siap;
+            document.getElementById('dashGagal').innerText = gagal;
+        }
+
+        function filterPlants(status) {
+            currentFilterStatus = status;
+
+            const statuses = ['Semua', 'Semai', 'Tumbuh Daun', 'Siap Pindah', 'Gagal'];
+            const filterMap = {
+                'Semua': 'filter-Semua',
+                'Semai': 'filter-Semai',
+                'Tumbuh Daun': 'filter-Tumbuh',
+                'Siap Pindah': 'filter-Siap',
+                'Gagal': 'filter-Gagal'
+            };
+
+            statuses.forEach(st => {
+                const btn = document.getElementById(filterMap[st]);
+                if (st === status) {
+                    btn.className = "px-4 py-1.5 rounded-xl text-xs font-bold bg-emerald-800 text-white shadow-sm shrink-0 transition-all border border-emerald-900/10";
+                } else {
+                    btn.className = "px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-stone-600 hover:bg-stone-100 shrink-0 transition-all border border-stone-200";
+                }
+            });
+
+            if (status === 'Semua') {
+                filteredPlants = allPlants;
+            } else {
+                filteredPlants = allPlants.filter(p => p.status === status);
+            }
+
+            renderPlantCards();
+        }
+
+        function renderPlantCards() {
+            const grid = document.getElementById('plantGrid');
+            const empty = document.getElementById('plantEmpty');
+
+            if (filteredPlants.length === 0) {
+                empty.classList.remove('hidden');
+                grid.innerHTML = '';
+                return;
+            }
+
+            empty.classList.add('hidden');
+            let cardsHTML = '';
+
+            filteredPlants.forEach(plant => {
+                const sowing = new Date(plant.sowing_date);
+                const today = new Date();
+                const diffTime = today - sowing;
+                const hss = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                
+                const hssText = hss >= 0 ? `Umur: ${hss} Hari di Kebun` : "Rencana Tanam";
+
+                let ringkasanNotes = plant.notes ? (plant.notes.length > 50 ? plant.notes.substring(0, 50) + "..." : plant.notes) : "Belum ada catatan khusus.";
+                if (ringkasanNotes.includes('|')) {
+                    ringkasanNotes = ringkasanNotes.split('|')[1].trim();
+                }
+
+                let colorBadge = "bg-amber-100 text-amber-800 border-amber-200/50";
+                let statusNamaIbu = "🌱 Baru Tumbuh";
+                if (plant.status === 'Tumbuh Daun') {
+                    colorBadge = "bg-blue-100 text-blue-800 border-blue-200/50";
+                    statusNamaIbu = "🌿 Banyak Daun";
+                } else if (plant.status === 'Siap Pindah') {
+                    colorBadge = "bg-lime-100 text-lime-700 border-lime-200/50";
+                    statusNamaIbu = "🪴 Siap Pindah Pot";
+                } else if (plant.status === 'Gagal') {
+                    colorBadge = "bg-rose-100 text-rose-800 border-rose-200/50";
+                    statusNamaIbu = "❌ Layu / Mati";
+                }
+
+                let statusSiramText = '<i class="fa-solid fa-droplet text-stone-300"></i> Belum disiram hari ini';
+                if (plant.last_watered) {
+                    const lWaterDate = new Date(plant.last_watered);
+                    if (lWaterDate.toDateString() === today.toDateString()) {
+                        statusSiramText = `<span class="text-emerald-600 font-bold"><i class="fa-solid fa-droplet text-emerald-500 mr-0.5"></i> Sudah Siram: ${lWaterDate.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})}</span>`;
+                    }
+                }
+
+                const backupImage = "https://images.unsplash.com/photo-1530652101053-8c0db4fbb5de?auto=format&fit=crop&w=450&q=80";
+
+                cardsHTML += `
+                    <div class="bg-white rounded-[2rem] shadow-sm border border-stone-200/50 overflow-hidden hover:shadow-md transition-all flex flex-col justify-between group">
+                        <div>
+                            <div class="relative h-44 bg-stone-100 w-full overflow-hidden">
+                                <img src="${plant.image_url || backupImage}" alt="${plant.plant_name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='${backupImage}'">
+                                <span class="absolute top-3.5 right-3.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase border shadow-sm ${colorBadge}">
+                                    ${statusNamaIbu}
+                                </span>
+                            </div>
+
+                            <div class="p-5 space-y-3">
+                                <div>
+                                    <h4 class="font-extrabold text-stone-800 text-sm leading-tight line-clamp-1">${plant.plant_name}</h4>
+                                    <div class="flex items-center space-x-1.5 mt-1">
+                                        <i class="fa-solid fa-hourglass-half text-emerald-500 text-[11px]"></i>
+                                        <span class="text-[11px] text-emerald-700 font-extrabold">${hssText}</span>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-y-1 gap-x-2 text-[11px] text-stone-500 border-t border-stone-100 pt-3">
+                                    <p class="truncate"><b>Wadah:</b> ${plant.planting_medium || '-'}</p>
+                                    <p class="truncate"><b>Tgl Tanam:</b> ${plant.sowing_date}</p>
+                                </div>
+
+                                <div class="bg-stone-50 p-2.5 rounded-xl text-[10px] text-stone-500 border-l-2 border-stone-300 leading-relaxed break-words line-clamp-2">
+                                    ${ringkasanNotes}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-stone-50/80 px-4 py-3 border-t border-stone-100 flex items-center justify-between text-[11px]">
+                            <p class="text-stone-400 font-medium">${statusSiramText}</p>
+                            <div class="flex space-x-1.5">
+                                <button onclick="quickWater(${plant.id})" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 active:scale-95 font-bold px-2.5 py-2 rounded-xl transition-all" title="Catat Siram Air">
+                                    <i class="fa-solid fa-shower"></i> Siram
+                                </button>
+                                <button onclick="openModalDetail(${plant.id})" class="bg-stone-200 text-stone-700 hover:bg-stone-300 active:scale-95 font-bold px-3 py-2 rounded-xl transition-all" title="Buka Detail">
+                                    Detail <i class="fa-solid fa-chevron-right text-[9px] ml-0.5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = cardsHTML;
+        }
+
+        function renderWateringList() {
+            const listDiv = document.getElementById('wateringList');
+            const todayStr = new Date().toDateString();
+
+            if (allPlants.length === 0) {
+                listDiv.innerHTML = '<p class="text-xs text-center text-stone-400 py-6">Ibu belum mendaftarkan tanaman apa pun di kebun.</p>';
+                return;
+            }
+
+            let listHTML = '';
+            let siramHariIni = allPlants.filter(p => {
+                if (!p.last_watered) return true;
+                return new Date(p.last_watered).toDateString() !== todayStr;
+            });
+
+            if (siramHariIni.length === 0) {
+                listHTML = `
+                    <div class="text-center py-6 text-stone-400">
+                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <p class="text-xs font-bold text-stone-600">Alhamdulillah, Semua Terpenuhi!</p>
+                        <p class="text-[10px] text-stone-400 mt-0.5">Semua tanaman Ibu sudah disiram air hari ini.</p>
+                    </div>
+                `;
+                listDiv.innerHTML = listHTML;
+                return;
+            }
+
+            siramHariIni.forEach(p => {
+                let statusNamaIbu = "Baru Tumbuh";
+                if (p.status === 'Tumbuh Daun') statusNamaIbu = "Banyak Daun";
+                else if (p.status === 'Siap Pindah') statusNamaIbu = "Siap Pindah Pot";
+                else if (p.status === 'Gagal') statusNamaIbu = "Gagal/Layu";
+
+                listHTML += `
+                    <div class="flex items-center justify-between p-3 bg-stone-50 rounded-2xl border border-stone-200/60 text-xs">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-seedling"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-stone-800 leading-tight">${p.plant_name}</h4>
+                                <p class="text-[10px] text-stone-400 mt-0.5">Media: ${p.planting_medium || '-'} • Kondisi: ${statusNamaIbu}</p>
+                            </div>
+                        </div>
+                        <button onclick="quickWater(${p.id}, true)" class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 font-bold text-white px-3 py-2 rounded-xl text-[10px] flex items-center space-x-1.5 transition-all">
+                            <i class="fa-solid fa-shower"></i> <span>Siram Sekarang</span>
+                        </button>
+                    </div>
+                `;
+            });
+
+            listDiv.innerHTML = listHTML;
+        }
+
+        async function quickWater(id, reloadHarian = false) {
+            try {
+                const nowStr = new Date().toISOString();
+                const response = await fetch(`${SUPABASE_BASE_URL}/rest/v1/plant_farm?id=eq.${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ last_watered: nowStr })
+                });
+
+                if (!response.ok) throw new Error();
+                tunjukkanToast("Penyiraman berhasil dicatat, Bu!", "success");
+                await loadPlants();
+                if (reloadHarian) renderWateringList();
+
+            } catch (e) {
+                tunjukkanToast("Gagal memperbarui riwayat siram.", "error");
+            }
+        }
+
+        // ================= MODAL TAMBAH & EDIT LOGIC =================
+
+        function openModalTambah() {
+            document.getElementById('editPlantId').value = "";
+            document.getElementById('modalTitle').innerText = "Catat Tanaman Baru Ibu";
+            document.getElementById('modalSaveText').innerText = "Simpan ke Buku Catatan";
+            document.getElementById('formPlantName').value = "";
+            document.getElementById('formSowingDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('formMedium').value = "";
+            document.getElementById('formStatus').value = "Semai";
+            document.getElementById('formCategory').value = "Sayuran Daun";
+            document.getElementById('formNotes').value = "";
+            
+            formSelectedFile = null;
+            document.getElementById('formImgLabel').innerText = "Belum ada foto";
+            document.getElementById('formImgPreviewContainer').classList.add('hidden');
+            document.getElementById('formImgPreview').src = "";
+
+            const modal = document.getElementById('modalTambah');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.add('opacity-100'), 10);
+        }
+
+        function closeModalTambah() {
+            const modal = document.getElementById('modalTambah');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function previewFormImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                tunjukkanToast("Format file harus berupa gambar ya, Bu!", "error");
+                return;
+            }
+
+            formSelectedFile = file;
+            document.getElementById('formImgLabel').innerText = file.name;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('formImgPreview');
+                img.src = e.target.result;
+                document.getElementById('formImgPreviewContainer').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function simpanBibit() {
+            const editId = document.getElementById('editPlantId').value;
+            const name = document.getElementById('formPlantName').value.trim();
+            const sowingDate = document.getElementById('formSowingDate').value;
+            const medium = document.getElementById('formMedium').value.trim();
+            const status = document.getElementById('formStatus').value;
+            const category = document.getElementById('formCategory').value;
+            const notes = document.getElementById('formNotes').value.trim();
+            const saveBtn = document.getElementById('modalSaveBtn');
+
+            if (!name || !sowingDate) {
+                tunjukkanToast("Nama Tanaman & Tanggal Semai wajib diisi ya, Bu!", "error");
+                return;
+            }
+
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> <span>Sedang Menyimpan...</span>';
+
+            let imageUrl = "";
+            if (editId) {
+                const oldPlant = allPlants.find(p => p.id == editId);
+                if (oldPlant) imageUrl = oldPlant.image_url || "";
+            }
+
+            try {
+                if (formSelectedFile) {
+                    const ext = formSelectedFile.name.split('.').pop();
+                    const fileNamaUnik = `bibit_${Date.now()}_${Math.random().toString(36).substring(2, 6)}.${ext}`;
+                    const storageUrl = `${SUPABASE_BASE_URL}/storage/v1/object/images-bucket/${fileNamaUnik}`;
+
+                    const uploadResponse = await fetch(storageUrl, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': formSelectedFile.type
+                        },
+                        body: formSelectedFile
+                    });
+
+                    if (!uploadResponse.ok) throw new Error("Aduh, gagal menyimpan gambar ke album.");
+                    imageUrl = `${SUPABASE_BASE_URL}/storage/v1/object/public/images-bucket/${fileNamaUnik}`;
+                }
+
+                const payload = {
+                    plant_name: name,
+                    sowing_date: sowingDate,
+                    planting_medium: medium || null,
+                    status: status,
+                    notes: `${category} | ${notes}`
+                };
+
+                if (imageUrl) {
+                    payload.image_url = imageUrl;
+                }
+
+                let response;
+
+                if (editId) {
+                    response = await fetch(`${SUPABASE_BASE_URL}/rest/v1/plant_farm?id=eq.${editId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                } else {
+                    response = await fetch(`${SUPABASE_BASE_URL}/rest/v1/plant_farm`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                if (!response.ok) throw new Error("Gagal menyambungkan data ke buku catatan.");
+
+                tunjukkanToast(editId ? "Catatan tanaman berhasil diperbarui!" : "Yey, tanaman baru berhasil dicatatkan!", "success");
+                closeModalTambah();
+                await loadPlants();
+
+            } catch (error) {
+                console.error(error);
+                tunjukkanToast(error.message, "error");
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> <span>${editId ? 'Perbarui' : 'Simpan'} Catatan</span>`;
+            }
+        }
+
+        // ================= JURNAL DETAIL MODAL LOGIC =================
+
+        function openModalDetail(id) {
+            const plant = allPlants.find(p => p.id == id);
+            if (!plant) return;
+
+            const sowing = new Date(plant.sowing_date);
+            const today = new Date();
+            const hss = Math.floor((today - sowing) / (1000 * 3600 * 24));
+
+            const backupImage = "https://images.unsplash.com/photo-1530652101053-8c0db4fbb5de?auto=format&fit=crop&w=450&q=80";
+
+            let kategori = "Umum";
+            let catatanAsli = plant.notes || "";
+            if (plant.notes && plant.notes.includes('|')) {
+                const bagian = plant.notes.split('|');
+                kategori = bagian[0].trim();
+                catatanAsli = bagian.slice(1).join('|').trim();
+            }
+
+            let statusNamaIbu = "Baru Tumbuh";
+            if (plant.status === 'Tumbuh Daun') statusNamaIbu = "Banyak Daun";
+            else if (plant.status === 'Siap Pindah') statusNamaIbu = "Siap Pindah Pot";
+            else if (plant.status === 'Gagal') statusNamaIbu = "Gagal/Layu";
+
+            const modal = document.getElementById('modalDetail');
+            const bodyContent = document.getElementById('detailBodyContent');
+            const hapusBtn = document.getElementById('detailHapusBtn');
+
+            activeHapusId = plant.id;
+            hapusBtn.onclick = () => openModalHapus();
+
+            bodyContent.innerHTML = `
+                <div class="relative h-48 bg-stone-100 rounded-2xl overflow-hidden border border-stone-200">
+                    <img src="${plant.image_url || backupImage}" alt="${plant.plant_name}" class="w-full h-full object-cover">
+                    <span class="absolute bottom-3 right-3 bg-emerald-800 text-white font-bold px-3 py-1 rounded-xl text-[10px] tracking-wider uppercase border border-emerald-900 shadow-lg">
+                        ${kategori}
+                    </span>
+                </div>
+
+                <div class="space-y-1">
+                    <div class="flex justify-between items-start">
+                        <h4 class="text-base font-extrabold text-stone-800 leading-tight">${plant.plant_name}</h4>
+                        <span class="px-2 py-0.5 bg-stone-100 text-stone-700 font-bold border rounded text-[10px]">${statusNamaIbu}</span>
+                    </div>
+                    <p class="text-[11px] text-emerald-600 font-bold"><i class="fa-solid fa-hourglass-half mr-1"></i>${hss >= 0 ? `Umur: ${hss} Hari Sejak Sebar Benih` : 'Rencana Semai'}</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 p-3 bg-stone-50 rounded-2xl border border-stone-200/50">
+                    <div>
+                        <p class="text-stone-400 font-bold text-[9px] uppercase tracking-wider">Mulai Tanam</p>
+                        <p class="font-extrabold text-stone-700 text-xs mt-0.5">${plant.sowing_date}</p>
+                    </div>
+                    <div>
+                        <p class="text-stone-400 font-bold text-[9px] uppercase tracking-wider">Wadah Media</p>
+                        <p class="font-extrabold text-stone-700 text-xs mt-0.5">${plant.planting_medium || 'Belum diisi'}</p>
+                    </div>
+                    <div class="col-span-2 border-t border-stone-200/60 pt-2.5">
+                        <p class="text-stone-400 font-bold text-[9px] uppercase tracking-wider">Penyiraman Terakhir</p>
+                        <p class="font-extrabold text-stone-700 text-xs mt-0.5">
+                            ${plant.last_watered ? new Date(plant.last_watered).toLocaleString('id-ID') : 'Belum pernah dicatat'}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <p class="text-stone-500 font-extrabold text-[10px] uppercase tracking-wider"><i class="fa-solid fa-book-bookmark mr-1"></i>Saran Tanam & Tips Perawatan</p>
+                    <div class="bg-emerald-50/50 p-4 rounded-2xl text-[11px] leading-relaxed text-stone-700 border border-emerald-100/50 space-y-2">
+                        ${formatAiResponse(catatanAsli) || 'Belum ada catatan tambahan.'}
+                    </div>
+                </div>
+
+                <button onclick="pindahKeFormEdit(${plant.id})" class="w-full py-2.5 rounded-xl border border-dashed border-stone-300 hover:border-emerald-600 text-stone-600 hover:text-emerald-700 font-extrabold transition-colors flex items-center justify-center space-x-1.5 text-xs">
+                    <i class="fa-solid fa-pen-to-square"></i> <span>Ubah / Edit Catatan Tanaman</span>
+                </button>
+            `;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.add('opacity-100'), 10);
+        }
+
+        function closeModalDetail() {
+            const modal = document.getElementById('modalDetail');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function pindahKeFormEdit(id) {
+            closeModalDetail();
+            const plant = allPlants.find(p => p.id == id);
+            if (!plant) return;
+
+            setTimeout(() => {
+                document.getElementById('editPlantId').value = plant.id;
+                document.getElementById('modalTitle').innerText = "Ubah Catatan Tanaman";
+                document.getElementById('modalSaveText').innerText = "Simpan Perubahan";
+                document.getElementById('formPlantName').value = plant.plant_name;
+                document.getElementById('formSowingDate').value = plant.sowing_date;
+                document.getElementById('formMedium').value = plant.planting_medium || "";
+                document.getElementById('formStatus').value = plant.status;
+                
+                let kategori = "Sayuran Daun";
+                let catatanAsli = plant.notes || "";
+                if (plant.notes && plant.notes.includes('|')) {
+                    const bagian = plant.notes.split('|');
+                    kategori = bagian[0].trim();
+                    catatanAsli = bagian.slice(1).join('|').trim();
+                }
+
+                document.getElementById('formCategory').value = kategori;
+                document.getElementById('formNotes').value = catatanAsli;
+
+                formSelectedFile = null;
+                if (plant.image_url) {
+                    document.getElementById('formImgLabel').innerText = "Ada foto tersimpan";
+                    document.getElementById('formImgPreview').src = plant.image_url;
+                    document.getElementById('formImgPreviewContainer').classList.remove('hidden');
+                } else {
+                    document.getElementById('formImgLabel').innerText = "Belum ada foto";
+                    document.getElementById('formImgPreviewContainer').classList.add('hidden');
+                    document.getElementById('formImgPreview').src = "";
+                }
+
+                const modal = document.getElementById('modalTambah');
+                modal.classList.remove('hidden');
+                modal.classList.add('opacity-100');
+            }, 350);
+        }
+
+        // ================= MODAL KONFIRMASI HAPUS KUSTOM =================
+        function openModalHapus() {
+            closeModalDetail();
+            const modal = document.getElementById('modalHapusKonfirmasi');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.add('opacity-100'), 10);
+            document.getElementById('btnHapusKonfirmasiMurni').onclick = () => eksekusiHapusBibit();
+        }
+
+        function closeModalHapus() {
+            const modal = document.getElementById('modalHapusKonfirmasi');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+            activeHapusId = null;
+        }
+
+        async function eksekusiHapusBibit() {
+            if (!activeHapusId) return;
+
+            try {
+                const response = await fetch(`${SUPABASE_BASE_URL}/rest/v1/plant_farm?id=eq.${activeHapusId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+
+                if (!response.ok) throw new Error("Gagal menghapus data di Supabase.");
+
+                tunjukkanToast("Catatan tanaman berhasil dihapus, Bu!", "success");
+                closeModalHapus();
+                await loadPlants();
+
+            } catch (error) {
+                console.error(error);
+                tunjukkanToast("Gagal menghapus catatan.", "error");
+            }
+        }
+    </script>
+</body>
+</html>
