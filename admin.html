@@ -3,225 +3,357 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Admin - Catatan Kebun Ibu</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>Panel Kendali Admin - Catatan Kebun Ibu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #f5f5f4; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #faf9f6; color: #292524; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .chat-scroll::-webkit-scrollbar { width: 4px; }
+        .chat-scroll::-webkit-scrollbar-track { background: transparent; }
+        .chat-scroll::-webkit-scrollbar-thumb { background: #e7e5e4; border-radius: 999px; }
+        .btn-press:active { transform: scale(0.97); }
     </style>
 </head>
-<body class="text-stone-800 font-sans min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col relative selection:bg-emerald-100">
 
-    <header class="bg-emerald-800 text-white shadow-md p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold flex items-center gap-2">
-                🌿 Mode Admin - Catetan Kebon Ibu
-            </h1>
-            <button onclick="logoutAdmin()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm">
-                Kaluar Panel
-            </button>
+    <header class="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 text-white px-6 py-5 shadow-xl sticky top-0 z-40 rounded-b-[2rem]">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3.5">
+                <div class="w-12 h-12 bg-emerald-500/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/10 shadow-inner">
+                    <i class="fa-solid fa-user-shield text-2xl text-lime-400"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg tracking-tight leading-tight">Panel Utama Admin</h1>
+                    <p class="text-xs text-stone-300 font-medium">Ngokolakeun data, hak aksés, sareng komunikasi Catetan Kebon Ibu</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <a href="index.html" class="bg-white/10 hover:bg-white/20 border border-white/10 px-4 py-2 rounded-xl text-xs font-bold transition-all btn-press">
+                    <i class="fa-solid fa-globe mr-1"></i> Tampilan Utama
+                </a>
+                <button onclick="logoutAdmin()" class="bg-rose-500 hover:bg-rose-600 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-rose-500/20 btn-press">
+                    <i class="fa-solid fa-power-off mr-1"></i> Kaluar Panel
+                </button>
+            </div>
         </div>
     </header>
 
-    <main class="container mx-auto p-4 flex-grow grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+    <main class="max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow">
         
-        <section class="bg-white p-5 rounded-3xl shadow-sm border border-stone-200 md:col-span-1 h-fit">
-            <h2 class="text-sm font-black text-emerald-800 mb-4 flex items-center gap-2">
-                📢 Pengumuman Berjalan (Marquee)
-            </h2>
-            <div class="mb-4">
-                <label class="block text-[11px] font-bold text-stone-500 mb-1">Pengumuman Ayeuna:</label>
-                <div id="current-marquee" class="p-3 bg-amber-50 text-amber-800 border border-amber-200 rounded-xl italic text-xs text-center font-semibold">
-                    Nuju marios...
-                </div>
-            </div>
-            <form id="form-marquee" onsubmit="updateMarquee(event)">
-                <div class="mb-4">
-                    <label for="marquee-input" class="block text-[11px] font-bold text-stone-600 mb-1">Serat Teks Anyar:</label>
-                    <textarea id="marquee-input" rows="3" class="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs focus:outline-emerald-600 focus:bg-white font-medium" placeholder="Serat pengumuman kebon di dieu..." required></textarea>
-                </div>
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-md">
-                    Simpen & Publikasikeun
-                </button>
-            </form>
-        </section>
-
-        <section class="bg-white p-5 rounded-3xl shadow-sm border border-stone-200 md:col-span-2 flex flex-col">
-            <h2 class="text-sm font-black text-emerald-800 mb-4 flex items-center gap-2">
-                👥 Daptar Anggota Kebon & Kecap Sandi
-            </h2>
+        <div class="space-y-6 lg:col-span-1">
             
-            <div class="overflow-x-auto flex-grow">
-                <table class="min-w-full divide-y divide-stone-200 text-xs">
-                    <thead class="bg-stone-50">
-                        <tr>
-                            <th class="px-4 py-3 text-left font-bold text-stone-600 uppercase tracking-wider">Nami Panggero Ibu</th>
-                            <th class="px-4 py-3 text-left font-bold text-stone-600 uppercase tracking-wider">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="user-table-body" class="bg-white divide-y divide-stone-100 font-medium">
-                        <tr>
-                            <td colspan="2" class="px-4 py-4 text-center text-stone-400">Nuju marios daptar anggota...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+            <section class="bg-white p-5 rounded-[2rem] shadow-sm border border-stone-200/60 space-y-4">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-8 h-8 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600"><i class="fa-solid fa-bullhorn text-sm"></i></div>
+                    <h2 class="font-extrabold text-xs text-stone-800 tracking-tight uppercase">Warta Berjalan (Marquee)</h2>
+                </div>
+                <div class="bg-amber-50/60 border border-amber-200/70 p-3.5 rounded-2xl">
+                    <span class="block text-[10px] font-bold text-amber-700 uppercase mb-1">Status Ayeuna:</span>
+                    <p id="current-marquee" class="text-xs font-semibold text-stone-700 italic">Nuju diparios...</p>
+                </div>
+                <form onsubmit="updateMarquee(event)" class="space-y-3">
+                    <div>
+                        <label class="block font-bold text-stone-600 text-[11px] mb-1.5 ml-1">Ganti Teks Warta</label>
+                        <textarea id="marquee-input" rows="2" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-3 py-2.5 text-xs focus:outline-emerald-600 focus:bg-white font-medium resize-none transition-all" placeholder="Serat bewara kebon di dieu..." required></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-3 rounded-2xl shadow-md shadow-emerald-600/10 transition-all btn-press">
+                        <i class="fa-solid fa-paper-plane mr-1"></i> Publikasikeun Warta
+                    </button>
+                </form>
+            </section>
 
+            <section class="bg-white p-5 rounded-[2rem] shadow-sm border border-stone-200/60 space-y-4">
+                <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+                    <div class="flex items-center space-x-2.5">
+                        <div class="w-8 h-8 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600"><i class="fa-solid fa-comments text-sm"></i></div>
+                        <h2 class="font-extrabold text-xs text-stone-800 tracking-tight uppercase">Moderasi Chat Nyi Sari</h2>
+                    </div>
+                    <button onclick="loadChatLogs()" class="text-stone-400 hover:text-stone-700 transition-colors"><i class="fa-solid fa-rotate-right text-xs"></i></button>
+                </div>
+                <div id="adminChatLogs" class="space-y-2.5 max-h-[380px] overflow-y-auto chat-scroll pr-1 text-xs flex flex-col">
+                    <p class="text-stone-400 text-center py-4">Nuju ngamuat obrolan...</p>
+                </div>
+            </section>
+        </div>
+
+        <div class="space-y-6 lg:col-span-2">
+            
+            <section class="bg-white p-5 rounded-[2rem] shadow-sm border border-stone-200/60 flex flex-col h-[400px]">
+                <div class="flex items-center justify-between border-b border-stone-100 pb-3 mb-4">
+                    <div class="flex items-center space-x-2.5">
+                        <div class="w-8 h-8 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600"><i class="fa-solid fa-users text-sm"></i></div>
+                        <h2 class="font-extrabold text-xs text-stone-800 tracking-tight uppercase">Manajemen Data Anggota Kebon</h2>
+                    </div>
+                    <span id="user-count-badge" class="bg-stone-100 text-stone-700 font-bold text-[10px] px-2.5 py-1 rounded-full">0 Anggota</span>
+                </div>
+                
+                <div class="overflow-y-auto flex-grow chat-scroll">
+                    <table class="min-w-full divide-y divide-stone-100 text-xs text-left">
+                        <thead class="bg-stone-50 text-[10px] font-bold text-stone-400 uppercase tracking-wider sticky top-0 z-10">
+                            <tr>
+                                <th class="px-4 py-3 rounded-l-xl">Nami Anggota</th>
+                                <th class="px-4 py-3">Kata Sandi (Password)</th>
+                                <th class="px-4 py-3 text-right rounded-r-xl">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table-body" class="divide-y divide-stone-50 font-medium">
+                            <tr>
+                                <td colspan="3" class="px-4 py-6 text-center text-stone-400">Nuju marios data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="bg-white p-5 rounded-[2rem] shadow-sm border border-stone-200/60 flex flex-col h-[300px]">
+                <div class="flex items-center justify-between border-b border-stone-100 pb-3 mb-3">
+                    <div class="flex items-center space-x-2.5">
+                        <div class="w-8 h-8 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600"><i class="fa-solid fa-clock-rotate-left text-sm"></i></div>
+                        <h2 class="font-extrabold text-xs text-stone-800 tracking-tight uppercase">Log Riwayat Masuk Aplikasi</h2>
+                    </div>
+                    <button onclick="clearAllLoginLogs()" class="text-rose-600 hover:text-rose-800 text-[10px] font-bold transition-colors"><i class="fa-solid fa-trash-can mr-1"></i>Hapus Sadaya</button>
+                </div>
+                <div class="overflow-y-auto flex-grow chat-scroll">
+                    <table class="min-w-full divide-y divide-stone-100 text-xs text-left">
+                        <thead class="bg-stone-50 text-[10px] font-bold text-stone-400 uppercase tracking-wider sticky top-0 z-10">
+                            <tr>
+                                <th class="px-4 py-2.5 rounded-l-xl">Nama Pengguna</th>
+                                <th class="px-4 py-2.5 rounded-r-xl text-right">Waktu Masuk</th>
+                            </tr>
+                        </thead>
+                        <tbody id="log-table-body" class="divide-y divide-stone-50 font-medium text-stone-600">
+                            <tr>
+                                <td colspan="2" class="px-4 py-4 text-center text-stone-400">Belum ada riwayat masuk dinten ieu.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
     </main>
 
-    <div id="password-modal" class="hidden fixed inset-0 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-3xl shadow-xl max-w-sm w-full p-5 relative border border-stone-100">
-            <h3 class="text-sm font-black text-stone-800 mb-1">Ganti Kecap Sandi</h3>
-            <p class="text-[11px] text-stone-500 mb-4">Ngarobih sandi kanggo akun: <span id="modal-username" class="font-bold text-emerald-700"></span></p>
+    <div id="password-modal" class="hidden fixed inset-0 bg-stone-900/60 backdrop-blur-md flex items-center justify-center p-4 z-50 transition-all duration-200">
+        <div class="bg-white rounded-[2rem] shadow-2xl max-w-sm w-full p-5 relative border border-stone-100">
+            <h3 class="text-sm font-black text-stone-800 mb-1 flex items-center gap-2"><i class="fa-solid fa-key text-emerald-600"></i> Ganti Kecap Sandi</h3>
+            <p class="text-[11px] text-stone-400 font-medium mb-4">Ngarobih sandi kanggo akun: <span id="modal-username" class="font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded"></span></p>
             
-            <form id="form-change-password" onsubmit="submitNewPassword(event)">
+            <form onsubmit="submitNewPassword(event)" class="space-y-4">
                 <input type="hidden" id="modal-user-id">
-                <div class="mb-4">
-                    <label for="new-password" class="block text-[11px] font-bold text-stone-600 mb-1">Sandi Anyar:</label>
-                    <input type="password" id="new-password" class="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl text-xs focus:outline-emerald-600 focus:bg-white font-medium" required placeholder="Lebetkeun sandi anyar">
+                <div>
+                    <label class="block text-[11px] font-bold text-stone-500 mb-1.5 ml-1">Kecap Sandi Anyar</label>
+                    <input type="password" id="new-password" class="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs focus:outline-emerald-600 focus:bg-white font-semibold" required placeholder="Lebetkeun sandi anyar">
                 </div>
-                <div class="flex justify-end gap-2 text-xs font-bold">
-                    <button type="button" onclick="closePasswordModal()" class="px-4 py-2.5 border border-stone-300 rounded-xl text-stone-600 hover:bg-stone-50">
-                        Batal
-                    </button>
-                    <button type="submit" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-md">
-                        Simpen Sandi
-                    </button>
+                <div class="flex justify-end gap-2 text-xs font-bold pt-2">
+                    <button type="button" onclick="closePasswordModal()" class="px-4 py-2.5 border border-stone-200 rounded-xl text-stone-600 hover:bg-stone-50 btn-press">Batal</button>
+                    <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-md shadow-emerald-600/10 btn-press">Simpen Sandi</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <div id="toast" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-stone-900 text-white text-[11px] px-4 py-2.5 rounded-full shadow-xl opacity-0 pointer-events-none transition-all duration-300 flex items-center space-x-2 z-[70]">
+        <span id="toastIcon"></span> <span id="toastMessage">Sistem Siap</span>
+    </div>
+
     <script>
-        // Nyaruakeun URL sareng KEY tina file index.html Ibu
         const SUPABASE_BASE_URL = "https://zaueuvplevtgkthqifsk.supabase.co";
         const SUPABASE_KEY = "sb_publishable_27mT7S6Eo9cBKN6xmujYqg_y2T20wSf";
         const authHeaders = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' };
 
-        // 1. PROTEKSI PANEL ADMIN (Nyaruakeun sareng sessionStorage tina index.html)
+        // 1. KEAMANAN AKSES PANEL
         if (sessionStorage.getItem('admin_auth_kebun') !== 'true') {
-            alert('Akses ditolak! Ibu kedah lebet nganggo tombol admin rahasia.');
+            alert('Akses Ditolak! Mangga lebet ti halaman utama.');
             window.location.href = 'index.html';
         }
-
         function logoutAdmin() {
             sessionStorage.removeItem('admin_auth_kebun');
             window.location.href = 'index.html';
         }
 
-        // 2. NGALEBETKEUN / MARIOS MARQUEE
+        // 2. TAMPILKAN / PASANG MARQUEE
         async function fetchMarquee() {
             try {
                 const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengumuman_kebun?select=pesan&aktif=eq.true&order=id.desc&limit=1`, { headers: authHeaders });
                 if(res.ok) {
                     const data = await res.json();
-                    const el = document.getElementById('current-marquee');
-                    if(data.length > 0 && el) el.innerText = data[0].pesan;
-                    else el.innerText = "Teu acan aya pengumuman anu aktif.";
+                    document.getElementById('current-marquee').innerText = data.length > 0 ? data[0].pesan : "Teu acan aya pengumuman aktif.";
                 }
-            } catch(e) {
-                document.getElementById('current-marquee').innerText = "Gagal nyambung ka database.";
-            }
+            } catch(e) { document.getElementById('current-marquee').innerText = "Gagal nyambung ka database."; }
         }
 
         async function updateMarquee(event) {
             event.preventDefault();
-            const teksBaru = document.getElementById('marquee-input').value.trim();
+            const text = document.getElementById('marquee-input').value.trim();
             try {
-                // Nganggo POST kanggo nambihan data pengumuman anyar anu aktif
                 const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengumuman_kebun`, {
                     method: 'POST',
                     headers: authHeaders,
-                    body: JSON.stringify({ pesan: teksBaru, aktif: true })
+                    body: JSON.stringify({ pesan: text, aktif: true })
                 });
-
-                if (!res.ok) throw new Error("Gagal ngirim data.");
-
-                alert('Pengumuman énggal parantos dipublikasikeun!');
-                document.getElementById('marquee-input').value = '';
-                fetchMarquee();
-            } catch (err) {
-                alert('Gagal nga-update pengumuman: ' + err.message);
-            }
+                if (res.ok) {
+                    tunjukkanToast("Pengumuman berhasil dianyarkeun!", "success");
+                    document.getElementById('marquee-input').value = '';
+                    fetchMarquee();
+                }
+            } catch (err) { tununjukkanToast("Gagal ngarobih pengumuman.", "error"); }
         }
 
-        // 3. MARIOS DAPTAR ANGGOTA (Tabel: pengguna_kebun)
+        // 3. DAFTAR ANGGOTA & LIHAT SANDI (BISA INTIP)
         async function fetchUsers() {
             try {
-                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengguna_kebun?select=id,nama_panggero&order=nama_panggero.asc`, { headers: authHeaders });
-                if (!res.ok) throw new Error();
+                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengguna_kebun?select=id,nama_panggero,sandi&order=nama_panggero.asc`, { headers: authHeaders });
                 const users = await res.json();
-
+                document.getElementById('user-count-badge').innerText = `${users.length} Anggota`;
+                
                 const tbody = document.getElementById('user-table-body');
                 tbody.innerHTML = '';
 
-                if (users.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="2" class="px-4 py-4 text-center text-stone-400">Teu acan aya anggota anu daptar.</td></tr>`;
-                    return;
-                }
-
-                users.forEach(user => {
+                users.forEach(u => {
                     const row = document.createElement('tr');
-                    row.className = 'hover:bg-stone-50 transition';
+                    row.className = 'hover:bg-stone-50/80 transition-colors group';
                     row.innerHTML = `
-                        <td class="px-4 py-3 text-stone-800 font-bold">${user.nama_panggero}</td>
-                        <td class="px-4 py-3">
-                            <button onclick="openPasswordModal('${user.id}', '${user.nama_panggero}')" class="text-emerald-600 hover:text-emerald-800 font-bold cursor-pointer">
-                                🔑 Ganti Sandi
+                        <td class="px-4 py-3.5 font-bold text-stone-800"><i class="fa-solid fa-user text-stone-300 mr-2 text-[10px]"></i>${u.nama_panggero}</td>
+                        <td class="px-4 py-3.5 font-semibold text-stone-600">
+                            <div class="flex items-center space-x-2">
+                                <input type="password" value="${u.sandi}" readonly id="pwd-${u.id}" class="bg-transparent border-none focus:outline-none w-24 p-0 text-xs tracking-wider">
+                                <button onclick="togglePasswordVisibility('${u.id}')" class="text-stone-400 hover:text-emerald-600 transition-colors"><i class="fa-solid fa-eye text-[11px]" id="eye-${u.id}"></i></button>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3.5 text-right">
+                            <button onclick="openPasswordModal('${u.id}', '${u.nama_panggero}')" class="bg-stone-100 hover:bg-emerald-50 text-stone-600 hover:text-emerald-700 px-3 py-1.5 rounded-xl font-bold transition-all text-[11px] btn-press">
+                                <i class="fa-solid fa-key text-[9px] mr-1"></i> Edit Sandi
                             </button>
                         </td>
                     `;
                     tbody.appendChild(row);
                 });
-            } catch (err) {
-                document.getElementById('user-table-body').innerHTML = `<tr><td colspan="2" class="px-4 py-4 text-center text-rose-500">Gagal ngamuat data anggota kebon.</td></tr>`;
+            } catch (e) { tbody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-rose-500">Gagal ngamuat data.</td></tr>'; }
+        }
+
+        function togglePasswordVisibility(id) {
+            const input = document.getElementById(`pwd-${id}`);
+            const icon = document.getElementById(`eye-${id}`);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.className = "fa-solid fa-eye-slash text-[11px]";
+            } else {
+                input.type = "password";
+                icon.className = "fa-solid fa-eye text-[11px]";
             }
         }
 
-        // 4. LOGIKA MODAL GANTI SANDI ANGGOTA
-        function openPasswordModal(id, nama) {
+        // 4. KELOLA CHAT NYI SARI & HAPUS PILIHAN CHAT
+        async function loadChatLogs() {
+            const logs = document.getElementById('adminChatLogs');
+            try {
+                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/farm_chat?select=id,sender,message,is_ai&order=id.desc`, { headers: authHeaders });
+                const chats = await res.json();
+                logs.innerHTML = '';
+
+                if(chats.length === 0) { logs.innerHTML = '<p class="text-stone-400 text-center py-4">Kosong.</p>'; return; }
+
+                chats.forEach(c => {
+                    const card = document.createElement('div');
+                    card.className = `p-3 rounded-2xl border text-[11px] relative group transition-all flex justify-between items-start ${c.is_ai ? 'bg-emerald-50/50 border-emerald-100' : 'bg-stone-50 border-stone-200/60'}`;
+                    card.innerHTML = `
+                        <div class="pr-6">
+                            <span class="font-extrabold block mb-0.5 ${c.is_ai ? 'text-emerald-800' : 'text-stone-800'}">${c.sender} ${c.is_ai ? '✨' : ''}</span>
+                            <p class="text-stone-600 font-medium leading-relaxed">${c.message}</p>
+                        </div>
+                        <button onclick="deleteChat(${c.id})" class="text-stone-400 hover:text-rose-600 font-bold transition-colors absolute top-3 right-3 btn-press" title="Hapus Chat">
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                    `;
+                    logs.appendChild(card);
+                });
+            } catch (e) { logs.innerHTML = '<p class="text-rose-500 text-center py-4">Gagal ngamuat obrolan.</p>'; }
+        }
+
+        async function deleteChat(id) {
+            if(!confirm("Ibu yakin hoyong ngahapus pesen ieu tina sajarah kebon?")) return;
+            try {
+                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/farm_chat?id=eq.${id}`, { method: 'DELETE', headers: authHeaders });
+                if(res.ok) { tununjukkanToast("Pesen parantos dihapus!", "success"); loadChatLogs(); }
+            } catch (e) { tununjukkanToast("Gagal ngahapus chat.", "error"); }
+        }
+
+        // 5. LOG RIWAYAT LOGIN (MASUK)
+        async function fetchLoginLogs() {
+            const tbody = document.getElementById('log-table-body');
+            try {
+                // Catatan: Pastikan tabel log_masuk_kebun sudah dibuat di Supabase Ibu
+                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/log_masuk_kebun?select=id,nama_penggero,kaping_masuk&order=id.desc&limit=15`, { headers: authHeaders });
+                if(!res.ok) throw new Error();
+                const logs = await res.json();
+                tbody.innerHTML = '';
+
+                if (logs.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="2" class="px-4 py-4 text-center text-stone-400">Teu acan aya riwayat lebet.</td></tr>';
+                    return;
+                }
+
+                logs.forEach(l => {
+                    const waktu = new Date(l.kaping_masuk).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + " WIB";
+                    const tgl = new Date(l.kaping_masuk).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                    
+                    const row = document.createElement('tr');
+                    row.className = "hover:bg-stone-50/50";
+                    row.innerHTML = `
+                        <td class="px-4 py-2 font-bold text-stone-700"><i class="fa-solid fa-right-to-bracket text-purple-400 mr-2 text-[10px]"></i>${l.nama_penggero}</td>
+                        <td class="px-4 py-2 text-right font-medium text-stone-400"><span class="bg-stone-100 text-stone-600 px-2 py-0.5 rounded text-[10px] mr-1.5">${tgl}</span>${waktu}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch(e) { tbody.innerHTML = '<tr><td colspan="2" class="text-center py-4 text-stone-400">Riwayat log otomatis sayaga saatos tabel log_masuk didamel.</td></tr>'; }
+        }
+
+        async function clearAllLoginLogs() {
+            if(!confirm("Hapus sadaya riwayat log lebet dinten ieu, Bu?")) return;
+            try {
+                await fetch(`${SUPABASE_BASE_URL}/rest/v1/log_masuk_kebun?id=gt.0`, { method: 'DELETE', headers: authHeaders });
+                tunjukkanToast("Sadaya log parantos beres dihapus!", "success");
+                fetchLoginLogs();
+            } catch (e) { tununjukkanToast("Gagal ngahapus log.", "error"); }
+        }
+
+        // 6. MODAL EDIT SANDI MANUAL
+        function openPasswordModal(id, name) {
             document.getElementById('modal-user-id').value = id;
-            document.getElementById('modal-username').innerText = nama;
+            document.getElementById('modal-username').innerText = name;
             document.getElementById('new-password').value = '';
             document.getElementById('password-modal').classList.remove('hidden');
         }
-
-        function closeModalPassword() {
-            document.getElementById('password-modal').classList.add('hidden');
-        }
-
-        async function submitNewPassword(event) {
-            event.preventDefault();
-            const userId = document.getElementById('modal-user-id').value;
-            const sandiBaru = document.getElementById('new-password').value;
-
+        function closePasswordModal() { document.getElementById('password-modal').classList.add('hidden'); }
+        async function submitNewPassword(e) {
+            e.preventDefault();
+            const id = document.getElementById('modal-user-id').value;
+            const text = document.getElementById('new-password').value;
             try {
-                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengguna_kebun?id=eq.${userId}`, {
-                    method: 'PATCH',
-                    headers: authHeaders,
-                    body: JSON.stringify({ sandi: sandiBaru })
+                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengguna_kebun?id=eq.${id}`, {
+                    method: 'PATCH', headers: authHeaders, body: JSON.stringify({ sandi: text })
                 });
-
-                if (!res.ok) throw new Error();
-
-                alert('Kecap sandi anggota parantos dirobih!');
-                closeModalPassword();
-            } catch (err) {
-                alert('Gagal ngarobih sandi: ' + err.message);
-            }
+                if(res.ok) { alert("Sandi anggota suksés dirobih!"); closePasswordModal(); fetchUsers(); }
+            } catch (err) { alert("Gagal."); }
         }
 
-        function closePasswordModal() {
-            document.getElementById('password-modal').classList.add('hidden');
+        // UTILITY TOAST
+        function tununjukkanToast(msg, type) { tununjukkanToast(msg, type); } // Alias
+        function tunjukkanToast(msg, tipe) {
+            const t = document.getElementById('toast'); const i = document.getElementById('toastIcon'); const m = document.getElementById('toastMessage');
+            if(m) m.innerText = msg;
+            if(i) i.innerHTML = tipe === 'success' ? '<i class="fa-solid fa-circle-check text-lime-400"></i>' : '<i class="fa-solid fa-circle-xmark text-rose-400"></i>';
+            if(t) { t.style.opacity = '1'; setTimeout(() => t.style.opacity = '0', 2500); }
         }
 
-        // 5. INISIALISASI DATA
+        // RUN AWAL
         window.onload = function() {
-            if (sessionStorage.getItem('admin_auth_kebun') === 'true') {
-                fetchMarquee();
-                fetchUsers();
-            }
+            fetchMarquee();
+            fetchUsers();
+            loadChatLogs();
+            fetchLoginLogs();
         };
     </script>
 </body>
