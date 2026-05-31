@@ -135,7 +135,7 @@
                     <div class="flex items-center space-x-2.5">
                         <div class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/10 shadow-inner shrink-0"><i class="fa-solid fa-leaf text-xl text-lime-300"></i></div>
                         <div>
-                            <h1 class="font-extrabold text-base tracking-tight leading-tight">Catatan Kebun Ibu</h1>
+                            <h1 class="font-extrabold text-base tracking-tight leading-tight">Catetan Kebon Ibu</h1>
                             <p id="headerSapaanIbu" class="text-[11px] text-emerald-100 font-medium">Wilujeng énjing!</p>
                             <!-- Wadah Lencana Kepemimpinan Teladan -->
                             <div id="headerBadges" class="flex flex-wrap gap-1 mt-1"></div>
@@ -147,7 +147,7 @@
                     </div>
                 </div>
 
-                <!-- TABS (Kalender Ditambahkan) -->
+                <!-- TABS -->
                 <div class="flex bg-emerald-900/40 backdrop-blur-md p-1 rounded-xl border border-emerald-500/10 text-xs overflow-x-auto hide-scrollbar">
                     <button onclick="switchTab('kebun')" id="tab-kebun" class="px-3 py-2.5 rounded-lg font-bold text-center bg-white text-emerald-900 shadow-sm shrink-0 transition-all flex items-center space-x-1"><i class="fa-solid fa-seedling"></i> <span>Tanaman</span></button>
                     <button onclick="switchTab('kalender')" id="tab-kalender" class="px-3 py-2.5 rounded-lg font-bold text-center text-emerald-100 hover:text-white shrink-0 transition-all flex items-center space-x-1"><i class="fa-regular fa-calendar-days"></i> <span>Kalénder</span></button>
@@ -220,7 +220,7 @@
             <div id="section-panen" class="hidden space-y-4 tab-section">
                 <div class="bg-gradient-to-r from-amber-400 to-orange-500 p-5 rounded-[2rem] text-white shadow-lg relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/4"></div>
-                    <div class="relative z-10 flex items-center space-x-3">
+                    <div class="relative z-10 flex items-center space-x-3 text-white">
                         <div class="text-4xl text-amber-100"><i class="fa-solid fa-basket-shopping"></i></div>
                         <div><h2 class="font-black text-lg">Galéri Panén Komunitas</h2><p class="text-[11px] font-medium text-amber-50">Pintonan hasil kebon ibu-ibu anu parantos suksés dipanén.</p></div>
                     </div>
@@ -234,7 +234,7 @@
                 <div class="bg-white p-4 rounded-3xl shadow-sm border border-stone-200/60">
                     <div class="flex items-center space-x-2.5 mb-3">
                         <div class="w-8 h-8 bg-blue-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-shower text-blue-500 text-sm"></i></div>
-                        <div><h2 class="font-bold text-xs text-stone-800">Daptar Pepelakan Kagungan Ibu</h2><p class="text-[10px] text-stone-400">Anu teu acan disiram dinten ieu</p></div>
+                        <div><h2 class="font-bold text-xs text-stone-800">Daptar Pepelakan Komunitas</h2><p class="text-[10px] text-stone-400">Mangga silih siramkeun tanaman saha waé anu teu acan disiram dinten ieu!</p></div>
                     </div>
                     <div id="wateringList" class="space-y-2 text-xs"></div>
                 </div>
@@ -254,19 +254,29 @@
             <!-- SEKSYEN AI -->
             <div id="section-ai" class="hidden space-y-4 tab-section">
                 <div class="flex space-x-2 bg-stone-200/60 p-1 rounded-xl text-xs">
-                    <button onclick="switchSubAi('chat')" id="btn-sub-chat" class="flex-1 py-2.5 rounded-lg font-bold text-center bg-white text-stone-800 shadow-sm transition-all">Ruang Obrolan Nyi Sari</button>
+                    <button onclick="switchTab('ai')" class="flex-1 py-2.5 rounded-lg font-bold text-center bg-white text-stone-800 shadow-sm transition-all">Ruang Obrolan Nyi Sari</button>
                     <button onclick="switchSubAi('doctor')" id="btn-sub-doctor" class="flex-1 py-2.5 rounded-lg font-bold text-center text-stone-600 transition-all">Parios Panyakit Daun</button>
                 </div>
                 <div id="ai-sub-chat" class="bg-white p-4 rounded-3xl shadow-sm border border-stone-200/60 space-y-3">
+                    
+                    <!-- PILIHAN MODE WALERAN (SINGKET VS DETAIL) -->
+                    <div class="flex items-center justify-between px-2 py-1.5 bg-stone-100 rounded-2xl text-[10px] font-bold text-stone-600">
+                        <span class="pl-1.5"><i class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i> Mode Waleran Nyi Sari:</span>
+                        <div class="flex space-x-1">
+                            <button type="button" onclick="setNyiSariStyle('sederhana')" id="style-sederhana" class="px-3 py-1 rounded-xl transition-all bg-emerald-600 text-white shadow-sm font-bold">Singket</button>
+                            <button type="button" onclick="setNyiSariStyle('rinci')" id="style-rinci" class="px-3 py-1 rounded-xl transition-all text-stone-500 hover:text-stone-800 font-semibold">Rinci &amp; Detail</button>
+                        </div>
+                    </div>
+
                     <div id="chatAiLogs" class="space-y-3 max-h-[300px] overflow-y-auto chat-scroll p-2 bg-stone-50 rounded-2xl border border-stone-100 text-xs flex flex-col"></div>
                     <div class="flex space-x-1.5">
                         <input type="text" id="chatAiInput" class="flex-1 bg-stone-50 border border-stone-300 rounded-xl px-3 py-2.5 text-xs focus:outline-emerald-600 focus:bg-white transition-all font-medium" placeholder="Tanya Nyi Sari..." onkeydown="if(event.key==='Enter')sendAiChat()">
-                        <button onclick="sendAiChat()" id="btnSendAiChat" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 rounded-xl shadow-md btn-press"><i class="fa-solid fa-paper-plane" id="aiChatIcon"></i><i class="fa-solid fa-circle-notch animate-spin hidden" id="aiChatLoading"></i></button>
+                        <button onclick="sendAiChat()" id="btnSendAiChat" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 rounded-xl shadow-md btn-press flex items-center justify-center"><i class="fa-solid fa-paper-plane" id="aiChatIcon"></i><i class="fa-solid fa-circle-notch animate-spin hidden" id="aiChatLoading"></i></button>
                     </div>
                 </div>
                 <div id="ai-sub-doctor" class="hidden bg-white p-4 rounded-3xl shadow-sm border border-stone-200/60 space-y-3 text-xs">
                     <div class="flex items-center space-x-2 bg-stone-50 p-2.5 rounded-xl border border-stone-200">
-                        <label class="cursor-pointer bg-white border border-stone-300 text-stone-700 px-3 py-2 rounded-lg font-bold shadow-sm transition-all hover:bg-stone-50"><input type="file" id="doctorImageFile" accept="image/*" capture="environment" class="hidden" onchange="previewDoctorImage(event)"><i class="fa-solid fa-camera text-rose-500 mr-1"></i> Pilih Foto Daun</label>
+                        <label class="cursor-pointer bg-white border border-stone-300 text-stone-700 px-3 py-2 rounded-lg font-bold shadow-sm transition-all hover:bg-stone-50"><input type="file" id="doctorImageFile" accept="image/*" class="hidden" onchange="previewDoctorImage(event)"><i class="fa-solid fa-camera text-rose-500 mr-1"></i> Pilih Foto Daun</label>
                         <span id="doctorImgLabel" class="text-[10px] text-stone-400 truncate max-w-[180px]">Teu acan aya foto</span>
                     </div>
                     <div class="flex items-center justify-center bg-stone-50 p-1.5 rounded-2xl border border-dashed border-stone-300 hidden" id="doctorImgContainer"><img id="doctorImgPreview" src="" class="max-h-40 rounded-xl object-contain"></div>
@@ -350,8 +360,22 @@
                 <div>
                     <label class="block font-bold text-stone-600 mb-1">Foto Pepelakan</label>
                     <div class="flex items-center space-x-2 bg-stone-50 p-2 rounded-xl border border-stone-200">
-                        <label class="cursor-pointer bg-white border border-stone-300 text-stone-700 px-2.5 py-1.5 rounded-lg font-bold text-[10px] hover:bg-stone-50"><input type="file" id="formImageFile" accept="image/*" capture="environment" class="hidden" onchange="previewFormImage(event)"><i class="fa-solid fa-camera"></i> Ambil Foto</label>
-                        <span id="formImgLabel" class="text-[10px] text-stone-400 truncate max-w-[180px]">Teu acan aya foto</span>
+                        <div class="flex flex-col sm:flex-row gap-2 w-full">
+                            <!-- Tombol Pilihan Foto dari Kamera -->
+                            <button type="button" onclick="triggerPhotoCapture('camera')" class="bg-white border border-stone-300 text-stone-700 px-3 py-1.5 rounded-lg font-bold text-[10px] hover:bg-stone-50 flex items-center justify-center space-x-1 btn-press shadow-sm">
+                                <i class="fa-solid fa-camera text-emerald-600"></i>
+                                <span>Ambil Kaméra</span>
+                            </button>
+                            <!-- Tombol Pilihan Foto dari Galeri -->
+                            <button type="button" onclick="triggerPhotoCapture('gallery')" class="bg-white border border-stone-300 text-stone-700 px-3 py-1.5 rounded-lg font-bold text-[10px] hover:bg-stone-50 flex items-center justify-center space-x-1 btn-press shadow-sm">
+                                <i class="fa-solid fa-images text-blue-500"></i>
+                                <span>Pilih ti Galéri</span>
+                            </button>
+                        </div>
+                        <!-- Inputs File Tersembunyi (Satu kamera, satu galeri biasa) -->
+                        <input type="file" id="formImageFileCamera" accept="image/*" capture="environment" class="hidden" onchange="previewFormImage(event)">
+                        <input type="file" id="formImageFileGallery" accept="image/*" class="hidden" onchange="previewFormImage(event)">
+                        <span id="formImgLabel" class="text-[10px] text-stone-400 truncate max-w-[140px] ml-auto">Teu acan aya foto</span>
                     </div>
                     <div class="flex items-center justify-center mt-2 bg-stone-50 p-1 rounded-xl border border-dashed border-stone-300 hidden" id="formImgPreviewContainer"><img id="formImgPreview" src="" class="max-h-24 object-contain"></div>
                 </div>
@@ -390,6 +414,67 @@
         </div>
     </div>
 
+    <!-- ================= MODAL: RACIK NUTRISI ORGANIK ================= -->
+    <div id="modalNutrisi" class="fixed inset-0 bg-stone-900/60 modal-backdrop flex items-center justify-center p-4 z-50 hidden opacity-0 transition-all duration-200">
+        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-xl border border-stone-200 flex flex-col max-h-[90vh]">
+            <div class="px-4 py-3 bg-emerald-800 text-white flex items-center justify-between text-xs">
+                <h3 class="font-bold flex items-center space-x-1.5"><i class="fa-solid fa-flask-vial"></i> <span>Racik Nutrisi Organik Anyar</span></h3>
+                <button onclick="closeModalNutrisi()" class="hover:text-lime-300 transition-colors"><i class="fa-solid fa-xmark text-sm"></i></button>
+            </div>
+            <div class="p-4 overflow-y-auto space-y-3.5 text-xs">
+                <div>
+                    <label class="block font-bold text-stone-600 mb-1">Nami Pepelakan *</label>
+                    <input type="text" id="nutrisiInputTanaman" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2.5 text-xs focus:outline-emerald-600 focus:bg-white font-medium" placeholder="Contoh: Sawi Putih">
+                </div>
+                <div>
+                    <label class="block font-bold text-stone-600 mb-1">Kategori Tanam</label>
+                    <select id="nutrisiInputKategori" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-2 py-2 focus:outline-emerald-600">
+                        <option value="Sayuran Daun">Sayuran Daun</option>
+                        <option value="Sayuran Buah">Sayuran Buah</option>
+                        <option value="Buah Pohon">Buah &amp; Tangkal</option>
+                        <option value="Hias / Bunga">Kembang / Hias</option>
+                    </select>
+                </div>
+                <button onclick="generasiPreviewNutrisi()" id="btnGeneratePreview" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl flex items-center justify-center space-x-1.5 btn-press shadow-sm text-xs">
+                    <i class="fa-solid fa-wand-magic-sparkles animate-pulse" id="previewAiIcon"></i>
+                    <i class="fa-solid fa-circle-notch animate-spin hidden" id="previewAiLoading"></i>
+                    <span>Tanya Nyi Sari Resepna</span>
+                </button>
+
+                <!-- Section Preview Hasil Racikan AI -->
+                <div id="nutrisiPreviewSection" class="hidden bg-emerald-50/50 border border-emerald-100 p-3 rounded-2xl space-y-2">
+                    <h4 class="font-extrabold text-[11px] text-emerald-800 border-b border-emerald-100 pb-1 flex items-center space-x-1">
+                        <i class="fa-solid fa-clipboard-check"></i> <span>Rekomendasi Nyi Sari:</span>
+                    </h4>
+                    <div>
+                        <label class="block font-bold text-stone-500 text-[9px] mb-0.5 uppercase">Nami Nutrisi</label>
+                        <input type="text" id="nutrisiPreviewName" class="w-full bg-white border border-stone-200 rounded-lg px-2 py-1.5 font-bold text-stone-800" readonly>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-stone-500 text-[9px] mb-0.5 uppercase">Mangpaat</label>
+                        <textarea id="nutrisiPreviewBenefit" rows="2" class="w-full bg-white border border-stone-200 rounded-lg px-2 py-1 font-medium text-stone-600 resize-none text-xs leading-relaxed" readonly></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block font-bold text-stone-500 text-[9px] mb-0.5 uppercase">Jadwal Aplikasi</label>
+                            <input type="text" id="nutrisiPreviewSchedule" class="w-full bg-white border border-stone-200 rounded-lg px-2 py-1.5 font-semibold text-stone-700" readonly>
+                        </div>
+                        <div>
+                            <label class="block font-bold text-stone-500 text-[9px] mb-0.5 uppercase">Takaran</label>
+                            <input type="text" id="nutrisiPreviewDosage" class="w-full bg-white border border-stone-200 rounded-lg px-2 py-1.5 font-semibold text-stone-700" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="px-4 py-3 bg-stone-50 border-t border-stone-200 flex space-x-2">
+                <button onclick="closeModalNutrisi()" class="flex-1 py-2 rounded-xl border border-stone-300 font-bold text-stone-600 hover:bg-stone-100 btn-press">Batal</button>
+                <button id="btnSimpanNutrisi" onclick="simpanNutrisiKeDb()" class="flex-1 py-2 rounded-xl bg-emerald-600 text-white font-bold flex items-center justify-center space-x-1 hover:bg-emerald-700 btn-press" disabled>
+                    <i class="fa-solid fa-plus"></i> <span>Tambihkeun</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- TOAST ALERT -->
     <div id="toast" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-stone-900 text-white text-[11px] px-3.5 py-2 rounded-full shadow-xl opacity-0 pointer-events-none transition-all duration-300 flex items-center space-x-1.5 z-[70]">
         <span id="toastIcon"></span> <span id="toastMessage">Sistem Parantos Sayaga</span>
@@ -402,7 +487,22 @@
 
         const OBFUSCATED_KEY_1 = [65, 81, 46, 65, 98, 56, 82, 78, 54, 76, 72, 81, 89, 65, 80, 52, 87, 88, 121, 117, 53, 121, 72, 55, 104, 95, 68, 112, 106, 79, 98, 112, 69, 77, 51, 55, 102, 85, 81, 115, 111, 48, 110, 69, 86, 65, 67, 70, 95, 122, 48, 70, 119];
         const OBFUSCATED_KEY_2 = [65, 81, 46, 65, 98, 56, 82, 78, 54, 76, 121, 56, 80, 83, 81, 87, 121, 122, 111, 104, 81, 118, 106, 87, 111, 108, 82, 122, 108, 51, 74, 89, 52, 87, 85, 68, 78, 119, 51, 51, 52, 79, 80, 73, 115, 85, 80, 67, 100, 104, 98, 112, 81];
-        const NYI_SARI_PERSONA = `Anjeun Nyi Sari, asisten kebun Sunda lemes. Waleran kedah singket pisan (2-3 kalimat).`;
+        
+        let nyiSariStyle = 'sederhana'; // Default mode waleran singket
+
+        // PERSONA NYI SARI ADAPTIF & LUWES
+        function dapatkanNyiSariPersona() {
+            let basePersona = `Anjeun nyaéta Nyi Sari, asisten kebun komunitas anu bageur, haneut, sareng calakan ti tatanén Sunda. 
+            Salawasna ngagunakeun Basa Sunda lemes (Sunda lemes/sopan) anu merenah tur pinuh ku kanyaah sapertos ka kulawarga sorangan.
+            Anjeun kedah mikawanoh jalma anu nuju ngobrol dumasar nami dina sajarah obrolan (contona: "Ibu Tati", "Teh Yani"). Upami ditaros saha nami anjeun, waler yén anjeun "Nyi Sari".`;
+            
+            if (nyiSariStyle === 'sederhana') {
+                basePersona += `\nMode waleran anjeun ayeuna nyaéta: SINGKET & SEDERHANA. Waler sacara haneut, ramah, tur singket (cukup 2-3 kalimah waé, ulah panjang-panjang).`;
+            } else {
+                basePersona += `\nMode waleran anjeun ayeuna nyaéta: JÉNTRE, RINCI, TUR DETAIL. Waler kalayan lengkep, panjang lebar, tur detail, paké struktur poin-poin atanapi paragraf anu rapih supados gampil kahartos ku Ibu-ibu kebon perkawis cara melak, pupuk, hama, atanapi patarosan sanésna.`;
+            }
+            return basePersona;
+        }
 
         let allPlants = []; let filteredPlants = []; let nutritionData = [];
         let currentTab = 'kebun'; let currentFilterStatus = 'Semua';
@@ -428,6 +528,61 @@
             isLargeText = !isLargeText; const body = document.getElementById('bodyApp'); const label = document.getElementById('textScaleLabel');
             if (isLargeText) { if(body) body.style.fontSize = "15px"; if(label) label.innerText = "Huruf Normal"; } 
             else { if(body) body.style.fontSize = ""; if(label) label.innerText = "Huruf Besar"; }
+        }
+
+        // --- GEMINI KEY HELPER FUNCTIONS ---
+        function dapatkanKunciPaten(index) {
+            return (index === 1 ? OBFUSCATED_KEY_1 : OBFUSCATED_KEY_2).map(c => String.fromCharCode(c)).join('');
+        }
+        function inisialisasiKunciDefaultLokal() {
+            if (!localStorage.getItem('ibu_kebun_gemini_key1')) localStorage.setItem('ibu_kebun_gemini_key1', dapatkanKunciPaten(1));
+            if (!localStorage.getItem('ibu_kebun_gemini_key2')) localStorage.setItem('ibu_kebun_gemini_key2', dapatkanKunciPaten(2));
+        }
+        function dapatkanApiKeyGemini() {
+            const key1 = localStorage.getItem('ibu_kebun_gemini_key1');
+            const key2 = localStorage.getItem('ibu_kebun_gemini_key2');
+            const keys = [key1, key2].filter(k => k && k.trim() !== "");
+            if (keys.length === 0) return "";
+            let idx = parseInt(localStorage.getItem('current_gemini_index') || "0", 10);
+            if (idx >= keys.length) idx = 0;
+            return keys[idx];
+        }
+        function rotasiApiKeyGemini() {
+            const key1 = localStorage.getItem('ibu_kebun_gemini_key1');
+            const key2 = localStorage.getItem('ibu_kebun_gemini_key2');
+            const keys = [key1, key2].filter(k => k && k.trim() !== "");
+            if (keys.length <= 1) return false;
+            let idx = parseInt(localStorage.getItem('current_gemini_index') || "0", 10);
+            localStorage.setItem('current_gemini_index', ((idx + 1) % keys.length).toString());
+            return true;
+        }
+
+        // PANGGIL GEMINI API (DILERESKEUN)
+        async function panggilGeminiAPI(prompt, systemPrompt = "", fileData = null, jsonSchemaConfig = null) {
+            let retries = 3; let attempt = 0; const models = ["gemini-2.5-flash-preview-09-2025", "gemini-2.5-flash", "gemini-1.5-flash"];
+            while (attempt < retries) {
+                const gKey = dapatkanApiKeyGemini();
+                for (let model of models) {
+                    try {
+                        let payload; let endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${gKey}`;
+                        if (fileData) {
+                            payload = { contents: [{ role: "user", parts: [{ text: prompt }, { inlineData: { mimeType: fileData.mimeType, data: fileData.base64 } }]}]};
+                        } else if (Array.isArray(prompt)) {
+                            payload = { contents: prompt };
+                        } else {
+                            payload = { contents: [{ parts: [{ text: prompt }] }] };
+                        }
+                        
+                        if (systemPrompt) payload.systemInstruction = { parts: [{ text: systemPrompt }] };
+                        if (jsonSchemaConfig) payload.generationConfig = { responseMimeType: "application/json", responseSchema: jsonSchemaConfig };
+                        
+                        const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                        if (res.status === 429 || res.status === 400 || res.status === 403) { if (model === models[models.length - 1]) { rotasiApiKeyGemini(); attempt++; break; } continue; }
+                        if (!res.ok) throw new Error();
+                        const json = await res.json(); return json.candidates?.[0]?.content?.parts?.[0]?.text || "Hapunten Nyi Sari gagal ngawaler.";
+                    } catch (error) { if (model === models[models.length - 1]) { rotasiApiKeyGemini(); attempt++; } }
+                }
+            } throw new Error("Sambungan kaganggu.");
         }
 
         // --- AUTH ADMIN ---
@@ -477,10 +632,11 @@
                 const checkData = await checkRes.json();
                 if (checkData.length > 0) throw new Error("Nami ieu parantos dianggo ku ibu sanés.");
                 
-                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengguna_kebun`, { method: 'POST', headers: { ...authHeaders, 'Prefer': 'return=representation' }, body: JSON.stringify({ nama_panggero: name, sandi: password }) });
+                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengguna_kebun`, { method: 'POST', headers: { ...authHeaders, 'Prefer': 'return=representation' }, body: JSON.stringify({ nama_panggero: name, sandi: password, peran: 'Anggota' }) });
                 if (!res.ok) { const errInfo = await res.json().catch(()=>({})); throw new Error(errInfo.message || "Gagal ngadamel akun kana server."); }
                 
                 localStorage.setItem('ibu_kebun_user', name); 
+                localStorage.setItem('ibu_kebun_role', 'Anggota');
                 
                 try {
                     await fetch(`${SUPABASE_BASE_URL}/rest/v1/log_masuk_kebun`, {
@@ -507,6 +663,7 @@
                 if (data.length === 0) throw new Error("Nami atanapi sandi anu dilebetkeun lepat.");
                 
                 localStorage.setItem('ibu_kebun_user', name); 
+                localStorage.setItem('ibu_kebun_role', data[0].peran || 'Anggota');
 
                 try {
                     await fetch(`${SUPABASE_BASE_URL}/rest/v1/log_masuk_kebun`, {
@@ -521,7 +678,12 @@
             finally { if(btn) btn.disabled = false; if(btnText) btnText.innerText = "Lebet ka Aplikasi"; }
         }
 
-        function doLogout() { localStorage.removeItem('ibu_kebun_user'); currentUser = null; location.reload(); }
+        function doLogout() { 
+            localStorage.removeItem('ibu_kebun_user'); 
+            localStorage.removeItem('ibu_kebun_role');
+            currentUser = null; 
+            location.reload(); 
+        }
 
         // --- PENGUMUMAN ADMIN ---
         async function loadPengumuman() {
@@ -535,74 +697,6 @@
             } catch(e) { console.log("Henteu aya pengumuman."); }
         }
 
-        // --- GEMINI API ---
-        function dapatkanKunciPaten(index) { return (index === 1 ? OBFUSCATED_KEY_1 : OBFUSCATED_KEY_2).map(c => String.fromCharCode(c)).join(''); }
-        function inisialisasiKunciDefaultLokal() {
-            if (!localStorage.getItem('ibu_kebun_gemini_key1')) localStorage.setItem('ibu_kebun_gemini_key1', dapatkanKunciPaten(1));
-            if (!localStorage.getItem('ibu_kebun_gemini_key2')) localStorage.setItem('ibu_kebun_gemini_key2', dapatkanKunciPaten(2));
-        }
-        function dapatkanApiKeyGemini() {
-            const key1 = localStorage.getItem('ibu_kebun_gemini_key1'); const key2 = localStorage.getItem('ibu_kebun_gemini_key2');
-            const keys = [key1, key2].filter(k => k && k.trim() !== ""); if (keys.length === 0) return "";
-            let idx = parseInt(localStorage.getItem('current_gemini_index') || "0", 10); if (idx >= keys.length) idx = 0; return keys[idx];
-        }
-        function rotasiApiKeyGemini() {
-            const key1 = localStorage.getItem('ibu_kebun_gemini_key1'); const key2 = localStorage.getItem('ibu_kebun_gemini_key2');
-            const keys = [key1, key2].filter(k => k && k.trim() !== ""); if (keys.length <= 1) return false;
-            let idx = parseInt(localStorage.getItem('current_gemini_index') || "0", 10);
-            localStorage.setItem('current_gemini_index', ((idx + 1) % keys.length).toString()); return true;
-        }
-
-        async function panggilGeminiAPI(prompt, systemPrompt = "", fileData = null, jsonSchemaConfig = null) {
-            let retries = 3; let attempt = 0; const models = ["gemini-2.5-flash-preview-09-2025", "gemini-2.5-flash", "gemini-1.5-flash"];
-            while (attempt < retries) {
-                const gKey = dapatkanApiKeyGemini();
-                for (let model of models) {
-                    try {
-                        let payload; let endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${gKey}`;
-                        if (fileData) payload = { contents: [{ role: "user", parts: [{ text: prompt }, { inlineData: { mimeType: fileData.mimeType, data: fileData.base64 } }]}]};
-                        else { payload = { contents: [{ parts: [{ text: prompt }] }] }; if (systemPrompt) payload.systemInstruction = { parts: [{ text: systemPrompt }] }; }
-                        if (jsonSchemaConfig) payload.generationConfig = { responseMimeType: "application/json", responseSchema: jsonSchemaConfig };
-                        const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                        if (res.status === 429 || res.status === 400 || res.status === 403) { if (model === models[models.length - 1]) { rotasiApiKeyGemini(); attempt++; break; } continue; }
-                        if (!res.ok) throw new Error();
-                        const json = await res.json(); return json.candidates?.[0]?.content?.parts?.[0]?.text || "Hapunten Nyi Sari gagal ngawaler.";
-                    } catch (error) { if (model === models[models.length - 1]) { rotasiApiKeyGemini(); attempt++; } }
-                }
-            } throw new Error("Sambungan kaganggu.");
-        }
-
-        // TANGGAL UTILITY
-        function nambihDinten(tglMimit, dinten) {
-            let res = new Date(tglMimit);
-            res.setDate(res.getDate() + parseInt(dinten));
-            return res.toISOString().split('T')[0];
-        }
-
-        function startJamSapaan() {
-            const update = () => {
-                const now = new Date(); const dJam = document.getElementById('headerJamDigital');
-                if(dJam) dJam.innerText = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + " WIB";
-                const jam = now.getHours(); const userName = currentUser || "Ibu"; let sapaan = `Wilujeng énjing, ${userName}!`;
-                if (jam >= 11 && jam < 15) sapaan = `Wilujeng siang, ${userName}! Mangga parios pot.`; else if (jam >= 15 && jam < 19) sapaan = `Wilujeng sonten, ${userName}! Waktosna nyiram.`; else if (jam >= 19 || jam < 4) sapaan = `Wilujeng wengi, ${userName}!`;
-                const dSapaan = document.getElementById('headerSapaanIbu'); if(dSapaan) dSapaan.innerText = sapaan;
-            }; update(); setInterval(update, 1000);
-        }
-
-        // --- SISTEM BAGIKAN KE WHATSAPP ---
-        function bagikanKeWA(tipe, namaItem, detail = "") {
-            let teks = "";
-            if (tipe === 'panen') {
-                teks = `Alhamdulillah! Dinten ieu abdi parantos suksés panén ${namaItem} di kebon mandiri Catetan Kebon Ibu. Hayu urang melak ogé! 🌿🥬`;
-            } else if (tipe === 'tanam') {
-                teks = `Wilujeng! Abdi nembé melak bibit ${namaItem} di kebon mandiri Catetan Kebon Ibu. Mugia tiasa tumbuh subur sareng héjo! 🌱🏡`;
-            } else if (tipe === 'nutrisi') {
-                teks = `Ibu-ibu, mangga tingali resep nutrisi organik "${namaItem}" kanggo ${detail}. Alus pisan kanggo pepelakan urang supados subur! 🧪🌿`;
-            }
-            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(teks)}`;
-            window.open(waUrl, '_blank');
-        }
-
         // --- SISTEM LENCANA APRESIASI ---
         function updateLencanaIbu() {
             const badgeContainer = document.getElementById('headerBadges');
@@ -611,6 +705,7 @@
             let hasWateredToday = false;
             let hasHarvested = false;
             let myPlantsCount = 0;
+            const userRole = localStorage.getItem('ibu_kebun_role') || 'Anggota';
 
             allPlants.forEach(p => {
                 if (p.pemilik === currentUser) {
@@ -624,6 +719,12 @@
 
             let badgesHTML = "";
 
+            if (userRole === 'Admin') {
+                badgesHTML += `<span class="bg-purple-600 border border-purple-400 text-white font-extrabold text-[9px] px-2.5 py-0.5 rounded-full flex items-center space-x-1" title="Peran: Admin Utama"><i class="fa-solid fa-user-shield text-[8px]"></i> <span>Admin Utama</span></span>`;
+            } else if (userRole === 'Ketua') {
+                badgesHTML += `<span class="bg-rose-600 border border-rose-400 text-white font-extrabold text-[9px] px-2.5 py-0.5 rounded-full flex items-center space-x-1" title="Peran: Ketua Komunitas"><i class="fa-solid fa-crown text-[8px]"></i> <span>Ketua Kebun</span></span>`;
+            }
+
             if (hasWateredToday) {
                 badgesHTML += `<span class="bg-blue-500/25 border border-blue-400 text-blue-100 font-extrabold text-[9px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu rajin nyiram pepelakan dinten ieu"><i class="fa-solid fa-shower text-[8px]"></i> <span>Penyiram Setia</span></span>`;
             }
@@ -635,6 +736,32 @@
             }
 
             badgeContainer.innerHTML = badgesHTML;
+        }
+
+        // --- DYNAMIC DRAFT TUNAS GRAPHIC SVG ---
+        function dapatkanTunasGraphicSVG(category) {
+            const leafSprout = `<svg class="w-full h-full object-contain p-4 bg-emerald-50 text-emerald-600" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32 60V32M32 32C32 20 20 18 16 22C12 26 16 38 32 32ZM32 32C32 20 44 18 48 22C52 26 48 38 32 32Z" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="#a7f3d0"/>
+                <circle cx="32" cy="18" r="3" fill="#34d399"/>
+            </svg>`;
+            const fruitSprout = `<svg class="w-full h-full object-contain p-4 bg-amber-50 text-amber-600" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32 60V34M32 34C32 22 22 20 18 24C14 28 18 40 32 34ZM32 34C32 22 42 20 46 24C50 28 46 40 32 34Z" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="#fde68a"/>
+                <circle cx="48" cy="40" r="6" fill="#f87171" stroke="currentColor" stroke-width="2"/>
+            </svg>`;
+            const treeSprout = `<svg class="w-full h-full object-contain p-4 bg-lime-50 text-lime-700" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32 60V24M32 28L20 20M32 36L44 28" stroke="#78350f" stroke-width="4" stroke-linecap="round"/>
+                <path d="M32 10C24 10 20 16 20 22C20 28 28 32 32 32C36 32 44 28 44 22C44 16 40 10 32 10Z" fill="#84cc16" stroke="currentColor" stroke-width="3"/>
+            </svg>`;
+            const flowerSprout = `<svg class="w-full h-full object-contain p-4 bg-rose-50 text-rose-600" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32 60V32" stroke="currentColor" stroke-width="4"/>
+                <circle cx="32" cy="22" r="8" fill="#fda4af" stroke="currentColor" stroke-width="3"/>
+                <circle cx="32" cy="22" r="3" fill="#facc15"/>
+            </svg>`;
+
+            if (category === "Sayuran Buah") return fruitSprout;
+            if (category === "Buah Pohon") return treeSprout;
+            if (category === "Hias / Bunga") return flowerSprout;
+            return leafSprout;
         }
 
         // --- ALARM CUACA EKSTREM & METEO ---
@@ -653,7 +780,6 @@
                     if(hamaBadge) hamaBadge.className = hum > 80 ? "bg-rose-100/80 border border-rose-300/60 text-rose-800 px-2.5 py-1 rounded-xl text-[10px] font-bold flex items-center space-x-1" : "bg-green-100/80 border border-green-300/60 text-green-800 px-2.5 py-1 rounded-xl text-[10px] font-bold flex items-center space-x-1";
                     if(hamaStatus) hamaStatus.innerText = hum > 80 ? "Hama: WASPADA" : "Hama: Aman";
                     
-                    // Deteksi Ikon & Teks Cuaca
                     let ikHTML = '<i class="fa-solid fa-cloud-sun text-amber-300 animate-pulse"></i>';
                     let desc = "Cerah Berawan";
                     if (code >= 51) {
@@ -666,12 +792,11 @@
                     if(ikonDiv) ikonDiv.innerHTML = ikHTML; 
                     if(deskripsiText) deskripsiText.innerText = `Cuaca Dinten Ieu: ${desc}`; 
                     
-                    // ALARM PENYELAMAT TANAMAN NYI SARI
                     let saranHTML = "";
                     if (temp > 32) {
                         saranHTML += `<div class="bg-amber-500/20 text-yellow-100 p-2.5 rounded-xl mb-2 font-bold flex items-start space-x-1.5 border border-amber-500/30 text-xs shadow-inner animate-pulse">⚠️ <span>Ibu, dinten ieu katingalina bakal panas pisan (${temp}°C). Teu kenging hilap nyiram tanaman dua kali dinten ieu supados teu layu nya! ☀️</span></div>`;
                     } else if (code >= 51) {
-                        saranHTML += `<div class="bg-rose-500/20 text-rose-100 p-2.5 rounded-xl mb-2 font-bold flex items-start space-x-1.5 border border-rose-500/30 text-xs shadow-inner animate-pulse">⛈️ <span>Ibu, dinten ieu katingalina bade aya hujan ageung atanapi barat. Mangga amankeun pot-pot alit atanapi bibit semai bilih palid!</span></div>`;
+                        saranHTML += `<div class="bg-rose-500/20 text-rose-100 p-2.5 rounded-xl mb-2 font-bold flex items-start space-x-1.5 border border-rose-500/30 text-xs shadow-inner animate-pulse">⛈️ <span>Ibu, dinten ieu katingalina bade aya hujan ageung atanapi barat. Mangga amankeun pot-pot alit bilih palid!</span></div>`;
                     }
                     
                     saranHTML += `Hawa nuju éndah tur iuh. Waktosna anu saé kanggo ngarawat kebon.`;
@@ -723,7 +848,7 @@
                 
                 filterPlants(currentFilterStatus);
                 renderKalender();
-                updateLencanaIbu(); // Segarkan lencana apresiasi ibu kebun
+                updateLencanaIbu(); 
             } catch (e) { if(loadingDiv) loadingDiv.classList.add('hidden'); }
         }
 
@@ -748,14 +873,17 @@
         function renderPlantCards() {
             const grid = document.getElementById('plantGrid'); if(!grid) return;
             if (filteredPlants.length === 0) { const empty = document.getElementById('plantEmpty'); if(empty) empty.classList.remove('hidden'); grid.innerHTML = ''; return; }
-            const empty = document.getElementById('plantEmpty'); if(empty) empty.classList.add('hidden');
+            const empty = document.getElementById('plantEmpty'); if(empty) empty.引导ClassList = "hidden";
             let html = '';
             filteredPlants.forEach(plant => {
+                const userRole = localStorage.getItem('ibu_kebun_role') || 'Anggota';
                 const isOwner = plant.pemilik === currentUser;
+                const isKetuaAtauAdmin = userRole === 'Ketua' || userRole === 'Admin';
+                const canManage = isOwner || isKetuaAtauAdmin;
+
                 const sowing = new Date(plant.sowing_date); const hss = Math.floor((new Date() - sowing) / (1000 * 3600 * 24));
                 let cat = plant.category || "Sayuran Daun"; let notesClean = plant.notes || "";
                 
-                // Gunakan tanggal panen khusus dari database jika ada, jika tidak pakai standar
                 let targetPanenHari = cat === 'Sayuran Buah' ? 80 : (cat === 'Buah Pohon' ? 180 : (cat === 'Hias / Bunga' ? 60 : 30));
                 let sisaHari = targetPanenHari - hss;
                 let persenProgress = Math.min(100, Math.max(5, Math.round((hss / targetPanenHari) * 100)));
@@ -773,14 +901,27 @@
                 
                 let siramText = '<span class="text-stone-400 font-bold text-[10px]">Teu acan disiram</span>';
                 if (plant.last_watered && new Date(plant.last_watered).toDateString() === new Date().toDateString()) siramText = `<span class="text-emerald-600 font-bold text-[10px]"><i class="fa-solid fa-droplet"></i> Disiram ${new Date(plant.last_watered).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</span>`;
-                const imgCadangan = "https://images.unsplash.com/photo-1530652101053-8c0db4fbb5de?auto=format&fit=crop&w=350&q=80";
+                
+                let imageContainerHTML = "";
+                if (plant.image_url) {
+                    imageContainerHTML = `<img src="${plant.image_url}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy">`;
+                } else {
+                    imageContainerHTML = dapatkanTunasGraphicSVG(cat);
+                }
                 
                 let actionButtons = `<button onclick="openModalDetail(${plant.id})" class="bg-stone-200 text-stone-700 font-bold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-stone-300 btn-press">Detail</button>`;
+                
                 if (isOwner) {
-                    actionButtons = `<button onclick="bagikanKeWA('tanam', '${plant.plant_name}')" class="bg-emerald-50 text-emerald-600 font-extrabold px-2 py-1.5 rounded-xl text-[10.5px] hover:bg-emerald-100 btn-press" title="Bagikeun ka WA"><i class="fa-brands fa-whatsapp text-xs"></i></button><button onclick="quickWater(${plant.id})" class="bg-emerald-50 text-emerald-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-emerald-100 btn-press"><i class="fa-solid fa-shower"></i></button><button onclick="openModalEdit(${plant.id})" class="bg-amber-50 text-amber-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-amber-100 btn-press"><i class="fa-solid fa-pen-to-square"></i></button>${actionButtons}`;
+                    actionButtons = `<button onclick="bagikanKeWA('tanam', '${plant.plant_name}')" class="bg-emerald-50 text-emerald-600 font-extrabold px-2 py-1.5 rounded-xl text-[10.5px] hover:bg-emerald-100 btn-press" title="Bagikeun ka WA"><i class="fa-brands fa-whatsapp text-xs"></i></button>${actionButtons}`;
                 }
 
-                html += `<div class="plant-card bg-white rounded-[2rem] shadow-sm border border-stone-200/60 overflow-hidden flex flex-col justify-between"><div><div class="relative h-36 bg-stone-100 w-full overflow-hidden"><img src="${plant.image_url || imgCadangan}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onerror="this.src='${imgCadangan}'" loading="lazy"><span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${colorBadge} backdrop-blur-sm">${statusIndo}</span><span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-white/80 text-stone-700 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-user mr-1 text-emerald-600"></i>${plant.pemilik || 'Anonim'}</span></div><div class="p-4 space-y-2.5"><div><h4 class="font-extrabold text-stone-800 text-xs leading-tight">${plant.plant_name}</h4><p class="text-[10px] text-emerald-700 font-extrabold mt-0.5"><i class="fa-solid fa-hourglass-half text-[9px]"></i> Umur: ${hss >= 0 ? hss : 0} Dinten</p></div><div class="space-y-1 bg-stone-50 p-2 rounded-xl border border-stone-100 text-[10px]"><div class="flex justify-between items-center text-stone-500"><span>Kamekaran</span><span>${teksEstimasi}</span></div><div class="w-full bg-stone-200 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-emerald-500 to-lime-400 h-full rounded-full progress-fill" style="width: ${persenProgress}%"></div></div></div><p class="text-[10px] text-stone-500 line-clamp-1 italic">Tips: ${notesClean || '-'}</p></div></div><div class="bg-stone-50/70 px-4 py-2.5 border-t border-stone-100 flex items-center justify-between text-[11px]">${siramText}<div class="flex space-x-1">${actionButtons}</div></div></div>`;
+                actionButtons = `<button onclick="quickWater(${plant.id})" class="bg-blue-50 text-blue-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-blue-100 btn-press" title="Silih Siramkeun"><i class="fa-solid fa-shower"></i></button>${actionButtons}`;
+
+                if (canManage) {
+                    actionButtons = `<button onclick="openModalEdit(${plant.id})" class="bg-amber-50 text-amber-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-amber-100 btn-press" title="Kemas kini"><i class="fa-solid fa-pen-to-square"></i></button>${actionButtons}`;
+                }
+
+                html += `<div class="plant-card bg-white rounded-[2rem] shadow-sm border border-stone-200/60 overflow-hidden flex flex-col justify-between"><div><div class="relative h-36 bg-stone-100 w-full overflow-hidden">${imageContainerHTML}<span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${colorBadge} backdrop-blur-sm">${statusIndo}</span><span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-white/80 text-stone-700 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-user mr-1 text-emerald-600"></i>${plant.pemilik || 'Anonim'}</span></div><div class="p-4 space-y-2.5"><div><h4 class="font-extrabold text-stone-800 text-xs leading-tight">${plant.plant_name}</h4><p class="text-[10px] text-emerald-700 font-extrabold mt-0.5"><i class="fa-solid fa-hourglass-half text-[9px]"></i> Umur: ${hss >= 0 ? hss : 0} Dinten</p></div><div class="space-y-1 bg-stone-50 p-2 rounded-xl border border-stone-100 text-[10px]"><div class="flex justify-between items-center text-stone-500"><span>Kamekaran</span><span>${teksEstimasi}</span></div><div class="w-full bg-stone-200 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-emerald-500 to-lime-400 h-full rounded-full progress-fill" style="width: ${persenProgress}%"></div></div></div><p class="text-[10px] text-stone-500 line-clamp-1 italic">Tips: ${notesClean || '-'}</p></div></div><div class="bg-stone-50/70 px-4 py-2.5 border-t border-stone-100 flex items-center justify-between text-[11px]">${siramText}<div class="flex space-x-1">${actionButtons}</div></div></div>`;
             });
             grid.innerHTML = html;
         }
@@ -795,13 +936,10 @@
             today.setHours(0,0,0,0);
 
             allPlants.forEach(p => {
-                // Tambihkeun Riwayat Awal Tani kanggo sadaya pepelakan
                 if(p.sowing_date) {
                     let d = new Date(p.sowing_date);
                     events.push({ plant: p, date: d, title: 'Awal Tani / Melak', icon: 'fa-seedling', color: 'text-emerald-600', bg: 'bg-emerald-100', isPast: d < today });
                 }
-
-                // Tambihkeun jadwal kapayun upami statusna relevan
                 if(p.status === 'Panen' || p.status === 'Gagal') return;
                 
                 if(p.est_tumbuh_date && p.status === 'Semai') {
@@ -878,10 +1016,10 @@
 
         function renderWateringList() {
             const listDiv = document.getElementById('wateringList'); if(!listDiv) return;
-            let targets = allPlants.filter(p => p.pemilik === currentUser && p.status !== 'Panen' && (!p.last_watered || new Date(p.last_watered).toDateString() !== new Date().toDateString()));
-            if (targets.length === 0) return listDiv.innerHTML = '<div class="text-center py-4 text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> Alhamdulillah! Sadaya pepelakan Ibu parantos beres disiram dinten ieu.</div>';
+            let targets = allPlants.filter(p => p.status !== 'Panen' && (!p.last_watered || new Date(p.last_watered).toDateString() !== new Date().toDateString()));
+            if (targets.length === 0) return listDiv.innerHTML = '<div class="text-center py-4 text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> Alhamdulillah! Sadaya pepelakan komunitas parantos beres disiram dinten ieu.</div>';
             let html = '';
-            targets.forEach(p => { html += `<div class="flex items-center justify-between p-2.5 bg-stone-50 rounded-xl border border-stone-100"><div class="pr-2"><h5 class="font-bold text-stone-800 leading-tight">${p.plant_name}</h5><p class="text-[10px] text-stone-400">Wadah: ${p.planting_medium || '-'}</p></div><button onclick="quickWater(${p.id}, true)" class="bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-[11px] flex items-center space-x-1.5 hover:bg-emerald-700 btn-press shadow-sm"><i class="fa-solid fa-shower"></i> <span>Siram</span></button></div>`; });
+            targets.forEach(p => { html += `<div class="flex items-center justify-between p-2.5 bg-stone-50 rounded-xl border border-stone-100"><div class="pr-2"><h5 class="font-bold text-stone-800 leading-tight">${p.plant_name}</h5><p class="text-[10px] text-stone-450">Kagungan: <b class="text-emerald-700">${p.pemilik || 'Anonim'}</b> • Wadah: ${p.planting_medium || '-'}</p></div><button onclick="quickWater(${p.id}, true)" class="bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-[11px] flex items-center space-x-1.5 hover:bg-emerald-700 btn-press shadow-sm"><i class="fa-solid fa-shower"></i> <span>Siram</span></button></div>`; });
             listDiv.innerHTML = html;
         }
 
@@ -910,6 +1048,7 @@
             } catch (e) { logs.innerHTML = '<p class="text-stone-400 text-center py-4 text-[11px]">Sajarah obrolan parantos sayaga dipidangkeun.</p>'; }
         }
 
+        // CHAT NYI SARI NYETAL MEMORI SAJARAH & PERSONA ADAPTIF
         async function sendAiChat() {
             const input = document.getElementById('chatAiInput'); const prompt = input.value.trim(); if (!prompt) return;
             const btn = document.getElementById('btnSendAiChat'); const icon = document.getElementById('aiChatIcon'); const loading = document.getElementById('aiChatLoading');
@@ -918,7 +1057,30 @@
             try {
                 await fetch(`${SUPABASE_BASE_URL}/rest/v1/farm_chat`, { method: 'POST', headers: authHeaders, body: JSON.stringify({ sender: userName, message: prompt, is_ai: false }) });
                 await loadChatHistory(); input.value = "";
-                const aiAns = await panggilGeminiAPI(prompt, NYI_SARI_PERSONA);
+
+                let chatContext = [];
+                try {
+                    const historyRes = await fetch(`${SUPABASE_BASE_URL}/rest/v1/farm_chat?select=sender,message,is_ai&order=id.desc&limit=15`, { headers: authHeaders });
+                    if (historyRes.ok) {
+                        const rawHistory = await historyRes.json();
+                        rawHistory.reverse(); 
+                        chatContext = rawHistory.map(c => {
+                            return {
+                                role: c.is_ai ? "model" : "user",
+                                parts: [{ text: `${c.sender}: ${c.message}` }]
+                            };
+                        });
+                    }
+                } catch (historyErr) {
+                    console.log("Gagal nyandak sajarah obrolan:", historyErr);
+                }
+
+                if (chatContext.length === 0) {
+                    chatContext = [{ role: "user", parts: [{ text: `${userName}: ${prompt}` }] }];
+                }
+
+                const aiAns = await panggilGeminiAPI(chatContext, dapatkanNyiSariPersona());
+
                 await fetch(`${SUPABASE_BASE_URL}/rest/v1/farm_chat`, { method: 'POST', headers: authHeaders, body: JSON.stringify({ sender: "Nyi Sari", message: aiAns, is_ai: true }) });
                 await loadChatHistory();
             } catch (error) {
@@ -931,7 +1093,60 @@
             } finally { btn.disabled = false; icon.classList.remove('hidden'); loading.classList.add('hidden'); }
         }
 
+        // NGAROBIH JABATAN WALERAN NYI SARI (SINGKET VS RINCI)
+        function setNyiSariStyle(style) {
+            nyiSariStyle = style;
+            const btnSederhana = document.getElementById('style-sederhana');
+            const btnRinci = document.getElementById('style-rinci');
+            if (style === 'sederhana') {
+                btnSederhana.className = "px-3 py-1 rounded-xl transition-all bg-emerald-600 text-white shadow-sm font-bold";
+                btnRinci.className = "px-3 py-1 rounded-xl transition-all text-stone-500 hover:text-stone-800 font-semibold";
+            } else {
+                btnSederhana.className = "px-3 py-1 rounded-xl transition-all text-stone-500 hover:text-stone-800 font-semibold";
+                btnRinci.className = "px-3 py-1 rounded-xl transition-all bg-emerald-600 text-white shadow-sm font-bold";
+            }
+            tunjukkanToast("Mode waleran dirobih janten: " + (style === 'sederhana' ? 'Singket' : 'Rinci & Detail'), "success");
+        }
+
         function setValid(el) { el.classList.remove('input-error'); const alert = document.getElementById('formAlert'); if(alert) alert.classList.add('hidden'); }
+
+        // --- SISTEM CHOOSE PHOTO (CAMERA VS GALLERY) ---
+        function triggerPhotoCapture(source) {
+            if (source === 'camera') {
+                document.getElementById('formImageFileCamera').click();
+            } else {
+                document.getElementById('formImageFileGallery').click();
+            }
+        }
+
+        // --- KOMPRESI GAMBAR CLIENT SIDE ---
+        function kompresiFileGambar(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 500; 
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        canvas.toBlob((blob) => {
+                            resolve(blob);
+                        }, 'image/jpeg', 0.6); 
+                    };
+                };
+            });
+        }
 
         async function simpanBibit() {
             const editId = document.getElementById('editPlantId').value;
@@ -957,14 +1172,24 @@
             
             try {
                 if (formSelectedFile) {
-                    const fileNamaUnik = `bibit_${Date.now()}.${formSelectedFile.name.split('.').pop()}`;
-                    const uploadRes = await fetch(`${SUPABASE_BASE_URL}/storage/v1/object/images-bucket/${fileNamaUnik}`, { method: 'POST', headers: { 'apikey': SUPABASE_KEY, 'Authorization': authHeaders.Authorization, 'Content-Type': formSelectedFile.type }, body: formSelectedFile });
+                    const fileDikompresi = await kompresiFileGambar(formSelectedFile);
+                    const fileNamaUnik = `bibit_${Date.now()}.jpg`;
+                    
+                    const uploadRes = await fetch(`${SUPABASE_BASE_URL}/storage/v1/object/images-bucket/${fileNamaUnik}`, { 
+                        method: 'POST', 
+                        headers: { 
+                            'apikey': SUPABASE_KEY, 
+                            'Authorization': authHeaders.Authorization, 
+                            'Content-Type': 'image/jpeg' 
+                        }, 
+                        body: fileDikompresi 
+                    });
                     if (uploadRes.ok) imgUrl = `${SUPABASE_BASE_URL}/storage/v1/object/public/images-bucket/${fileNamaUnik}`;
                 }
                 
                 const payload = { 
                     plant_name: name, sowing_date: sowingDate, planting_medium: medium || null, status: status, 
-                    category: category, notes: notes, image_url: imgUrl, pemilik: currentUser,
+                    category: category, notes: notes, image_url: imgUrl || null, pemilik: editId ? (allPlants.find(p => p.id == editId)?.pemilik || currentUser) : currentUser,
                     est_tumbuh_date: eTumbuh || null, est_pindah_date: ePindah || null, est_panen_date: ePanen || null
                 };
                 let url = `${SUPABASE_BASE_URL}/rest/v1/plant_farm`; let method = 'POST';
@@ -996,6 +1221,10 @@
             
             document.getElementById('editPlantId').value = ""; document.getElementById('modalTitle').innerText = "Catat Tanaman Baru Ibu"; document.getElementById('formPlantName').value = ""; document.getElementById('formMedium').value = ""; document.getElementById('formStatus').value = "Semai"; document.getElementById('formCategory').value = "Sayuran Daun"; document.getElementById('formNotes').value = ""; formSelectedFile = null; document.getElementById('formImgLabel').innerText = "Teu acan aya foto"; document.getElementById('formImgPreviewContainer').classList.add('hidden');
             document.getElementById('formEstTumbuh').value = ""; document.getElementById('formEstPindah').value = ""; document.getElementById('formEstPanen').value = "";
+            
+            document.getElementById('formImageFileCamera').value = "";
+            document.getElementById('formImageFileGallery').value = "";
+
             const m = document.getElementById('modalTambah'); m.classList.remove('hidden'); setTimeout(() => m.classList.add('opacity-100'), 10);
         }
 
@@ -1013,6 +1242,9 @@
             document.getElementById('formEstPindah').value = plant.est_pindah_date || "";
             document.getElementById('formEstPanen').value = plant.est_panen_date || "";
 
+            document.getElementById('formImageFileCamera').value = "";
+            document.getElementById('formImageFileGallery').value = "";
+
             const m = document.getElementById('modalTambah'); m.classList.remove('hidden'); setTimeout(() => m.classList.add('opacity-100'), 10);
         }
 
@@ -1020,11 +1252,21 @@
         
         function openModalDetail(id) {
             const plant = allPlants.find(p => p.id == id); if (!plant) return; activeHapusId = plant.id;
-            const isOwner = plant.pemilik === currentUser; let cat = plant.category || "Sayuran Daun"; let notesClean = plant.notes || "";
+            const isOwner = plant.pemilik === currentUser; 
+            const userRole = localStorage.getItem('ibu_kebun_role') || 'Anggota';
+            const isKetuaAtauAdmin = userRole === 'Ketua' || userRole === 'Admin';
+            const canManage = isOwner || isKetuaAtauAdmin;
+
+            let cat = plant.category || "Sayuran Daun"; let notesClean = plant.notes || "";
             const m = document.getElementById('modalDetail');
-            document.getElementById('detailBodyContent').innerHTML = `<div class="h-32 bg-stone-100 rounded-xl overflow-hidden border"><img src="${plant.image_url || 'https://images.unsplash.com/photo-1530652101053-8c0db4fbb5de?auto=format&fit=crop&w=350&q=80'}" class="w-full h-full object-cover"></div><div class="space-y-1"><h4 class="font-extrabold text-stone-800 text-sm leading-tight">${plant.plant_name}</h4><p class="text-[10px] text-stone-400">Nu Kagungan: <b class="text-emerald-600">${plant.pemilik || 'Anonim'}</b> • Kategori: ${cat}</p></div><div class="bg-stone-50 p-2.5 rounded-xl border border-stone-100 text-[11px] leading-relaxed text-stone-600"><b>Panduan Pangurus:</b><br>${notesClean || 'Teu acan aya catetan khusus.'}</div>`;
+
+            let detailImageHTML = plant.image_url 
+                ? `<img src="${plant.image_url}" class="w-full h-full object-cover">` 
+                : dapatkanTunasGraphicSVG(cat);
+
+            document.getElementById('detailBodyContent').innerHTML = `<div class="h-32 bg-stone-100 rounded-xl overflow-hidden border flex items-center justify-center">${detailImageHTML}</div><div class="space-y-1"><h4 class="font-extrabold text-stone-800 text-sm leading-tight">${plant.plant_name}</h4><p class="text-[10px] text-stone-400">Nu Kagungan: <b class="text-emerald-600">${plant.pemilik || 'Anonim'}</b> • Kategori: ${cat}</p></div><div class="bg-stone-50 p-2.5 rounded-xl border border-stone-100 text-[11px] leading-relaxed text-stone-600"><b>Panduan Pangurus:</b><br>${notesClean || 'Teu acan aya catetan khusus.'}</div>`;
             const btnHapus = document.getElementById('detailHapusBtn');
-            if(isOwner) { btnHapus.classList.remove('hidden'); btnHapus.onclick = () => openModalHapus(); } else { btnHapus.classList.add('hidden'); }
+            if(canManage) { btnHapus.classList.remove('hidden'); btnHapus.onclick = () => openModalHapus(); } else { btnHapus.classList.add('hidden'); }
             m.classList.remove('hidden'); setTimeout(() => m.classList.add('opacity-100'), 10);
         }
         function closeModalDetail() { const m = document.getElementById('modalDetail'); m.classList.remove('opacity-100'); setTimeout(() => m.classList.add('hidden'), 200); }
@@ -1059,7 +1301,7 @@
             let statusContext = "";
             if (statusVal === "Semai") statusContext = "Tanaman ini baru saja disemai dari biji.";
             else if (statusVal === "Tumbuh Daun") statusContext = "Tanaman ini sudah berbentuk bibit yang mulai berdaun (bukan dari biji lagi).";
-            else if (statusVal === "Siap Pindah") statusContext = "Tanaman ini sudah dewasa dan siap dipindah ke pot besar/tanah.";
+            else if (statusVal === "Siap Pindah") statusContext = "Tanaman ini sudah dewasa and siap dipindah ke pot besar/tanah.";
             else if (statusVal === "Panen") statusContext = "Tanaman ini sudah masuk masa panen.";
 
             try {
@@ -1080,7 +1322,7 @@
                     required: ["tips", "hari_tumbuh", "hari_pindah", "hari_panen"] 
                 };
                 
-                const answerJSON = await panggilGeminiAPI(prompt, NYI_SARI_PERSONA, null, schema);
+                const answerJSON = await panggilGeminiAPI(prompt, dapatkanNyiSariPersona(), null, schema);
                 const parsed = JSON.parse(answerJSON);
                 
                 document.getElementById('formNotes').value = parsed.tips;
@@ -1102,59 +1344,139 @@
 
         // --- SISTEM NUTRISI ---
         async function simpanNutrisiKeDb() {
-            if (nutrisiDraftSaved) return; nutrisiDraftSaved = true;
-            const name = document.getElementById('nutrisiPreviewName').value.trim(); const benefit = document.getElementById('nutrisiPreviewBenefit').value.trim(); const schedule = document.getElementById('nutrisiPreviewSchedule').value.trim(); const dosage = document.getElementById('nutrisiPreviewDosage').value.trim();
-            if (!name || !benefit || !schedule || !dosage) { nutrisiDraftSaved = false; return tunjukkanToast("Punten pisan Ibu, aya kénéh kotak anu teu acan dieusi.", "error"); }
-            const btn = document.getElementById('btnSimpanNutrisi'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Nuju Nyimpen...';
+            if (nutrisiDraftSaved) return; 
+            nutrisiDraftSaved = true;
+            
+            const name = document.getElementById('nutrisiPreviewName').value.trim(); 
+            const benefit = document.getElementById('nutrisiPreviewBenefit').value.trim(); 
+            const schedule = document.getElementById('nutrisiPreviewSchedule').value.trim(); 
+            const dosage = document.getElementById('nutrisiPreviewDosage').value.trim();
+            
+            if (!name || !benefit || !schedule || !dosage) { 
+                nutrisiDraftSaved = false; 
+                return tunjukkanToast("Punten pisan Ibu, aya kénéh kotak anu teu acan dieusi.", "error"); 
+            }
+            
+            const btn = document.getElementById('btnSimpanNutrisi'); 
+            btn.disabled = true; 
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Nuju Nyimpen...';
+            
             try {
                 let headers = { ...authHeaders, 'Prefer': 'return=representation' };
-                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/farm_nutrition`, { method: 'POST', headers: headers, body: JSON.stringify({ name, benefit, schedule, dosage }) });
-                if (!res.ok) throw new Error(); tunjukkanToast("Hatur nuhun Ibu! Resep anyar parantos kasimpen.", "success");
-                closeModalNutrisi(); await loadNutritionFromDb();
-            } catch (error) { tununjukkanToast("Punten, sistem gagal nyimpen.", "error"); nutrisiDraftSaved = false; }
-            finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-plus"></i> <span>Tambihkeun</span>'; }
+                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/farm_nutrition`, { 
+                    method: 'POST', 
+                    headers: headers, 
+                    body: JSON.stringify({ name, benefit, schedule, dosage }) 
+                });
+                
+                if (!res.ok) {
+                    const errInfo = await res.json().catch(() => ({}));
+                    throw new Error(errInfo.message || errInfo.details || "Penolakan akses ti database server.");
+                }
+                
+                tunjukkanToast("Hatur nuhun Ibu! Resep anyar parantos kasimpen.", "success");
+                closeModalNutrisi(); 
+                await loadNutritionFromDb();
+            } catch (error) { 
+                console.error("Gagal nyimpen resep nutrisi:", error);
+                tunjukkanToast("Gagal nyimpen resep: " + error.message, "error"); 
+                nutrisiDraftSaved = false; 
+            } finally { 
+                btn.disabled = false; 
+                btn.innerHTML = '<i class="fa-solid fa-plus"></i> <span>Tambihkeun</span>'; 
+            }
         }
+
         function openModalNutrisi() {
-            ['Tanaman', 'Kategori', 'PreviewName', 'PreviewBenefit', 'PreviewSchedule', 'PreviewDosage'].forEach(id => { const el = document.getElementById(`nutrisi${id.includes('Input') ? 'Input' : 'Preview'}${id.replace('Input', '').replace('Preview', '')}`); if (el) el.value = (id === 'Kategori') ? "Sayuran Daun" : ""; });
-            document.getElementById('nutrisiPreviewSection').classList.add('hidden'); document.getElementById('btnSimpanNutrisi').disabled = true; nutrisiDraftSaved = false;
-            const m = document.getElementById('modalNutrisi'); m.classList.remove('hidden'); setTimeout(() => m.classList.add('opacity-100'), 10); setTimeout(() => document.getElementById('nutrisiInputTanaman').focus(), 300);
+            const inputTanaman = document.getElementById('nutrisiInputTanaman');
+            const inputKategori = document.getElementById('nutrisiInputKategori');
+            const previewName = document.getElementById('nutrisiPreviewName');
+            const previewBenefit = document.getElementById('nutrisiPreviewBenefit');
+            const previewSchedule = document.getElementById('nutrisiPreviewSchedule');
+            const previewDosage = document.getElementById('nutrisiPreviewDosage');
+            
+            if (inputTanaman) inputTanaman.value = "";
+            if (inputKategori) inputKategori.value = "Sayuran Daun";
+            if (previewName) previewName.value = "";
+            if (previewBenefit) previewBenefit.value = "";
+            if (previewSchedule) previewSchedule.value = "";
+            if (previewDosage) previewDosage.value = "";
+
+            const previewSec = document.getElementById('nutrisiPreviewSection');
+            if (previewSec) previewSec.classList.add('hidden');
+            
+            const btnSimpan = document.getElementById('btnSimpanNutrisi');
+            if (btnSimpan) btnSimpan.disabled = true;
+            
+            nutrisiDraftSaved = false;
+            
+            const m = document.getElementById('modalNutrisi');
+            if (m) {
+                m.classList.remove('hidden');
+                setTimeout(() => m.classList.add('opacity-100'), 10);
+            }
+            setTimeout(() => {
+                if (inputTanaman) inputTanaman.focus();
+            }, 300);
         }
-        function closeModalNutrisi() { const m = document.getElementById('modalNutrisi'); m.classList.remove('opacity-100'); setTimeout(() => m.classList.add('hidden'), 200); }
+
+        function closeModalNutrisi() { 
+            const m = document.getElementById('modalNutrisi'); 
+            if(m) {
+                m.classList.remove('opacity-100'); 
+                setTimeout(() => m.classList.add('hidden'), 200); 
+            }
+        }
+
         async function generasiPreviewNutrisi() {
-            const namaTanaman = document.getElementById('nutrisiInputTanaman').value.trim(); const kategori = document.getElementById('nutrisiInputKategori').value;
+            const namaTanaman = document.getElementById('nutrisiInputTanaman').value.trim(); 
             if (!namaTanaman) return tunjukkanToast("Punten pisan Ibu, nami pepelakan kedah dieusi heula nya!", "error");
             const btn = document.getElementById('btnGeneratePreview'); const icon = document.getElementById('previewAiIcon'); const loading = document.getElementById('previewAiLoading');
             btn.disabled = true; btn.classList.add('opacity-75'); icon.classList.add('hidden'); loading.classList.remove('hidden'); tunjukkanToast("Nyi Sari nuju milarikeun resepna...", "warning");
             try {
-                const prompt = `Buatkan resep nutrisi organik pakai bahan dapur untuk tanaman "${namaTanaman}".`;
+                const prompt = `Buatkan resep nutrisi organik pakai bahan dapur untuk tanaman "${namaTanaman}". Berikan penjelasan rincinya.`;
                 const jsonSchema = { type: "OBJECT", properties: { name: { type: "STRING" }, benefit: { type: "STRING" }, schedule: { type: "STRING" }, dosage: { type: "STRING" } }, required: ["name", "benefit", "schedule", "dosage"] };
-                const rawResponse = await panggilGeminiAPI(prompt, NYI_SARI_PERSONA, null, jsonSchema); const parsed = JSON.parse(rawResponse);
+                const rawResponse = await panggilGeminiAPI(prompt, dapatkanNyiSariPersona(), null, jsonSchema); const parsed = JSON.parse(rawResponse);
                 document.getElementById('nutrisiPreviewName').value = parsed.name || ""; document.getElementById('nutrisiPreviewBenefit').value = parsed.benefit || ""; document.getElementById('nutrisiPreviewSchedule').value = parsed.schedule || ""; document.getElementById('nutrisiPreviewDosage').value = parsed.dosage || "";
                 document.getElementById('nutrisiPreviewSection').classList.remove('hidden'); document.getElementById('btnSimpanNutrisi').disabled = false; nutrisiDraftSaved = false;
                 tunjukkanToast("Resep ti Nyi Sari parantos sayaga Ibu!", "success");
             } catch (error) { tununjukkanToast("Hapunten Nyi Sari gagal: " + error.message, "error"); } finally { btn.disabled = false; btn.classList.remove('opacity-75'); icon.classList.remove('hidden'); loading.classList.add('hidden'); }
         }
+
         function switchSubAi(sId) {
             currentSubAi = sId; ['chat', 'doctor'].forEach(s => { const el = document.getElementById(`ai-sub-${s}`); if(el) el.classList.add('hidden'); const btn = document.getElementById(`btn-sub-${s}`); if(btn) btn.className = "flex-1 py-2.5 rounded-lg font-bold text-center text-stone-600 transition-all"; });
             const sel = document.getElementById(`ai-sub-${sId}`); if(sel) sel.classList.remove('hidden'); const bId = document.getElementById(`btn-sub-${sId}`); if(bId) bId.className = "flex-1 py-2.5 rounded-lg font-bold text-center bg-white text-stone-800 shadow-sm transition-all";
         }
+
         function previewDoctorImage(event) {
             const file = event.target.files[0]; if (!file) return; doctorSelectedFile = file; document.getElementById('doctorImgLabel').innerText = file.name;
             const reader = new FileReader(); reader.onload = function(e) { document.getElementById('doctorImgPreview').src = e.target.result; document.getElementById('doctorImgContainer').classList.remove('hidden'); }; reader.readAsDataURL(file);
         }
+
         function previewFormImage(event) {
-            const file = event.target.files[0]; if (!file) return; formSelectedFile = file; document.getElementById('formImgLabel').innerText = file.name;
-            const reader = new FileReader(); reader.onload = function(e) { document.getElementById('formImgPreview').src = e.target.result; document.getElementById('formImgPreviewContainer').classList.remove('hidden'); }; reader.readAsDataURL(file);
+            const file = event.target.files[0]; 
+            if (!file) return; 
+            formSelectedFile = file; 
+            document.getElementById('formImgLabel').innerText = file.name;
+            const reader = new FileReader(); 
+            reader.onload = function(e) { 
+                document.getElementById('formImgPreview').src = e.target.result; 
+                document.getElementById('formImgPreviewContainer').classList.remove('hidden'); 
+            }; 
+            reader.readAsDataURL(file);
         }
+
         async function diagnosePlantImage() {
             if (!doctorSelectedFile) return tunjukkanToast("Punten Ibu, kedah milih poto daunna heula!", "error");
             const btn = document.getElementById('btnDiagnose'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-1"></i> Nuju Mariksa...';
             try {
-                const base64Data = await fileToBase64(doctorSelectedFile); const prompt = "Sebutkan nama penyakit daun ini dan 2 penanganan herbal.";
-                const dataText = await panggilGeminiAPI(prompt, NYI_SARI_PERSONA, { base64: base64Data, mimeType: doctorSelectedFile.type });
+                const base64Data = await fileToBase64(doctorSelectedFile); 
+                const prompt = "Ibu, mangga parios foto daun ieu sacara jentre tur rinci pisan. Sebutkeun nami panyakitna dina basa Sunda sareng Indonesia, gejala-gejalana, sarta 2 dugi ka 3 cara nungkulanana nganggo bahan herbal organik dapur sacara jentre tur detail.";
+                const dataText = await panggilGeminiAPI(prompt, dapatkanNyiSariPersona(), { base64: base64Data, mimeType: doctorSelectedFile.type });
                 document.getElementById('diagnosisText').innerHTML = formatAiResponse(dataText); document.getElementById('diagnosisResult').classList.remove('hidden');
             } catch (error) { tununjukkanToast("Gagal: " + error.message, "error"); } finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Mawitan Mariksa Panyakit</span>'; }
         }
+
         function tununjukkanToast(msg, tipe) { tunjukkanToast(msg, tipe); } // Alias
         function tunjukkanToast(msg, tipe) {
             const t = document.getElementById('toast'); const i = document.getElementById('toastIcon'); const m = document.getElementById('toastMessage');
@@ -1166,6 +1488,7 @@
             }
             if(t) { t.style.opacity = '1'; t.style.pointerEvents = 'auto'; setTimeout(() => { t.style.opacity = '0'; t.style.pointerEvents = 'none'; }, 2500); }
         }
+
         function formatAiResponse(text) {
             if (!text) return ""; let lines = text.split("\n"); let resultHTML = [];
             for (let line of lines) {
