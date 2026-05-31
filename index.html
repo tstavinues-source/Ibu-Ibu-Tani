@@ -134,7 +134,12 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-2.5">
                         <div class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/10 shadow-inner shrink-0"><i class="fa-solid fa-leaf text-xl text-lime-300"></i></div>
-                        <div><h1 class="font-extrabold text-base tracking-tight leading-tight">Catatan Kebun Ibu</h1><p id="headerSapaanIbu" class="text-[11px] text-emerald-100 font-medium">Wilujeng énjing!</p></div>
+                        <div>
+                            <h1 class="font-extrabold text-base tracking-tight leading-tight">Catatan Kebun Ibu</h1>
+                            <p id="headerSapaanIbu" class="text-[11px] text-emerald-100 font-medium">Wilujeng énjing!</p>
+                            <!-- Wadah Lencana Kepemimpinan Teladan -->
+                            <div id="headerBadges" class="flex flex-wrap gap-1 mt-1"></div>
+                        </div>
                     </div>
                     <div class="flex items-center space-x-1">
                         <button onclick="segarSemuaData()" class="bg-white/10 hover:bg-white/20 btn-press p-2 rounded-xl border border-white/5"><i class="fa-solid fa-rotate text-xs"></i></button>
@@ -170,7 +175,7 @@
                     </div>
                     <div class="bg-white/20 border border-white/20 px-2.5 py-1 rounded-xl text-[10px] font-bold flex items-center space-x-1" id="hamaBadgeWaspada"><i class="fa-solid fa-bug text-lime-300"></i> <span id="hamaStatusText">Hama: Aman</span></div>
                 </div>
-                <div class="bg-white/10 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 text-[11px] text-blue-50 leading-relaxed relative z-10" id="cuacaSaranTani">Nuju milari data cuaca pangénggalna...</div>
+                <div class="bg-white/10 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 text-[11px] text-blue-50 leading-relaxed relative z-10 overflow-hidden" id="cuacaSaranTani">Nuju milari data cuaca pangénggalna...</div>
             </section>
 
             <!-- SEKSYEN TANAMAN (KEBUN) -->
@@ -475,8 +480,18 @@
                 const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengguna_kebun`, { method: 'POST', headers: { ...authHeaders, 'Prefer': 'return=representation' }, body: JSON.stringify({ nama_panggero: name, sandi: password }) });
                 if (!res.ok) { const errInfo = await res.json().catch(()=>({})); throw new Error(errInfo.message || "Gagal ngadamel akun kana server."); }
                 
-                localStorage.setItem('ibu_kebun_user', name); tunjukkanToast("Hatur nuhun, akun parantos suksés didamel!", "success"); pariksaStatusLogin();
-            } catch (err) { tunjukkanToast("Pendaftaran Gagal: " + err.message, "error"); } 
+                localStorage.setItem('ibu_kebun_user', name); 
+                
+                try {
+                    await fetch(`${SUPABASE_BASE_URL}/rest/v1/log_masuk_kebun`, {
+                        method: 'POST',
+                        headers: authHeaders,
+                        body: JSON.stringify({ nama_penggero: name, kaping_masuk: new Date().toISOString() })
+                    });
+                } catch (e) { console.log("Gagal nyerat log masuk:", e); }
+
+                tunjukkanToast("Hatur nuhun, akun parantos suksés didamel!", "success"); pariksaStatusLogin();
+            } catch (err) { tununjukkanToast("Pendaftaran Gagal: " + err.message, "error"); } 
             finally { if(btn) btn.disabled = false; if(btnText) btnText.innerText = "Daptar Ayeuna"; }
         }
 
@@ -491,8 +506,18 @@
                 const data = await res.json();
                 if (data.length === 0) throw new Error("Nami atanapi sandi anu dilebetkeun lepat.");
                 
-                localStorage.setItem('ibu_kebun_user', name); tunjukkanToast("Suksés lebet! Wilujeng sumping.", "success"); pariksaStatusLogin();
-            } catch (err) { tunjukkanToast("Login Gagal: " + err.message, "error"); } 
+                localStorage.setItem('ibu_kebun_user', name); 
+
+                try {
+                    await fetch(`${SUPABASE_BASE_URL}/rest/v1/log_masuk_kebun`, {
+                        method: 'POST',
+                        headers: authHeaders,
+                        body: JSON.stringify({ nama_penggero: name, kaping_masuk: new Date().toISOString() })
+                    });
+                } catch (e) { console.log("Gagal nyerat log masuk:", e); }
+
+                tunjukkanToast("Suksés lebet! Wilujeng sumping.", "success"); pariksaStatusLogin();
+            } catch (err) { tununjukkanToast("Login Gagal: " + err.message, "error"); } 
             finally { if(btn) btn.disabled = false; if(btnText) btnText.innerText = "Lebet ka Aplikasi"; }
         }
 
@@ -564,19 +589,93 @@
             }; update(); setInterval(update, 1000);
         }
 
+        // --- SISTEM BAGIKAN KE WHATSAPP ---
+        function bagikanKeWA(tipe, namaItem, detail = "") {
+            let teks = "";
+            if (tipe === 'panen') {
+                teks = `Alhamdulillah! Dinten ieu abdi parantos suksés panén ${namaItem} di kebon mandiri Catetan Kebon Ibu. Hayu urang melak ogé! 🌿🥬`;
+            } else if (tipe === 'tanam') {
+                teks = `Wilujeng! Abdi nembé melak bibit ${namaItem} di kebon mandiri Catetan Kebon Ibu. Mugia tiasa tumbuh subur sareng héjo! 🌱🏡`;
+            } else if (tipe === 'nutrisi') {
+                teks = `Ibu-ibu, mangga tingali resep nutrisi organik "${namaItem}" kanggo ${detail}. Alus pisan kanggo pepelakan urang supados subur! 🧪🌿`;
+            }
+            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(teks)}`;
+            window.open(waUrl, '_blank');
+        }
+
+        // --- SISTEM LENCANA APRESIASI ---
+        function updateLencanaIbu() {
+            const badgeContainer = document.getElementById('headerBadges');
+            if (!badgeContainer || !currentUser) return;
+
+            let hasWateredToday = false;
+            let hasHarvested = false;
+            let myPlantsCount = 0;
+
+            allPlants.forEach(p => {
+                if (p.pemilik === currentUser) {
+                    myPlantsCount++;
+                    if (p.status === 'Panen') hasHarvested = true;
+                    if (p.last_watered && new Date(p.last_watered).toDateString() === new Date().toDateString()) {
+                        hasWateredToday = true;
+                    }
+                }
+            });
+
+            let badgesHTML = "";
+
+            if (hasWateredToday) {
+                badgesHTML += `<span class="bg-blue-500/25 border border-blue-400 text-blue-100 font-extrabold text-[9px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu rajin nyiram pepelakan dinten ieu"><i class="fa-solid fa-shower text-[8px]"></i> <span>Penyiram Setia</span></span>`;
+            }
+            if (hasHarvested) {
+                badgesHTML += `<span class="bg-amber-500/25 border border-amber-400 text-amber-100 font-extrabold text-[9px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu parantos suksés panén kebon"><i class="fa-solid fa-crown text-[8px]"></i> <span>Ibu Panen Raya</span></span>`;
+            }
+            if (myPlantsCount > 2) {
+                badgesHTML += `<span class="bg-lime-500/25 border border-lime-400 text-lime-100 font-extrabold text-[9px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu rajin ngurus rupa-rupa tanaman"><i class="fa-solid fa-seedling text-[8px]"></i> <span>Pakar Tani Dapur</span></span>`;
+            }
+
+            badgeContainer.innerHTML = badgesHTML;
+        }
+
+        // --- ALARM CUACA EKSTREM & METEO ---
         async function ambilDataCuacaMeteo() {
             const ikonDiv = document.getElementById('cuacaIkon'); const deskripsiText = document.getElementById('cuacaDeskripsi'); const suhuText = document.getElementById('cuacaSuhu'); const kelembapanText = document.getElementById('cuacaKelembapan'); const saranText = document.getElementById('cuacaSaranTani'); const hamaBadge = document.getElementById('hamaBadgeWaspada'); const hamaStatus = document.getElementById('hamaStatusText');
             async function panggilMeteoAPI(latitude, longitude) {
                 try {
                     const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,weather_code&timezone=auto`);
                     if (!res.ok) throw new Error(); const data = await res.json();
-                    if(suhuText) suhuText.innerText = `${Math.round(data.current.temperature_2m)}°C`; 
-                    if(kelembapanText) kelembapanText.innerText = `${data.current.relative_humidity_2m}%`;
-                    if(hamaBadge) hamaBadge.className = data.current.relative_humidity_2m > 80 ? "bg-rose-100/80 border border-rose-300/60 text-rose-800 px-2.5 py-1 rounded-xl text-[10px] font-bold flex items-center space-x-1" : "bg-green-100/80 border border-green-300/60 text-green-800 px-2.5 py-1 rounded-xl text-[10px] font-bold flex items-center space-x-1";
-                    if(hamaStatus) hamaStatus.innerText = data.current.relative_humidity_2m > 80 ? "Hama: WASPADA" : "Hama: Aman";
-                    if(ikonDiv) ikonDiv.innerHTML = '<i class="fa-solid fa-cloud-sun text-amber-300"></i>'; 
-                    if(deskripsiText) deskripsiText.innerText = `Cuaca Dinten Ieu: Cerah Berawan`; 
-                    if(saranText) saranText.innerText = "Hawa nuju éndah tur iuh. Waktos anu saé kanggo ngarawat kebon.";
+                    const temp = Math.round(data.current.temperature_2m);
+                    const hum = data.current.relative_humidity_2m;
+                    const code = data.current.weather_code;
+                    
+                    if(suhuText) suhuText.innerText = `${temp}°C`; 
+                    if(kelembapanText) kelembapanText.innerText = `${hum}%`;
+                    if(hamaBadge) hamaBadge.className = hum > 80 ? "bg-rose-100/80 border border-rose-300/60 text-rose-800 px-2.5 py-1 rounded-xl text-[10px] font-bold flex items-center space-x-1" : "bg-green-100/80 border border-green-300/60 text-green-800 px-2.5 py-1 rounded-xl text-[10px] font-bold flex items-center space-x-1";
+                    if(hamaStatus) hamaStatus.innerText = hum > 80 ? "Hama: WASPADA" : "Hama: Aman";
+                    
+                    // Deteksi Ikon & Teks Cuaca
+                    let ikHTML = '<i class="fa-solid fa-cloud-sun text-amber-300 animate-pulse"></i>';
+                    let desc = "Cerah Berawan";
+                    if (code >= 51) {
+                        ikHTML = '<i class="fa-solid fa-cloud-showers-heavy text-slate-300 animate-bounce"></i>';
+                        desc = "Hujan / Mendung";
+                    } else if (temp > 32) {
+                        ikHTML = '<i class="fa-solid fa-sun text-amber-400 animate-spin"></i>';
+                        desc = "Panas Pisan";
+                    }
+                    if(ikonDiv) ikonDiv.innerHTML = ikHTML; 
+                    if(deskripsiText) deskripsiText.innerText = `Cuaca Dinten Ieu: ${desc}`; 
+                    
+                    // ALARM PENYELAMAT TANAMAN NYI SARI
+                    let saranHTML = "";
+                    if (temp > 32) {
+                        saranHTML += `<div class="bg-amber-500/20 text-yellow-100 p-2.5 rounded-xl mb-2 font-bold flex items-start space-x-1.5 border border-amber-500/30 text-xs shadow-inner animate-pulse">⚠️ <span>Ibu, dinten ieu katingalina bakal panas pisan (${temp}°C). Teu kenging hilap nyiram tanaman dua kali dinten ieu supados teu layu nya! ☀️</span></div>`;
+                    } else if (code >= 51) {
+                        saranHTML += `<div class="bg-rose-500/20 text-rose-100 p-2.5 rounded-xl mb-2 font-bold flex items-start space-x-1.5 border border-rose-500/30 text-xs shadow-inner animate-pulse">⛈️ <span>Ibu, dinten ieu katingalina bade aya hujan ageung atanapi barat. Mangga amankeun pot-pot alit atanapi bibit semai bilih palid!</span></div>`;
+                    }
+                    
+                    saranHTML += `Hawa nuju éndah tur iuh. Waktosna anu saé kanggo ngarawat kebon.`;
+                    if(saranText) saranText.innerHTML = saranHTML;
                 } catch (e) {}
             }
             panggilMeteoAPI(-6.2, 106.8);
@@ -598,7 +697,7 @@
             const listDiv = document.getElementById('nutritionList'); if(!listDiv) return;
             if (nutritionData.length === 0) return listDiv.innerHTML = '<p class="text-stone-400 text-center py-4">Lomari resep nutrisi nuju kosong.</p>';
             let html = '';
-            nutritionData.forEach(n => { html += `<div class="bg-stone-50 border border-stone-200/80 p-4 rounded-3xl space-y-2 shadow-sm"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5"><h4 class="font-extrabold text-xs text-emerald-800 flex items-center space-x-1.5"><i class="fa-solid fa-flask-vial text-emerald-600"></i><span>${n.name}</span></h4><span class="bg-lime-100 text-emerald-950 font-extrabold text-[9px] px-2.5 py-0.5 rounded-full flex items-center space-x-1 border border-lime-200"><i class="fa-solid fa-calendar-day text-[8px]"></i><span>Aplikasi: ${n.schedule}</span></span></div><p class="text-stone-600 font-medium text-[10.5px] leading-relaxed"><b class="text-stone-700 block mb-0.5"><i class="fa-solid fa-star text-amber-500 mr-1 text-[9px]"></i>Mangpaat:</b>${n.benefit}</p><p class="text-stone-500 text-[10.5px] leading-relaxed bg-white p-3 rounded-2xl border border-stone-200 shadow-inner"><b class="text-emerald-800 block mb-1"><i class="fa-solid fa-gears mr-1 text-[9px]"></i>Takaran:</b>${n.dosage}</p></div>`; });
+            nutritionData.forEach(n => { html += `<div class="bg-stone-50 border border-stone-200/80 p-4 rounded-3xl space-y-2 shadow-sm"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5"><h4 class="font-extrabold text-xs text-emerald-800 flex items-center space-x-1.5"><i class="fa-solid fa-flask-vial text-emerald-600"></i><span>${n.name}</span></h4><div class="flex items-center space-x-2"><button onclick="bagikanKeWA('nutrisi', '${n.name}', '${n.benefit}')" class="text-emerald-600 hover:text-emerald-700 font-bold text-[10px] flex items-center space-x-1" title="Bagikeun ka WA"><i class="fa-brands fa-whatsapp text-xs"></i> <span>Bagikeun</span></button><span class="bg-lime-100 text-emerald-950 font-extrabold text-[9px] px-2.5 py-0.5 rounded-full flex items-center space-x-1 border border-lime-200"><i class="fa-solid fa-calendar-day text-[8px]"></i><span>Aplikasi: ${n.schedule}</span></span></div></div><p class="text-stone-600 font-medium text-[10.5px] leading-relaxed"><b class="text-stone-700 block mb-0.5"><i class="fa-solid fa-star text-amber-500 mr-1 text-[9px]"></i>Mangpaat:</b>${n.benefit}</p><p class="text-stone-500 text-[10.5px] leading-relaxed bg-white p-3 rounded-2xl border border-stone-200 shadow-inner"><b class="text-emerald-800 block mb-1"><i class="fa-solid fa-gears mr-1 text-[9px]"></i>Takaran:</b>${n.dosage}</p></div>`; });
             listDiv.innerHTML = html;
         }
 
@@ -624,6 +723,7 @@
                 
                 filterPlants(currentFilterStatus);
                 renderKalender();
+                updateLencanaIbu(); // Segarkan lencana apresiasi ibu kebun
             } catch (e) { if(loadingDiv) loadingDiv.classList.add('hidden'); }
         }
 
@@ -677,7 +777,7 @@
                 
                 let actionButtons = `<button onclick="openModalDetail(${plant.id})" class="bg-stone-200 text-stone-700 font-bold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-stone-300 btn-press">Detail</button>`;
                 if (isOwner) {
-                    actionButtons = `<button onclick="quickWater(${plant.id})" class="bg-emerald-50 text-emerald-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-emerald-100 btn-press"><i class="fa-solid fa-shower"></i></button><button onclick="openModalEdit(${plant.id})" class="bg-amber-50 text-amber-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-amber-100 btn-press"><i class="fa-solid fa-pen-to-square"></i></button>${actionButtons}`;
+                    actionButtons = `<button onclick="bagikanKeWA('tanam', '${plant.plant_name}')" class="bg-emerald-50 text-emerald-600 font-extrabold px-2 py-1.5 rounded-xl text-[10.5px] hover:bg-emerald-100 btn-press" title="Bagikeun ka WA"><i class="fa-brands fa-whatsapp text-xs"></i></button><button onclick="quickWater(${plant.id})" class="bg-emerald-50 text-emerald-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-emerald-100 btn-press"><i class="fa-solid fa-shower"></i></button><button onclick="openModalEdit(${plant.id})" class="bg-amber-50 text-amber-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-amber-100 btn-press"><i class="fa-solid fa-pen-to-square"></i></button>${actionButtons}`;
                 }
 
                 html += `<div class="plant-card bg-white rounded-[2rem] shadow-sm border border-stone-200/60 overflow-hidden flex flex-col justify-between"><div><div class="relative h-36 bg-stone-100 w-full overflow-hidden"><img src="${plant.image_url || imgCadangan}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onerror="this.src='${imgCadangan}'" loading="lazy"><span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${colorBadge} backdrop-blur-sm">${statusIndo}</span><span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-white/80 text-stone-700 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-user mr-1 text-emerald-600"></i>${plant.pemilik || 'Anonim'}</span></div><div class="p-4 space-y-2.5"><div><h4 class="font-extrabold text-stone-800 text-xs leading-tight">${plant.plant_name}</h4><p class="text-[10px] text-emerald-700 font-extrabold mt-0.5"><i class="fa-solid fa-hourglass-half text-[9px]"></i> Umur: ${hss >= 0 ? hss : 0} Dinten</p></div><div class="space-y-1 bg-stone-50 p-2 rounded-xl border border-stone-100 text-[10px]"><div class="flex justify-between items-center text-stone-500"><span>Kamekaran</span><span>${teksEstimasi}</span></div><div class="w-full bg-stone-200 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-emerald-500 to-lime-400 h-full rounded-full progress-fill" style="width: ${persenProgress}%"></div></div></div><p class="text-[10px] text-stone-500 line-clamp-1 italic">Tips: ${notesClean || '-'}</p></div></div><div class="bg-stone-50/70 px-4 py-2.5 border-t border-stone-100 flex items-center justify-between text-[11px]">${siramText}<div class="flex space-x-1">${actionButtons}</div></div></div>`;
@@ -771,7 +871,7 @@
             let html = '';
             filteredPlants.forEach(plant => {
                 const imgCadangan = "https://images.unsplash.com/photo-1595856417726-2d164506c9e0?auto=format&fit=crop&w=350&q=80";
-                html += `<div class="plant-card bg-white rounded-[2rem] shadow-md border border-amber-200 overflow-hidden flex flex-col justify-between"><div class="relative h-48 bg-stone-100 w-full overflow-hidden"><img src="${plant.image_url || imgCadangan}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onerror="this.src='${imgCadangan}'" loading="lazy"><span class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4 pt-12"><h4 class="font-black text-white text-sm leading-tight shadow-sm">${plant.plant_name}</h4><p class="text-[10px] text-amber-300 font-bold mt-1"><i class="fa-solid fa-crown mr-1"></i> Dipanén ku: ${plant.pemilik || 'Anonim'}</p></span><div class="absolute top-3 right-3 bg-amber-400 text-amber-950 px-3 py-1 rounded-full text-[10px] font-black shadow-md flex items-center space-x-1"><i class="fa-solid fa-star"></i> <span>Panén!</span></div></div></div>`;
+                html += `<div class="plant-card bg-white rounded-[2rem] shadow-md border border-amber-200 overflow-hidden flex flex-col justify-between"><div class="relative h-48 bg-stone-100 w-full overflow-hidden"><img src="${plant.image_url || imgCadangan}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onerror="this.src='${imgCadangan}'" loading="lazy"><span class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4 pt-12"><h4 class="font-black text-white text-sm leading-tight shadow-sm">${plant.plant_name}</h4><p class="text-[10px] text-amber-300 font-bold mt-1"><i class="fa-solid fa-crown mr-1"></i> Dipanén ku: ${plant.pemilik || 'Anonim'}</p></span><div class="absolute top-3 right-3 bg-amber-400 text-amber-950 px-3 py-1 rounded-full text-[10px] font-black shadow-md flex items-center space-x-1"><i class="fa-solid fa-star"></i> <span>Panén!</span></div><button onclick="bagikanKeWA('panen', '${plant.plant_name}')" class="absolute top-3 left-3 bg-emerald-600 text-white px-2.5 py-1.5 rounded-full text-[10px] font-bold shadow-md flex items-center space-x-1 hover:bg-emerald-700 btn-press"><i class="fa-brands fa-whatsapp text-xs"></i> <span>Bagikeun</span></button></div></div>`;
             });
             grid.innerHTML = html;
         }
@@ -791,7 +891,7 @@
                 if (!response.ok) throw new Error();
                 tunjukkanToast("Panyiraman parantos kasimpen kana catetan!", "success");
                 await loadPlants(); if (reloadSiram) renderWateringList();
-            } catch (e) { tunjukkanToast("Hapunten, sistem gagal nyatet siram.", "error"); }
+            } catch (e) { tununjukkanToast("Hapunten, sistem gagal nyatet siram.", "error"); }
         }
 
         async function loadChatHistory() {
@@ -875,7 +975,7 @@
                 
                 tunjukkanToast("Buku catetan kebon parantos diropéa!", "success");
                 closeModalTambah(); await loadPlants();
-            } catch (e) { tunjukkanToast("Gagal Nyimpen Data.", "error"); } finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpen'; }
+            } catch (e) { tununjukkanToast("Gagal Nyimpen Data.", "error"); } finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpen'; }
         }
 
         async function eksekusiHapusMurni() {
@@ -887,7 +987,7 @@
                 if (!response.ok) { const err = await response.json().catch(()=>({})); throw new Error(err.message || "Gagal ngahapus ti server."); }
                 tunjukkanToast("Catetan parantos suksés dihapus!", "success");
                 closeModalHapus(); activeHapusId = null; await loadPlants();
-            } catch (e) { tunjukkanToast("Gagal: " + e.message, "error"); } finally { btn.disabled = false; btn.innerHTML = 'Muhun, Hapus!'; }
+            } catch (e) { tununjukkanToast("Gagal: " + e.message, "error"); } finally { btn.disabled = false; btn.innerHTML = 'Muhun, Hapus!'; }
         }
 
         function openModalTambah() {
@@ -996,7 +1096,7 @@
                 });
 
                 tunjukkanToast("Éstimasi ti Nyi Sari parantos dicatetkeun!", "success");
-            } catch (e) { tunjukkanToast("Gagal ngadamel éstimasi.", "error"); } 
+            } catch (e) { tununjukkanToast("Gagal ngadamel éstimasi.", "error"); } 
             finally { btn.disabled = false; icon.classList.remove('hidden'); loading.classList.add('hidden'); }
         }
 
@@ -1011,7 +1111,7 @@
                 const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/farm_nutrition`, { method: 'POST', headers: headers, body: JSON.stringify({ name, benefit, schedule, dosage }) });
                 if (!res.ok) throw new Error(); tunjukkanToast("Hatur nuhun Ibu! Resep anyar parantos kasimpen.", "success");
                 closeModalNutrisi(); await loadNutritionFromDb();
-            } catch (error) { tunjukkanToast("Punten, sistem gagal nyimpen.", "error"); nutrisiDraftSaved = false; }
+            } catch (error) { tununjukkanToast("Punten, sistem gagal nyimpen.", "error"); nutrisiDraftSaved = false; }
             finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-plus"></i> <span>Tambihkeun</span>'; }
         }
         function openModalNutrisi() {
@@ -1032,7 +1132,7 @@
                 document.getElementById('nutrisiPreviewName').value = parsed.name || ""; document.getElementById('nutrisiPreviewBenefit').value = parsed.benefit || ""; document.getElementById('nutrisiPreviewSchedule').value = parsed.schedule || ""; document.getElementById('nutrisiPreviewDosage').value = parsed.dosage || "";
                 document.getElementById('nutrisiPreviewSection').classList.remove('hidden'); document.getElementById('btnSimpanNutrisi').disabled = false; nutrisiDraftSaved = false;
                 tunjukkanToast("Resep ti Nyi Sari parantos sayaga Ibu!", "success");
-            } catch (error) { tunjukkanToast("Hapunten Nyi Sari gagal: " + error.message, "error"); } finally { btn.disabled = false; btn.classList.remove('opacity-75'); icon.classList.remove('hidden'); loading.classList.add('hidden'); }
+            } catch (error) { tununjukkanToast("Hapunten Nyi Sari gagal: " + error.message, "error"); } finally { btn.disabled = false; btn.classList.remove('opacity-75'); icon.classList.remove('hidden'); loading.classList.add('hidden'); }
         }
         function switchSubAi(sId) {
             currentSubAi = sId; ['chat', 'doctor'].forEach(s => { const el = document.getElementById(`ai-sub-${s}`); if(el) el.classList.add('hidden'); const btn = document.getElementById(`btn-sub-${s}`); if(btn) btn.className = "flex-1 py-2.5 rounded-lg font-bold text-center text-stone-600 transition-all"; });
@@ -1053,8 +1153,9 @@
                 const base64Data = await fileToBase64(doctorSelectedFile); const prompt = "Sebutkan nama penyakit daun ini dan 2 penanganan herbal.";
                 const dataText = await panggilGeminiAPI(prompt, NYI_SARI_PERSONA, { base64: base64Data, mimeType: doctorSelectedFile.type });
                 document.getElementById('diagnosisText').innerHTML = formatAiResponse(dataText); document.getElementById('diagnosisResult').classList.remove('hidden');
-            } catch (error) { tunjukkanToast("Gagal: " + error.message, "error"); } finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Mawitan Mariksa Panyakit</span>'; }
+            } catch (error) { tununjukkanToast("Gagal: " + error.message, "error"); } finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Mawitan Mariksa Panyakit</span>'; }
         }
+        function tununjukkanToast(msg, tipe) { tunjukkanToast(msg, tipe); } // Alias
         function tunjukkanToast(msg, tipe) {
             const t = document.getElementById('toast'); const i = document.getElementById('toastIcon'); const m = document.getElementById('toastMessage');
             if(m) m.innerText = msg;
