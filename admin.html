@@ -7,63 +7,61 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body {
-            background-color: #f0fdf4; /* Nuansa hijau kebun yang lembut */
-        }
+        body { background-color: #f5f5f4; }
     </style>
 </head>
-<body class="text-gray-800 font-sans min-h-screen flex flex-col">
+<body class="text-stone-800 font-sans min-h-screen flex flex-col">
 
-    <header class="bg-emerald-700 text-white shadow-md p-4">
-        <div class="container mx-auto flex justify-between items-between items-center">
-            <h1 class="text-2xl font-bold flex items-center gap-2">
-                🌿 Panel Admin Catatan Kebun Ibu
+    <header class="bg-emerald-800 text-white shadow-md p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                🌿 Mode Admin - Catetan Kebon Ibu
             </h1>
-            <button onclick="logoutAdmin()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition shadow">
-                Keluar Panel
+            <button onclick="logoutAdmin()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm">
+                Kaluar Panel
             </button>
         </div>
     </header>
 
     <main class="container mx-auto p-4 flex-grow grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
         
-        <section class="bg-white p-6 rounded-2xl shadow-sm border border-emerald-100 md:col-span-1">
-            <h2 class="text-xl font-bold text-emerald-800 mb-4 flex items-center gap-2">
-                📢 Kelola Pengumuman Berjalan
+        <section class="bg-white p-5 rounded-3xl shadow-sm border border-stone-200 md:col-span-1 h-fit">
+            <h2 class="text-sm font-black text-emerald-800 mb-4 flex items-center gap-2">
+                📢 Pengumuman Berjalan (Marquee)
             </h2>
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-600 mb-1">Teks Pengumuman Saat Ini:</label>
-                <div id="current-marquee" class="p-3 bg-amber-50 text-amber-800 border border-amber-200 rounded-lg italic text-sm text-center">
-                    Memuat pengumuman...
+                <label class="block text-[11px] font-bold text-stone-500 mb-1">Pengumuman Ayeuna:</label>
+                <div id="current-marquee" class="p-3 bg-amber-50 text-amber-800 border border-amber-200 rounded-xl italic text-xs text-center font-semibold">
+                    Nuju marios...
                 </div>
             </div>
             <form id="form-marquee" onsubmit="updateMarquee(event)">
                 <div class="mb-4">
-                    <label for="marquee-input" class="block text-sm font-medium text-gray-700 mb-1">Update Teks Baru:</label>
-                    <textarea id="marquee-input" rows="3" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Tulis pengumuman kebun di sini..." required></textarea>
+                    <label for="marquee-input" class="block text-[11px] font-bold text-stone-600 mb-1">Serat Teks Anyar:</label>
+                    <textarea id="marquee-input" rows="3" class="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs focus:outline-emerald-600 focus:bg-white font-medium" placeholder="Serat pengumuman kebon di dieu..." required></textarea>
                 </div>
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg transition shadow">
-                    Simpan & Publikasikan
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-md">
+                    Simpen & Publikasikeun
                 </button>
             </form>
         </section>
 
-        <section class="bg-white p-6 rounded-2xl shadow-sm border border-emerald-100 md:col-span-2 flex flex-col">
-            <h2 class="text-xl font-bold text-emerald-800 mb-4 flex items-center gap-2">
-                👥 Daftar Anggota Kebun & Manajemen Sandi
+        <section class="bg-white p-5 rounded-3xl shadow-sm border border-stone-200 md:col-span-2 flex flex-col">
+            <h2 class="text-sm font-black text-emerald-800 mb-4 flex items-center gap-2">
+                👥 Daptar Anggota Kebon & Kecap Sandi
             </h2>
             
             <div class="overflow-x-auto flex-grow">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-emerald-50">
+                <table class="min-w-full divide-y divide-stone-200 text-xs">
+                    <thead class="bg-stone-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-emerald-800 uppercase tracking-wider">Nama Anggota</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-emerald-800 uppercase tracking-wider">Aksi</th>
+                            <th class="px-4 py-3 text-left font-bold text-stone-600 uppercase tracking-wider">Nami Panggero Ibu</th>
+                            <th class="px-4 py-3 text-left font-bold text-stone-600 uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="user-table-body" class="bg-white divide-y divide-gray-100">
+                    <tbody id="user-table-body" class="bg-white divide-y divide-stone-100 font-medium">
                         <tr>
-                            <td colspan="2" class="px-6 py-4 text-center text-gray-500 text-sm">Memuat daftar anggota...</td>
+                            <td colspan="2" class="px-4 py-4 text-center text-stone-400">Nuju marios daptar anggota...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -72,140 +70,116 @@
 
     </main>
 
-    <div id="password-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fade-in">
-        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative">
-            <h3 class="text-lg font-bold text-gray-900 mb-2">Ganti Sandi Anggota</h3>
-            <p class="text-sm text-gray-500 mb-4">Mengubah kata sandi untuk akun: <span id="modal-username" class="font-semibold text-emerald-700"></span></p>
+    <div id="password-modal" class="hidden fixed inset-0 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl shadow-xl max-w-sm w-full p-5 relative border border-stone-100">
+            <h3 class="text-sm font-black text-stone-800 mb-1">Ganti Kecap Sandi</h3>
+            <p class="text-[11px] text-stone-500 mb-4">Ngarobih sandi kanggo akun: <span id="modal-username" class="font-bold text-emerald-700"></span></p>
             
             <form id="form-change-password" onsubmit="submitNewPassword(event)">
                 <input type="hidden" id="modal-user-id">
                 <div class="mb-4">
-                    <label for="new-password" class="block text-sm font-medium text-gray-700 mb-1">Sandi Baru:</label>
-                    <input type="password" id="new-password" class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none" required placeholder="Masukkan sandi baru">
+                    <label for="new-password" class="block text-[11px] font-bold text-stone-600 mb-1">Sandi Anyar:</label>
+                    <input type="password" id="new-password" class="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl text-xs focus:outline-emerald-600 focus:bg-white font-medium" required placeholder="Lebetkeun sandi anyar">
                 </div>
-                <div class="flex justify-end gap-3">
-                    <button type="button" onclick="closePasswordModal()" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition text-sm">
+                <div class="flex justify-end gap-2 text-xs font-bold">
+                    <button type="button" onclick="closePasswordModal()" class="px-4 py-2.5 border border-stone-300 rounded-xl text-stone-600 hover:bg-stone-50">
                         Batal
                     </button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition text-sm shadow">
-                        Simpan Sandi
+                    <button type="submit" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-md">
+                        Simpen Sandi
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <footer class="bg-emerald-800 text-emerald-200 text-center py-4 text-xs mt-auto">
-        &copy; 2026 Catatan Kebun Ibu - Hak Akses Terbatas Admin
-    </footer>
-
     <script>
-        // 1. KONFIGURASI SUPABASE
-        // Ganti dengan URL dan Anon Key proyek Supabase Anda sendiri
-        const SUPABASE_URL = "https://URL_PROYEK_ANDA_DISINI.supabase.co";
-        const SUPABASE_KEY = "ANON_KEY_SUPABASE_ANDA_DISINI";
-        
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Nyaruakeun URL sareng KEY tina file index.html Ibu
+        const SUPABASE_BASE_URL = "https://zaueuvplevtgkthqifsk.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_27mT7S6Eo9cBKN6xmujYqg_y2T20wSf";
+        const authHeaders = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' };
 
-        // Keterangan Asumsi Struktur Tabel Supabase (karena RLS dimatikan):
-        // Tabel 1: 'pengguna' -> kolom: id (int/uuid), nama (text, unique), sandi (text)
-        // Tabel 2: 'pengumuman' -> kolom: id (int), teks (text), updated_at (timestamptz)
-
-        // 2. PROTEKSI HALAMAN (Sandi Admin: Mekarwangi1)
-        // Memeriksa status login session admin sederhana melalui localStorage
-        if (localStorage.getItem('admin_authenticated') !== 'true') {
-            alert('Akses ditolak! Anda harus masuk lewat tombol admin rahasia.');
+        // 1. PROTEKSI PANEL ADMIN (Nyaruakeun sareng sessionStorage tina index.html)
+        if (sessionStorage.getItem('admin_auth_kebun') !== 'true') {
+            alert('Akses ditolak! Ibu kedah lebet nganggo tombol admin rahasia.');
             window.location.href = 'index.html';
         }
 
-        // Fungsi Keluar
         function logoutAdmin() {
-            localStorage.removeItem('admin_authenticated');
+            sessionStorage.removeItem('admin_auth_kebun');
             window.location.href = 'index.html';
         }
 
-        // 3. FUNGSI UNTUK MANAJEMEN PENGUMUMAN (MARQUEE)
+        // 2. NGALEBETKEUN / MARIOS MARQUEE
         async function fetchMarquee() {
             try {
-                // Mengambil pengumuman terakhir (id: 1 atau baris paling baru)
-                const { data, error } = await supabase
-                    .from('pengumuman')
-                    .select('teks')
-                    .order('id', { ascending: false })
-                    .limit(1);
-
-                if (error) throw error;
-
-                if (data && data.length > 0) {
-                    document.getElementById('current-marquee').innerText = data[0].teks;
-                } else {
-                    document.getElementById('current-marquee').innerText = "Belum ada pengumuman.";
+                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengumuman_kebun?select=pesan&aktif=eq.true&order=id.desc&limit=1`, { headers: authHeaders });
+                if(res.ok) {
+                    const data = await res.json();
+                    const el = document.getElementById('current-marquee');
+                    if(data.length > 0 && el) el.innerText = data[0].pesan;
+                    else el.innerText = "Teu acan aya pengumuman anu aktif.";
                 }
-            } catch (err) {
-                console.error("Gagal memuat marquee:", err);
-                document.getElementById('current-marquee').innerText = "Gagal memuat data dari database.";
+            } catch(e) {
+                document.getElementById('current-marquee').innerText = "Gagal nyambung ka database.";
             }
         }
 
         async function updateMarquee(event) {
             event.preventDefault();
             const teksBaru = document.getElementById('marquee-input').value.trim();
-            
             try {
-                // Di sini kita asumsikan update baris id: 1, atau lakukan 'upsert'
-                const { error } = await supabase
-                    .from('pengumuman')
-                    .upsert({ id: 1, teks: teksBaru, updated_at: new Date() });
+                // Nganggo POST kanggo nambihan data pengumuman anyar anu aktif
+                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengumuman_kebun`, {
+                    method: 'POST',
+                    headers: authHeaders,
+                    body: JSON.stringify({ pesan: teksBaru, aktif: true })
+                });
 
-                if (error) throw error;
+                if (!res.ok) throw new Error("Gagal ngirim data.");
 
-                alert('Pengumuman berhasil diperbarui!');
+                alert('Pengumuman énggal parantos dipublikasikeun!');
                 document.getElementById('marquee-input').value = '';
-                fetchMarquee(); // refresh tampilan teks pengumuman saat ini
+                fetchMarquee();
             } catch (err) {
-                alert('Gagal mengupdate pengumuman: ' + err.message);
+                alert('Gagal nga-update pengumuman: ' + err.message);
             }
         }
 
-        // 4. FUNGSI UNTUK MENAMPILKAN DAFTAR USER (KUSTOM TANPA EMAIL)
+        // 3. MARIOS DAPTAR ANGGOTA (Tabel: pengguna_kebun)
         async function fetchUsers() {
             try {
-                const { data: users, error } = await supabase
-                    .from('pengguna')
-                    .select('id, nama')
-                    .order('nama', { ascending: true });
-
-                if (error) throw error;
+                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengguna_kebun?select=id,nama_panggero&order=nama_panggero.asc`, { headers: authHeaders });
+                if (!res.ok) throw new Error();
+                const users = await res.json();
 
                 const tbody = document.getElementById('user-table-body');
                 tbody.innerHTML = '';
 
-                if (!users || users.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="2" class="px-6 py-4 text-center text-gray-500 text-sm">Belum ada anggota terdaftar.</td></tr>`;
+                if (users.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="2" class="px-4 py-4 text-center text-stone-400">Teu acan aya anggota anu daptar.</td></tr>`;
                     return;
                 }
 
                 users.forEach(user => {
                     const row = document.createElement('tr');
-                    row.className = 'hover:bg-gray-50 transition';
+                    row.className = 'hover:bg-stone-50 transition';
                     row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-950">${user.nama}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <button onclick="openPasswordModal('${user.id}', '${user.nama}')" class="text-emerald-600 hover:text-emerald-900 font-semibold cursor-pointer">
+                        <td class="px-4 py-3 text-stone-800 font-bold">${user.nama_panggero}</td>
+                        <td class="px-4 py-3">
+                            <button onclick="openPasswordModal('${user.id}', '${user.nama_panggero}')" class="text-emerald-600 hover:text-emerald-800 font-bold cursor-pointer">
                                 🔑 Ganti Sandi
                             </button>
                         </td>
                     `;
                     tbody.appendChild(row);
                 });
-
             } catch (err) {
-                console.error("Gagal memuat daftar pengguna:", err);
-                document.getElementById('user-table-body').innerHTML = `<tr><td colspan="2" class="px-6 py-4 text-center text-red-500 text-sm">Gagal memuat data anggota.</td></tr>`;
+                document.getElementById('user-table-body').innerHTML = `<tr><td colspan="2" class="px-4 py-4 text-center text-rose-500">Gagal ngamuat data anggota kebon.</td></tr>`;
             }
         }
 
-        // 5. FUNGSI EDIT / GANTI SANDI USER
+        // 4. LOGIKA MODAL GANTI SANDI ANGGOTA
         function openPasswordModal(id, nama) {
             document.getElementById('modal-user-id').value = id;
             document.getElementById('modal-username').innerText = nama;
@@ -213,7 +187,7 @@
             document.getElementById('password-modal').classList.remove('hidden');
         }
 
-        function closePasswordModal() {
+        function closeModalPassword() {
             document.getElementById('password-modal').classList.add('hidden');
         }
 
@@ -223,24 +197,28 @@
             const sandiBaru = document.getElementById('new-password').value;
 
             try {
-                // Melakukan update kolom 'sandi' langsung pada tabel 'pengguna' karena RLS non-aktif
-                const { error } = await supabase
-                    .from('pengguna')
-                    .update({ sandi: sandiBaru })
-                    .eq('id', userId);
+                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengguna_kebun?id=eq.${userId}`, {
+                    method: 'PATCH',
+                    headers: authHeaders,
+                    body: JSON.stringify({ sandi: sandiBaru })
+                });
 
-                if (error) throw error;
+                if (!res.ok) throw new Error();
 
-                alert('Kata sandi pengguna berhasil diperbarui!');
-                closePasswordModal();
+                alert('Kecap sandi anggota parantos dirobih!');
+                closeModalPassword();
             } catch (err) {
-                alert('Gagal mengganti sandi: ' + err.message);
+                alert('Gagal ngarobih sandi: ' + err.message);
             }
         }
 
-        // 6. INISIALISASI SAAT HALAMAN DIBUKA
+        function closePasswordModal() {
+            document.getElementById('password-modal').classList.add('hidden');
+        }
+
+        // 5. INISIALISASI DATA
         window.onload = function() {
-            if (localStorage.getItem('admin_authenticated') === 'true') {
+            if (sessionStorage.getItem('admin_auth_kebun') === 'true') {
                 fetchMarquee();
                 fetchUsers();
             }
