@@ -57,6 +57,14 @@
             navigator.geolocation.getCurrentPosition((pos) => { pilihLokasiKebun('Lokasi GPS Saya', Math.round(pos.coords.latitude * 10000) / 10000, Math.round(pos.coords.longitude * 10000) / 10000); }, () => { tunjukkanToast('Izin lokasi ditolak.', 'error'); });
         }
 
+        function toggleInfoKebun(sembunyi) {
+            const isi = document.getElementById('infoKebunIsi'); const btn = document.getElementById('btnToggleInfo');
+            const harusSembunyi = typeof sembunyi === 'boolean' ? sembunyi : !(isi && isi.classList.contains('hidden'));
+            if (isi) isi.classList.toggle('hidden', harusSembunyi);
+            if (btn) btn.innerHTML = harusSembunyi ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-up"></i>';
+            try { localStorage.setItem('ibu_kebun_info_sembunyi', harusSembunyi ? '1' : ''); } catch (e) {}
+        }
+
         // --- INDIKATOR WAKTU: fase bulan + hari pasaran (dihitung dari tanggal) ---
         function perbaruiIndikatorWaktu() {
             const kini = new Date();
@@ -85,7 +93,7 @@
 
         const DEFAULT_NUTRITION_RECIPES = [{ name: "Air Cucian Beras", benefit: "Menyuburkan bakteri baik di dalam tanah.", schedule: "Setiap Hari Senin", dosage: "Siramkan langsung air bilasan pertama." }];
 
-        window.onload = function() { buatPartikelDaun(); inisialisasiKunciDefaultLokal(); aturSkalaHuruf(localStorage.getItem('ibu_kebun_skala_huruf') || 'sedang', false); perbaruiIndikatorWaktu(); pariksaStatusLogin(); };
+        window.onload = function() { buatPartikelDaun(); inisialisasiKunciDefaultLokal(); aturSkalaHuruf(localStorage.getItem('ibu_kebun_skala_huruf') || 'sedang', false); perbaruiIndikatorWaktu(); if (localStorage.getItem('ibu_kebun_info_sembunyi')) toggleInfoKebun(true); pariksaStatusLogin(); };
 
         function buatPartikelDaun() {
             const container = document.getElementById('floatingLeaves'); const daunEmoji = ['🍃', '🌿', '☘️', '🍀', '🌱'];
@@ -503,7 +511,88 @@
             grid.innerHTML = html;
         }
 
+        // --- RUANG KOMUNITAS: foto + keterangan dari semua anggota (tabel photos) ---
+        let komunitasSelectedFile = null;
+        function previewKomunitasImage(event) {
+            const file = event.target.files[0]; if (!file) return; komunitasSelectedFile = file;
+            document.getElementById('komunitasImgLabel').innerText = file.name;
+            const reader = new FileReader(); reader.onload = function(e) { document.getElementById('komunitasImgPreview').src = e.target.result; document.getElementById('komunitasImgContainer').classList.remove('hidden'); }; reader.readAsDataURL(file);
+        }
+        async function muatFotoKomunitas() {
+            const grid = document.getElementById('komunitasGrid'); if (!grid) return;
+            try {
+                const res = await fetch(SUPABASE_BASE_URL + '/rest/v1/photos?select=*&order=id.desc&limit=30', { headers: authHeaders });
+                if (!res.ok) throw new Error();
+                const rows = await res.json();
+                const peran = localStorage.getItem('ibu_kebun_role') || 'Anggota';
+                if (!rows.length) { grid.innerHTML = '<p class="text-xs text-stone-400 col-span-full text-center py-3">Belum ada foto komunitas. Jadilah yang pertama membagikan!</p>'; return; }
+                grid.innerHTML = rows.map(r => {
+                    const cocok = /^\[([^\]]+)\]\s*(.*)$/.exec(r.title || '');
+                    const nama = cocok ? cocok[1] : 'Pengunjung'; const ket = cocok ? cocok[2] : (r.title || '');
+                    const bolehHapus = (nama === currentUser) || peran === 'Ketua' || peran === 'Admin';
+                    const tgl = r.created_at ? new Date(r.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+                    return '<div class="bg-stone-50 rounded-2xl border border-stone-200/70 overflow-hidden">' + (r.image_url ? '<img src="' + escapeHtml(r.image_url) + '" class="w-full h-44 object-cover" loading="lazy">' : '') + '<div class="p-3 space-y-1"><p class="text-xs text-stone-700 font-medium">' + escapeHtml(ket || '(tanpa keterangan)') + '</p><p class="text-[11px] text-stone-400 flex items-center justify-between"><span><i class="fa-solid fa-user text-rose-500 mr-1"></i>' + escapeHtml(nama) + ' • ' + tgl + '</span>' + (bolehHapus ? '<button onclick="hapusFotoKomunitas(' + r.id + ')" class="text-rose-500 font-bold btn-press"><i class="fa-solid fa-trash-can mr-0.5"></i>Hapus</button>' : '') + '</p></div></div>';
+                }).join('');
+            } catch (e) { grid.innerHTML = '<p class="text-xs text-rose-400 col-span-full text-center py-3">Gagal memuat foto komunitas.</p>'; }
+        }
+        async function unggahFotoKomunitas() {
+            if (!komunitasSelectedFile) return tunjukkanToast('Pilih foto dulu ya.', 'error');
+            const ket = document.getElementById('komunitasCaption').value.trim();
+            const btn = document.getElementById('btnUnggahKomunitas'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin mr-1"></i> Mengunggah...';
+            try {
+                const blob = await kompresiFileGambar(komunitasSelectedFile);
+                const namaFile = 'komunitas_' + Date.now() + '.jpg';
+                const up = await fetch(SUPABASE_BASE_URL + '/storage/v1/object/images-bucket/' + namaFile, { method: 'POST', headers: { 'apikey': SUPABASE_KEY, 'Authorization': authHeaders.Authorization, 'Content-Type': 'image/jpeg' }, body: blob });
+                if (!up.ok) throw new Error();
+                const urlFoto = SUPABASE_BASE_URL + '/storage/v1/object/public/images-bucket/' + namaFile;
+                const judul = ('[' + (currentUser || 'Pengunjung') + '] ' + ket).trim();
+                const ins = await fetch(SUPABASE_BASE_URL + '/rest/v1/photos', { method: 'POST', headers: { 'apikey': SUPABASE_KEY, 'Authorization': authHeaders.Authorization, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' }, body: JSON.stringify({ title: judul, image_url: urlFoto }) });
+                if (!ins.ok) throw new Error();
+                komunitasSelectedFile = null; document.getElementById('komunitasCaption').value = ''; document.getElementById('komunitasImgLabel').innerText = 'Belum ada foto'; document.getElementById('komunitasImgContainer').classList.add('hidden');
+                tunjukkanToast('Foto berhasil dibagikan ke komunitas!', 'success');
+                muatFotoKomunitas();
+            } catch (e) { tunjukkanToast('Gagal mengunggah foto. Coba lagi.', 'error'); }
+            finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> Bagikan ke Komunitas'; }
+        }
+        async function hapusFotoKomunitas(id) {
+            if (!confirm('Hapus foto ini dari ruang komunitas?')) return;
+            try { const res = await fetch(SUPABASE_BASE_URL + '/rest/v1/photos?id=eq.' + id, { method: 'DELETE', headers: authHeaders }); if (!res.ok) throw new Error(); tunjukkanToast('Foto dihapus.', 'success'); muatFotoKomunitas(); } catch (e) { tunjukkanToast('Gagal menghapus foto.', 'error'); }
+        }
+
         // RENDER KALENDER JADWAL
+        let kalenderGeserBulan = 0; let kalenderTanggalPilih = null;
+        function geserBulanKalender(delta) { kalenderGeserBulan += delta; renderKalender(); }
+        function pilihTanggalKalender(iso) { kalenderTanggalPilih = (kalenderTanggalPilih === iso) ? null : iso; renderKalender(); }
+        function kunciTanggal(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+        function renderKalenderGrid(events) {
+            const grid = document.getElementById('kalenderGrid'); const judul = document.getElementById('kalenderJudulBulan'); if (!grid) return;
+            const dasar = new Date(); dasar.setDate(1); dasar.setMonth(dasar.getMonth() + kalenderGeserBulan);
+            const tahun = dasar.getFullYear(), bulan = dasar.getMonth();
+            if (judul) judul.innerText = dasar.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+            const peta = {};
+            events.forEach(e => { const k = kunciTanggal(e.date); if (!peta[k]) peta[k] = []; if (!peta[k].includes(e.title)) peta[k].push(e.title); });
+            const warnaTitik = { 'Awal Tanam / Menanam': 'bg-emerald-500', 'Siap Tumbuh Daun': 'bg-blue-500', 'Pindah ke Pot Besar': 'bg-lime-500', 'Waktunya Panen!': 'bg-amber-500' };
+            const hariPertama = new Date(tahun, bulan, 1).getDay();
+            const jumlahHari = new Date(tahun, bulan + 1, 0).getDate();
+            const kunciHariIni = kunciTanggal(new Date());
+            let html = '';
+            for (let i = 0; i < hariPertama; i++) html += '<div></div>';
+            for (let t = 1; t <= jumlahHari; t++) {
+                const kunci = tahun + '-' + String(bulan + 1).padStart(2, '0') + '-' + String(t).padStart(2, '0');
+                const jenis = peta[kunci] || [];
+                const titik = jenis.slice(0, 4).map(jt => '<span class="w-1.5 h-1.5 rounded-full ' + (warnaTitik[jt] || 'bg-stone-400') + '"></span>').join('');
+                const kelasHariIni = kunci === kunciHariIni ? 'bg-indigo-600 text-white shadow' : 'bg-stone-50 text-stone-700';
+                const kelasPilih = kunci === kalenderTanggalPilih ? 'ring-2 ring-rose-500' : '';
+                html += '<button onclick="pilihTanggalKalender(\'' + kunci + '\')" class="min-h-[44px] rounded-xl flex flex-col items-center justify-center gap-1 font-bold text-xs btn-press ' + kelasHariIni + ' ' + kelasPilih + '"><span>' + t + '</span><span class="flex space-x-0.5 h-1.5">' + titik + '</span></button>';
+            }
+            grid.innerHTML = html;
+            const info = document.getElementById('kalenderInfoPilih');
+            if (info) {
+                if (kalenderTanggalPilih) { const d = new Date(kalenderTanggalPilih + 'T00:00:00'); info.innerHTML = 'Menampilkan jadwal tanggal <b>' + d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) + '</b> — <button class="underline font-bold text-indigo-600" onclick="pilihTanggalKalender(\'' + kalenderTanggalPilih + '\')">tampilkan semua</button>'; info.classList.remove('hidden'); }
+                else info.classList.add('hidden');
+            }
+        }
+
         function renderKalender() {
             const list = document.getElementById('kalenderList');
             if(!list) return;
@@ -533,6 +622,7 @@
                 }
             });
 
+            renderKalenderGrid(events);
             if(events.length === 0) {
                 document.getElementById('kalenderEmpty').classList.remove('hidden');
                 list.innerHTML = ''; return;
@@ -540,9 +630,11 @@
             document.getElementById('kalenderEmpty').classList.add('hidden');
 
             events.sort((a, b) => a.date - b.date);
+            const eventsTampil = kalenderTanggalPilih ? events.filter(e => kunciTanggal(e.date) === kalenderTanggalPilih) : events;
 
             let html = '';
-            events.forEach(e => {
+            if (kalenderTanggalPilih && eventsTampil.length === 0) html = '<p class="text-xs text-stone-400 text-center py-4">Tidak ada jadwal pada tanggal ini.</p>';
+            eventsTampil.forEach(e => {
                 let diff = Math.ceil((e.date - today) / (1000*3600*24));
                 let badgeHTML = "";
                 let cardOpacity = "";
@@ -1014,11 +1106,13 @@
             if (tId === 'kalender') renderKalender();
             if (tId === 'tugas') renderWateringList();
             if (tId === 'benih') loadBankBenih();
-            if (tId === 'panen') filterPlants('Semua');
+            if (tId === 'panen') { filterPlants('Semua'); muatFotoKomunitas(); }
             if (tId === 'kebun') filterPlants(currentFilterStatus);
         }
 
         // --- MINTA SARAN AI UNTUK TANGGAL PANEN ---
+        function nambihDinten(tanggal, jumlahHari) { const d = new Date(tanggal); d.setDate(d.getDate() + jumlahHari); return d.toISOString().split('T')[0]; }
+
         async function generateAiGuide() {
             const pName = document.getElementById('formPlantName').value.trim(); 
             const baseDateVal = document.getElementById('formSowingDate').value;
@@ -1037,7 +1131,10 @@
             else if (statusVal === "Panen") statusContext = "Tanaman ini sudah masuk masa panen.";
 
             try {
+                const infoCuacaAI = cuacaRingkasan ? ` Cuaca hari ini di lokasi kebun: suhu ${cuacaRingkasan.suhu}°C, peluang hujan ${cuacaRingkasan.peluangHujan !== null ? cuacaRingkasan.peluangHujan + '%' : 'tidak diketahui'}.` : "";
                 const prompt = `Berikan panduan menanam singkat 1 paragraf untuk tanaman: "${pName}".
+                Lokasi kebun: ${lokasiKebun.nama} (koordinat ${lokasiKebun.lat}, ${lokasiKebun.lon}, wilayah Tasikmalaya, Jawa Barat — tropis).${infoCuacaAI}
+                Sesuaikan estimasi jumlah hari dengan iklim dan kondisi lokasi tersebut.
                 PENTING: ${statusContext}
                 Berdasarkan status/kondisi saat ini, berikan estimasi JUMALAH HARI (dihitung dari HARI INI) untuk mencapai tahap selanjutnya.
                 Jika suatu tahap sudah terlewati (misal karena mulainya dari bibit besar), isi angkanya dengan 0.
@@ -1070,7 +1167,7 @@
                 });
 
                 tunjukkanToast("Estimasi dari Nyi Sari sudah dicatat!", "success");
-            } catch (e) { tununjukkanToast("Gagal membuat estimasi.", "error"); } 
+            } catch (e) { tunjukkanToast("Gagal membuat estimasi. Coba lagi.", "error"); } 
             finally { btn.disabled = false; icon.classList.remove('hidden'); loading.classList.add('hidden'); }
         }
 
