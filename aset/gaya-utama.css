@@ -67,3 +67,6 @@
 #tourLayar { position: fixed; inset: 0; z-index: 120; }
 #tourSorot { position: fixed; z-index: 121; border: 3px solid #a3e635; border-radius: 18px; box-shadow: 0 0 0 9999px rgba(24, 36, 28, .62); pointer-events: none; transition: top .35s ease, left .35s ease, width .35s ease, height .35s ease; }
 #tourKartu { z-index: 130; transition: top .35s ease, left .35s ease; }
+
+/* Selama panduan berjalan, matikan animasi pudar tab agar layar tidak berkedip saat berpindah langkah */
+body.tour-aktif .tab-section { animation: none !important; }

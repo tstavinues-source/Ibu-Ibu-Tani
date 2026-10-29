@@ -57,8 +57,8 @@
     <!-- ================= APLIKASI UTAMA ================= -->
     <div id="appScreen" class="hidden flex flex-col min-h-screen relative z-10 w-full">
         
-        <!-- Papan Pengumuman -->
-        <div class="bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-800 text-xs font-bold py-2.5 px-4 flex items-center overflow-hidden border-b border-amber-200 shadow-sm relative">
+        <!-- Papan Pengumuman (hanya tampil bila ada siaran aktif dari admin) -->
+        <div id="papanPengumuman" class="hidden bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-800 text-xs font-bold py-2.5 px-4 flex items-center overflow-hidden border-b border-amber-200 shadow-sm relative">
             <div class="absolute left-0 bg-gradient-to-r from-amber-100 to-transparent w-12 h-full z-10"></div>
             <i class="fa-solid fa-bullhorn mr-2 text-amber-600 absolute left-4 z-20"></i>
             <div class="marquee-container ml-5"><span id="pengumumanMarquee" class="marquee-content tracking-wide">Sedang memeriksa pengumuman terbaru...</span></div>
