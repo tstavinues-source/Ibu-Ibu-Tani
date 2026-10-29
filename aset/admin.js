@@ -104,6 +104,8 @@
         }
 
         // PENYELASAN DETAIL ERROR JIKA JABATAN GAGAL DIUBAH
+        function intipSandi(idInput, btn) { const inp = document.getElementById(idInput); if (!inp) return; const tampil = inp.type === 'password'; inp.type = tampil ? 'text' : 'password'; if (btn) btn.innerHTML = '<i class="fa-solid ' + (tampil ? 'fa-eye-slash' : 'fa-eye') + '"></i>'; }
+
         async function updatePeranAkun(id, peranBaru) {
             try {
                 const hasilPeran = await panggilRpc('admin_atur_peran', { p_sandi_admin: sandiAdmin(), p_id: id, p_peran_baru: peranBaru });
