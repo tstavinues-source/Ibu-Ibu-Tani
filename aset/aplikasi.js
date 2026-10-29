@@ -25,13 +25,67 @@
 
         let allPlants = []; let filteredPlants = []; let nutritionData = [];
         let cuacaRingkasan = null;
+
+        // --- LOKASI KEBUN: bawaan Cibeuti, bisa dipindah per perangkat ---
+        const LOKASI_BAWAAN = { nama: "Cibeuti, Kawalu, Tasikmalaya", lat: -7.3793, lon: 108.1991 };
+        let lokasiKebun = (() => { try { const t = JSON.parse(localStorage.getItem('ibu_kebun_lokasi')); if (t && typeof t.lat === 'number' && typeof t.lon === 'number' && t.nama) return t; } catch (e) {} return { nama: LOKASI_BAWAAN.nama, lat: LOKASI_BAWAAN.lat, lon: LOKASI_BAWAAN.lon }; })();
+        function simpanLokasiKebun(lok) { lokasiKebun = lok; try { localStorage.setItem('ibu_kebun_lokasi', JSON.stringify(lok)); } catch (e) {} const el = document.getElementById('cuacaLokasiNama'); if (el) el.innerText = lok.nama; }
+        function bukaModalLokasi() { const m = document.getElementById('modalLokasi'); m.classList.remove('hidden'); setTimeout(() => m.classList.add('opacity-100'), 10); }
+        function tutupModalLokasi() { const m = document.getElementById('modalLokasi'); m.classList.remove('opacity-100'); setTimeout(() => m.classList.add('hidden'), 200); }
+        async function cariLokasiKebun() {
+            const kata = document.getElementById('cariLokasiInput').value.trim();
+            const wadah = document.getElementById('hasilLokasi'); if (!wadah) return;
+            if (kata.length < 3) { wadah.innerHTML = '<p class="text-xs text-rose-500 font-bold">Ketik minimal 3 huruf.</p>'; return; }
+            wadah.innerHTML = '<p class="text-xs text-stone-400">Mencari...</p>';
+            try {
+                const res = await fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(kata) + '&count=6&language=id&format=json');
+                const data = await res.json();
+                const hasil = (data && data.results) || [];
+                if (!hasil.length) { wadah.innerHTML = '<p class="text-xs text-rose-500 font-bold">Tidak ditemukan. Coba nama kota terdekat.</p>'; return; }
+                wadah.innerHTML = hasil.map(r => {
+                    const bagian = [r.name, r.admin3, r.admin2, r.admin1, r.country];
+                    const unik = bagian.filter((v, i) => v && bagian.indexOf(v) === i);
+                    const nama = unik.join(', ');
+                    return '<button onclick="pilihLokasiKebun(\'' + escapeJsString(nama) + '\', ' + r.latitude + ', ' + r.longitude + ')" class="w-full text-left bg-stone-50 hover:bg-sky-50 border border-stone-200 rounded-xl px-3 py-2.5 btn-press"><span class="block font-bold text-sm text-stone-800">' + escapeHtml(nama) + '</span><span class="block text-[11px] text-stone-400">' + r.latitude.toFixed(4) + ', ' + r.longitude.toFixed(4) + '</span></button>';
+                }).join('');
+            } catch (e) { wadah.innerHTML = '<p class="text-xs text-rose-500 font-bold">Pencarian gagal. Periksa sambungan internet.</p>'; }
+        }
+        function pilihLokasiKebun(nama, lat, lon) { simpanLokasiKebun({ nama: nama, lat: lat, lon: lon }); tutupModalLokasi(); ambilDataCuacaMeteo(); tunjukkanToast('Lokasi kebun dipindah ke ' + nama, 'success'); }
+        function aturLokasiBawaan() { pilihLokasiKebun(LOKASI_BAWAAN.nama, LOKASI_BAWAAN.lat, LOKASI_BAWAAN.lon); }
+        function pakaiGPSLokasi() {
+            if (!navigator.geolocation) { tunjukkanToast('GPS tidak tersedia di perangkat ini.', 'error'); return; }
+            navigator.geolocation.getCurrentPosition((pos) => { pilihLokasiKebun('Lokasi GPS Saya', Math.round(pos.coords.latitude * 10000) / 10000, Math.round(pos.coords.longitude * 10000) / 10000); }, () => { tunjukkanToast('Izin lokasi ditolak.', 'error'); });
+        }
+
+        // --- INDIKATOR WAKTU: fase bulan + hari pasaran (dihitung dari tanggal) ---
+        function perbaruiIndikatorWaktu() {
+            const kini = new Date();
+            const namaHari = kini.toLocaleDateString('id-ID', { weekday: 'long' });
+            const hariSejakEpoch = Math.floor(Date.UTC(kini.getFullYear(), kini.getMonth(), kini.getDate()) / 86400000);
+            const pasaran = ['Legi', 'Pahing', 'Pon', 'Wage', 'Kliwon'][((hariSejakEpoch % 5) + 5) % 5];
+            const elP = document.getElementById('indPasaran'); if (elP) elP.innerText = namaHari + ' ' + pasaran;
+            const umurBulan = ((kini - new Date(Date.UTC(2000, 0, 6, 18, 14))) / 86400000) % 29.530588853;
+            let fase, ikon;
+            if (umurBulan < 1.8) { fase = 'Bulan Baru'; ikon = '🌑'; } else if (umurBulan < 7.4) { fase = 'Sabit Awal'; ikon = '🌒'; } else if (umurBulan < 9.2) { fase = 'Kuartal I'; ikon = '🌓'; } else if (umurBulan < 14.8) { fase = 'Cembung'; ikon = '🌔'; } else if (umurBulan < 16.6) { fase = 'Purnama'; ikon = '🌕'; } else if (umurBulan < 22.1) { fase = 'Cembung Akhir'; ikon = '🌖'; } else if (umurBulan < 23.9) { fase = 'Kuartal Akhir'; ikon = '🌗'; } else { fase = 'Sabit Akhir'; ikon = '🌘'; }
+            const elB = document.getElementById('indBulan'); if (elB) elB.innerText = ikon + ' ' + fase;
+        }
+
+        // --- INDIKATOR PANEN: tanaman yang panen dalam 7 hari ---
+        function perbaruiIndikatorPanen() {
+            const el = document.getElementById('indPanen'); if (!el) return;
+            const kini = new Date(); kini.setHours(0, 0, 0, 0);
+            const batas = new Date(kini); batas.setDate(batas.getDate() + 7);
+            let n = 0;
+            allPlants.forEach(p => { if (p.est_panen_date && p.status !== 'Panen' && p.status !== 'Gagal') { const t = new Date(p.est_panen_date); if (t >= kini && t <= batas) n++; } });
+            el.innerText = n + ' tanaman';
+        }
         let currentTab = 'kebun'; let currentFilterStatus = 'Semua';
         let formSelectedFile = null; let doctorSelectedFile = null; let activeHapusId = null;
         let nutrisiDraftSaved = false; let currentUser = null;
 
         const DEFAULT_NUTRITION_RECIPES = [{ name: "Air Cucian Beras", benefit: "Menyuburkan bakteri baik di dalam tanah.", schedule: "Setiap Hari Senin", dosage: "Siramkan langsung air bilasan pertama." }];
 
-        window.onload = function() { buatPartikelDaun(); inisialisasiKunciDefaultLokal(); aturSkalaHuruf(localStorage.getItem('ibu_kebun_skala_huruf') || 'sedang', false); pariksaStatusLogin(); };
+        window.onload = function() { buatPartikelDaun(); inisialisasiKunciDefaultLokal(); aturSkalaHuruf(localStorage.getItem('ibu_kebun_skala_huruf') || 'sedang', false); perbaruiIndikatorWaktu(); pariksaStatusLogin(); };
 
         function buatPartikelDaun() {
             const container = document.getElementById('floatingLeaves'); const daunEmoji = ['🍃', '🌿', '☘️', '🍀', '🌱'];
@@ -274,7 +328,7 @@
             const ikonDiv = document.getElementById('cuacaIkon'); const deskripsiText = document.getElementById('cuacaDeskripsi'); const suhuText = document.getElementById('cuacaSuhu'); const kelembapanText = document.getElementById('cuacaKelembapan'); const saranText = document.getElementById('cuacaSaranTani'); const hamaBadge = document.getElementById('hamaBadgeWaspada'); const hamaStatus = document.getElementById('hamaStatusText');
             async function panggilMeteoAPI(latitude, longitude) {
                 try {
-                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,weather_code&daily=precipitation_sum,precipitation_probability_max&forecast_days=1&timezone=auto`);
+                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,uv_index&daily=precipitation_sum,precipitation_probability_max,sunrise,sunset&forecast_days=2&timezone=auto`);
                     if (!res.ok) throw new Error(); const data = await res.json();
                     const temp = Math.round(data.current.temperature_2m);
                     const hum = data.current.relative_humidity_2m;
@@ -283,6 +337,14 @@
                     const jumlahHujan = (data.daily && data.daily.precipitation_sum) ? data.daily.precipitation_sum[0] : null;
                     const hujanMungkin = (peluangHujan !== null && peluangHujan >= 50) || (jumlahHujan !== null && jumlahHujan >= 5) || code >= 51;
                     cuacaRingkasan = { suhu: temp, kode: code, peluangHujan: peluangHujan, jumlahHujan: jumlahHujan, hujanMungkin: hujanMungkin };
+                    const elLokasi = document.getElementById('cuacaLokasiNama'); if (elLokasi) elLokasi.innerText = lokasiKebun.nama;
+                    const angin = data.current.wind_speed_10m; const uv = data.current.uv_index;
+                    const elAngin = document.getElementById('indAngin'); if (elAngin) elAngin.innerText = (angin != null ? Math.round(angin) : '--') + ' km/jam';
+                    const elUV = document.getElementById('indUV'); if (elUV) elUV.innerText = (uv != null ? Math.round(uv) : '--') + (uv == null ? '' : (uv <= 2 ? ' (Rendah)' : (uv <= 5 ? ' (Sedang)' : (uv <= 7 ? ' (Tinggi)' : ' (Sgt Tinggi)'))));
+                    const elHujan = document.getElementById('indHujan'); if (elHujan) elHujan.innerText = (peluangHujan !== null ? peluangHujan + '%' : '--') + ' • ' + (jumlahHujan !== null ? jumlahHujan + ' mm' : '--');
+                    let risikoJamur = 'Rendah'; if (hum >= 85 && ((jumlahHujan || 0) > 0 || (peluangHujan || 0) >= 50)) risikoJamur = 'Tinggi'; else if (hum >= 78 || (hum >= 70 && (peluangHujan || 0) >= 50)) risikoJamur = 'Sedang';
+                    const elJamur = document.getElementById('indJamur'); if (elJamur) elJamur.innerText = risikoJamur;
+                    const elMt = document.getElementById('indMatahari'); if (elMt && data.daily && data.daily.sunrise && data.daily.sunset) elMt.innerText = data.daily.sunrise[0].slice(11, 16) + ' – ' + data.daily.sunset[0].slice(11, 16);
                     
                     if(suhuText) suhuText.innerText = `${temp}°C`; 
                     if(kelembapanText) kelembapanText.innerText = `${hum}%`;
@@ -316,7 +378,7 @@
                     renderSiramBanner();
                 } catch (e) {}
             }
-            panggilMeteoAPI(-6.2, 106.8);
+            panggilMeteoAPI(lokasiKebun.lat, lokasiKebun.lon);
         }
 
         async function loadNutritionFromDb() {
@@ -358,6 +420,7 @@
                 const dSemai = document.getElementById('dashSemai'); if(dSemai) dSemai.innerText = semai;
                 const dSiap = document.getElementById('dashSiap'); if(dSiap) dSiap.innerText = siap;
                 const dGagal = document.getElementById('dashGagal'); if(dGagal) dGagal.innerText = gagal;
+                perbaruiIndikatorPanen();
                 
                 filterPlants(currentFilterStatus);
                 renderKalender();
