@@ -93,7 +93,7 @@
                             </div>
                         </div>
                         
-                        <div class="flex justify-between items-center text-[10px] pt-1 border-t border-slate-150">
+                        <div class="flex justify-between items-center text-[10px] pt-1 border-t border-slate-200">
                             <button onclick="openEditSandiModal('${user.id}', '${escapeJsString(user.nama_panggero)}')" class="text-emerald-600 hover:text-emerald-800 font-bold transition-all"><i class="fa-solid fa-key mr-1"></i>Ganti Sandi</button>
                             <button onclick="hapusAkun('${user.id}', '${escapeJsString(user.nama_panggero)}')" class="font-bold text-rose-500 hover:text-rose-700 transition-all"><i class="fa-solid fa-trash-can mr-1"></i>Hapus Akun</button>
                         </div>
@@ -277,7 +277,7 @@
                             <span class="font-black block text-[10px] ${isAi ? 'text-emerald-700' : 'text-slate-700'}">${escapeHtml(c.sender)} ${isAi ? '✨ (AI)' : ''}</span>
                             <p class="text-slate-600 font-medium mt-0.5 leading-relaxed">${escapeHtml(c.message)}</p>
                         </div>
-                        <button onclick="hapusChat('${c.id}')" class="text-rose-500 hover:text-rose-750 p-1 transition-colors" title="Hapus Obrolan"><i class="fa-solid fa-xmark text-xs font-bold"></i></button>
+                        <button onclick="hapusChat('${c.id}')" class="text-rose-500 hover:text-rose-700 p-1 transition-colors" title="Hapus Obrolan"><i class="fa-solid fa-xmark text-xs font-bold"></i></button>
                     </div>`;
                 });
                 list.innerHTML = html;
@@ -307,7 +307,7 @@
                     const waktu = new Date(l.waktu).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + " WIB";
                     const tgl = new Date(l.waktu).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
                     html += `
-                    <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-150 flex justify-between items-center text-[10px] font-bold text-slate-700 shadow-sm hover:border-slate-200 transition-all">
+                    <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex justify-between items-center text-[10px] font-bold text-slate-700 shadow-sm hover:border-slate-200 transition-all">
                         <div class="flex items-center space-x-2">
                             <i class="fa-solid fa-right-to-bracket text-purple-500"></i>
                             <span>${escapeHtml(l.nama_panggero)}</span>

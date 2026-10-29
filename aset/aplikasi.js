@@ -508,7 +508,7 @@
             let targets = allPlants.filter(p => p.status !== 'Panen' && (!p.last_watered || new Date(p.last_watered).toDateString() !== new Date().toDateString()));
             if (targets.length === 0) return listDiv.innerHTML = '<div class="text-center py-4 text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> Alhamdulillah! Semua tanaman komunitas sudah selesai disiram hari ini.</div>';
             let html = '';
-            targets.forEach(p => { html += `<div class="flex items-center justify-between p-2.5 bg-stone-50 rounded-xl border border-stone-100"><div class="pr-2"><h5 class="font-bold text-stone-800 leading-tight">${escapeHtml(p.plant_name)}</h5><p class="text-[10px] text-stone-450">Milik: <b class="text-emerald-700">${escapeHtml(p.pemilik || 'Anonim')}</b> • Media: ${escapeHtml(p.planting_medium || '-')}</p></div><button onclick="quickWater(${p.id}, true)" class="bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-[11px] flex items-center space-x-1.5 hover:bg-emerald-700 btn-press shadow-sm"><i class="fa-solid fa-shower"></i> <span>Siram</span></button></div>`; });
+            targets.forEach(p => { html += `<div class="flex items-center justify-between p-2.5 bg-stone-50 rounded-xl border border-stone-100"><div class="pr-2"><h5 class="font-bold text-stone-800 leading-tight">${escapeHtml(p.plant_name)}</h5><p class="text-[10px] text-stone-500">Milik: <b class="text-emerald-700">${escapeHtml(p.pemilik || 'Anonim')}</b> • Media: ${escapeHtml(p.planting_medium || '-')}</p></div><button onclick="quickWater(${p.id}, true)" class="bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-[11px] flex items-center space-x-1.5 hover:bg-emerald-700 btn-press shadow-sm"><i class="fa-solid fa-shower"></i> <span>Siram</span></button></div>`; });
             listDiv.innerHTML = html;
         }
 
@@ -785,6 +785,41 @@
                 bukaIsiPanenDetail(plant);
                 loadRekapPanen();
             } catch (e) { tunjukkanToast("Maaf, hasil panen gagal dicatat.", "error"); }
+        }
+
+        function bagikanKeWA(jenis, nama, manfaat) {
+            let teks;
+            if (jenis === 'panen') teks = `Alhamdulillah, *${nama}* sudah panen di Kebon Ibu! \u{1F9FA}\u{1F331}\nDicatat dari aplikasi Catetan Kebon Ibu.`;
+            else if (jenis === 'nutrisi') teks = `*Resep Nutrisi: ${nama}* \u{1F9EA}\nManfaat: ${manfaat || '-'}\n\nDari Buku Saku Nutrisi Catetan Kebon Ibu.`;
+            else teks = `Halo, saya menanam *${nama}* di Kebon Ibu! \u{1F331}\nDicatat dari aplikasi Catetan Kebon Ibu.`;
+            window.open('https://wa.me/?text=' + encodeURIComponent(teks), '_blank');
+        }
+
+        async function bagikanRekapWA() {
+            const namaBulan = new Date().toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+            const aktif = allPlants.filter(p => p.status !== 'Panen' && p.status !== 'Gagal');
+            const hitung = (st) => allPlants.filter(p => p.status === st).length;
+            let barisPanen = 'belum ada catatan panen bulan ini';
+            let jumlahBenih = 0;
+            try {
+                const awal = new Date(); awal.setDate(1);
+                const iso = awal.toISOString().slice(0, 10);
+                const [rp, rb] = await Promise.all([
+                    fetch(`${SUPABASE_BASE_URL}/rest/v1/catatan_panen?tanggal=gte.${iso}&select=jumlah,satuan`, { headers: authHeaders }),
+                    fetch(`${SUPABASE_BASE_URL}/rest/v1/bank_benih?masih_ada=eq.true&select=id`, { headers: authHeaders }),
+                ]);
+                if (rp.ok) {
+                    const rows = await rp.json();
+                    if (rows.length) {
+                        const total = {};
+                        rows.forEach(x => { total[x.satuan] = (total[x.satuan] || 0) + parseFloat(x.jumlah || 0); });
+                        barisPanen = Object.keys(total).map(k => `${total[k]} ${k}`).join(', ') + ` (${rows.length} kali panen)`;
+                    }
+                }
+                if (rb.ok) jumlahBenih = (await rb.json()).length;
+            } catch (e) {}
+            const teks = `\u{1F331} *Rekap Kebon Ibu — ${namaBulan}*\n\n\u{1F33F} Tanaman aktif: ${aktif.length} (Semai ${hitung('Semai')} \u{2022} Tumbuh Daun ${hitung('Tumbuh Daun')} \u{2022} Siap Pindah ${hitung('Siap Pindah')})\n\u{1F9FA} Panen bulan ini: ${barisPanen}\n\u{1F330} Stok benih tersedia: ${jumlahBenih} jenis\n\nSemangat berkebun, Ibu-ibu! \u{1F49A}\n— dari aplikasi Catetan Kebon Ibu`;
+            window.open('https://wa.me/?text=' + encodeURIComponent(teks), '_blank');
         }
 
         async function loadRekapPanen() {
