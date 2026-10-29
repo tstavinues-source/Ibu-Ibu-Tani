@@ -9,6 +9,16 @@
     <link rel="stylesheet" href="aset/gaya-utama.css">
 </head>
 <body class="min-h-screen flex flex-col transition-all duration-200 relative" id="bodyApp">
+    <script>
+        // Atur skala huruf & layar yang benar SEBELUM halaman digambar, supaya tidak berkedip saat refresh:
+        // ukuran langsung sebesar pilihan pengguna, dan bila sudah masuk, layar login tidak sempat tampil.
+        (function () { try {
+            var petaSkala = { kecil: 0.9, sedang: 1, besar: 1.16 };
+            var skala = localStorage.getItem('ibu_kebun_skala_huruf') || 'sedang';
+            document.getElementById('bodyApp').style.zoom = petaSkala[skala] || 1;
+            if (localStorage.getItem('ibu_kebun_user')) document.documentElement.classList.add('sudah-login');
+        } catch (e) {} })();
+    </script>
 
     <div class="floating-leaves" id="floatingLeaves"></div>
 
