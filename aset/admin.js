@@ -338,3 +338,8 @@
             if (tipe === 'success') i.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i>'; else if (tipe === 'warning') i.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-400"></i>'; else i.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-400"></i>';
             t.style.opacity = '1'; t.style.pointerEvents = 'auto'; setTimeout(() => { t.style.opacity = '0'; t.style.pointerEvents = 'none'; }, 5000); // Durasi dipanjangkeun ka 5 detik supados kabaca leres
         }
+
+// --- PWA: daftarkan service worker (aplikasi bisa dipasang & dibuka luring) ---
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+}
