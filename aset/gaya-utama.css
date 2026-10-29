@@ -62,3 +62,8 @@
 /* Logo Mekarwangi (Kelompok Wanita Tani) — login & kepala dashboard */
 .logo-login { width: 118px; height: 118px; object-fit: contain; margin: 0 auto 4px; filter: drop-shadow(0 10px 18px rgba(6, 95, 70, .25)); }
 .logo-kepala { width: 44px; height: 44px; object-fit: contain; border-radius: 9999px; box-shadow: 0 2px 8px rgba(0, 0, 0, .25); }
+
+/* Panduan fitur (tur pemula): layar blokir, sorotan penunjuk, kartu keterangan */
+#tourLayar { position: fixed; inset: 0; z-index: 120; }
+#tourSorot { position: fixed; z-index: 121; border: 3px solid #a3e635; border-radius: 18px; box-shadow: 0 0 0 9999px rgba(24, 36, 28, .62); pointer-events: none; transition: top .35s ease, left .35s ease, width .35s ease, height .35s ease; }
+#tourKartu { z-index: 130; transition: top .35s ease, left .35s ease; }
