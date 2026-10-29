@@ -24,10 +24,10 @@
         <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4">
             <div class="w-16 h-16 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center mx-auto text-2xl"><i class="fa-solid fa-lock"></i></div>
             <h2 class="font-black text-xl text-slate-800">Verifikasi Admin</h2>
-            <p class="text-xs text-slate-500">Punten lebetkeun deui sandi admin pikeun mastikeun kaamanan.</p>
+            <p class="text-xs text-slate-500">Silakan masukkan lagi kata sandi admin untuk memastikan keamanan.</p>
             <input type="password" id="fallbackPassword" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-slate-500 text-center tracking-widest" placeholder="Sandi Admin">
-            <button onclick="checkFallbackAuth()" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-3 rounded-xl shadow-md btn-press transition-all">Lajengkeun</button>
-            <button onclick="window.location.href='index.html'" class="w-full text-xs text-slate-500 font-bold hover:text-slate-700 underline pt-2">Uih ka Aplikasi Utama</button>
+            <button onclick="checkFallbackAuth()" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-3 rounded-xl shadow-md btn-press transition-all">Lanjutkan</button>
+            <button onclick="window.location.href='index.html'" class="w-full text-xs text-slate-500 font-bold hover:text-slate-700 underline pt-2">Kembali ke Aplikasi Utama</button>
         </div>
     </div>
 
@@ -39,11 +39,11 @@
                     <div class="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center"><i class="fa-solid fa-user-shield text-emerald-400"></i></div>
                     <div>
                         <h1 class="font-black text-sm tracking-wide">PORTAL ADMIN KEBON</h1>
-                        <p class="text-[10px] text-slate-400 font-medium">Sistem Pangaturan Pusat</p>
+                        <p class="text-[10px] text-slate-400 font-medium">Sistem Pengaturan Pusat</p>
                     </div>
                 </div>
                 <button onclick="keluarAdmin()" class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-rose-500/40 transition-all btn-press flex items-center space-x-1.5">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i> <span class="hidden sm:inline">Kaluar</span>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> <span class="hidden sm:inline">Keluar</span>
                 </button>
             </div>
             <div class="max-w-4xl mx-auto mt-4 flex space-x-2 text-xs overflow-x-auto hide-scrollbar">
@@ -60,15 +60,15 @@
             <div id="section-akun" class="space-y-4">
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-address-book text-emerald-600 mr-1.5"></i> Daptar Sandi & Jabatan Ibu-Ibu</h2>
+                        <h2 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-address-book text-emerald-600 mr-1.5"></i> Daftar Kata Sandi & Jabatan Ibu-Ibu</h2>
                         <button onclick="muatDataAkun()" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1.5 rounded-lg font-bold hover:bg-slate-200 btn-press"><i class="fa-solid fa-rotate"></i> Refresh</button>
                     </div>
                     <div class="bg-yellow-50 text-yellow-800 text-[10px] p-2.5 rounded-xl border border-yellow-200 mb-4 font-medium leading-relaxed">
-                        <i class="fa-solid fa-triangle-exclamation"></i> <b>Perhatosan:</b> Ieu mangrupikeun data rahasia. Ibu tiasa nangtukeun saha baé anu janten <b>Ketua</b> kebon di dieu. Ketua tiasa ngarobih sareng ngahapus tanaman milik sasaha waé dina aplikasi utama.
+                        <i class="fa-solid fa-triangle-exclamation"></i> <b>Perhatian:</b> Ini adalah data rahasia. Ibu bisa menentukan siapa saja yang menjadi <b>Ketua</b> kebun di sini. Ketua bisa mengubah dan menghapus tanaman milik siapa saja di aplikasi utama.
                     </div>
                     
-                    <div id="akunLoading" class="text-center py-6 text-slate-400 text-xs font-bold"><i class="fa-solid fa-circle-notch animate-spin text-xl mb-2 block"></i> Nuju milari data...</div>
-                    <div id="akunEmpty" class="hidden text-center py-6 text-slate-400 text-xs font-bold bg-slate-50 rounded-xl border border-dashed border-slate-300">Teu acan aya anu daptar.</div>
+                    <div id="akunLoading" class="text-center py-6 text-slate-400 text-xs font-bold"><i class="fa-solid fa-circle-notch animate-spin text-xl mb-2 block"></i> Sedang mencari data...</div>
+                    <div id="akunEmpty" class="hidden text-center py-6 text-slate-400 text-xs font-bold bg-slate-50 rounded-xl border border-dashed border-slate-300">Belum ada yang daftar.</div>
                     
                     <div id="akunGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
                 </div>
@@ -82,11 +82,11 @@
                         <button onclick="muatDataTanaman()" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1.5 rounded-lg font-bold hover:bg-slate-200 btn-press"><i class="fa-solid fa-rotate"></i> Refresh</button>
                     </div>
                     <div class="bg-lime-50 text-emerald-800 text-[10px] p-2.5 rounded-xl border border-emerald-200 mb-4 font-medium leading-relaxed">
-                        <i class="fa-solid fa-circle-info"></i> <b>Katerangan:</b> Klik kotak nami di palih katuhu tanaman pikeun mindahkeun kepemilikan tanaman kasebut ka anggota sanés sacara langsung.
+                        <i class="fa-solid fa-circle-info"></i> <b>Keterangan:</b> Klik kotak nama di sebelah kanan tanaman untuk memindahkan kepemilikan tanaman tersebut ke anggota lain secara langsung.
                     </div>
                     
-                    <div id="tanamanLoading" class="text-center py-6 text-slate-400 text-xs font-bold"><i class="fa-solid fa-circle-notch animate-spin text-xl mb-2 block"></i> Nuju milari data tanaman...</div>
-                    <div id="tanamanEmpty" class="hidden text-center py-6 text-slate-400 text-xs font-bold bg-slate-50 rounded-xl border border-dashed border-slate-300">Teu acan aya tanaman di kebon.</div>
+                    <div id="tanamanLoading" class="text-center py-6 text-slate-400 text-xs font-bold"><i class="fa-solid fa-circle-notch animate-spin text-xl mb-2 block"></i> Sedang mencari data tanaman...</div>
+                    <div id="tanamanEmpty" class="hidden text-center py-6 text-slate-400 text-xs font-bold bg-slate-50 rounded-xl border border-dashed border-slate-300">Belum ada tanaman di kebun.</div>
                     
                     <div id="tanamanList" class="space-y-2 text-xs"></div>
                 </div>
@@ -95,10 +95,10 @@
             <!-- TAB: PENGUMUMAN -->
             <div id="section-pengumuman" class="hidden space-y-4">
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
-                    <h2 class="font-bold text-sm text-slate-800 mb-3"><i class="fa-solid fa-pen-to-square text-blue-600 mr-1.5"></i> Damél Pengumuman Énggal</h2>
-                    <textarea id="inputPengumuman" rows="3" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:outline-blue-500 transition-all resize-none mb-3" placeholder="Conto: Énjing dinten Jumaah badé aya pembagian bibit di balé désa..."></textarea>
+                    <h2 class="font-bold text-sm text-slate-800 mb-3"><i class="fa-solid fa-pen-to-square text-blue-600 mr-1.5"></i> Buat Pengumuman Baru</h2>
+                    <textarea id="inputPengumuman" rows="3" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:outline-blue-500 transition-all resize-none mb-3" placeholder="Contoh: Besok hari Jumat akan ada pembagian bibit di balai desa..."></textarea>
                     <button onclick="simpanPengumuman()" id="btnSimpanPengumuman" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl shadow-md btn-press transition-all text-xs flex items-center justify-center space-x-1.5">
-                        <i class="fa-solid fa-paper-plane"></i> <span>Sebarkeun ayeuna</span>
+                        <i class="fa-solid fa-paper-plane"></i> <span>Sebarkan sekarang</span>
                     </button>
                 </div>
 
@@ -107,8 +107,8 @@
                         <h2 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-clock-rotate-left text-slate-600 mr-1.5"></i> Riwayat Pengumuman</h2>
                         <button onclick="muatDataPengumuman()" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1.5 rounded-lg font-bold hover:bg-slate-200 btn-press"><i class="fa-solid fa-rotate"></i> Refresh</button>
                     </div>
-                    <div id="pengumumanLoading" class="text-center py-6 text-slate-400 text-xs font-bold"><i class="fa-solid fa-circle-notch animate-spin text-xl mb-2 block"></i> Nuju milari data...</div>
-                    <div id="pengumumanEmpty" class="hidden text-center py-6 text-slate-400 text-xs font-bold bg-slate-50 rounded-xl border border-dashed border-slate-300">Teu acan aya pengumuman.</div>
+                    <div id="pengumumanLoading" class="text-center py-6 text-slate-400 text-xs font-bold"><i class="fa-solid fa-circle-notch animate-spin text-xl mb-2 block"></i> Sedang mencari data...</div>
+                    <div id="pengumumanEmpty" class="hidden text-center py-6 text-slate-400 text-xs font-bold bg-slate-50 rounded-xl border border-dashed border-slate-300">Belum ada pengumuman.</div>
                     <div id="pengumumanList" class="space-y-2 text-xs"></div>
                 </div>
             </div>
@@ -122,8 +122,8 @@
                         <button onclick="muatDataChat()" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1.5 rounded-lg font-bold hover:bg-slate-200 btn-press"><i class="fa-solid fa-rotate"></i> Refresh</button>
                     </div>
                     
-                    <div id="chatLoading" class="text-center py-6 text-slate-400 text-xs font-bold"><i class="fa-solid fa-circle-notch animate-spin text-xl mb-2 block"></i> Nuju milari obrolan...</div>
-                    <div id="chatEmpty" class="hidden text-center py-6 text-slate-400 text-xs font-bold bg-slate-50 rounded-xl border border-dashed border-slate-300">Teu acan aya pesen obrolan.</div>
+                    <div id="chatLoading" class="text-center py-6 text-slate-400 text-xs font-bold"><i class="fa-solid fa-circle-notch animate-spin text-xl mb-2 block"></i> Sedang mencari obrolan...</div>
+                    <div id="chatEmpty" class="hidden text-center py-6 text-slate-400 text-xs font-bold bg-slate-50 rounded-xl border border-dashed border-slate-300">Belum ada pesan obrolan.</div>
                     
                     <div id="chatList" class="space-y-2 max-h-[300px] overflow-y-auto chat-scroll pr-1"></div>
                 </div>
@@ -133,13 +133,13 @@
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-clock-rotate-left text-purple-600 mr-1.5"></i> Log Riwayat Masuk</h2>
                         <div class="flex space-x-2">
-                            <button onclick="hapusSemuaLog()" class="text-xs bg-rose-50 text-rose-600 border border-rose-100 px-2.5 py-1.5 rounded-lg font-bold hover:bg-rose-100 btn-press"><i class="fa-solid fa-trash-can mr-1"></i>Hapus Sadaya</button>
+                            <button onclick="hapusSemuaLog()" class="text-xs bg-rose-50 text-rose-600 border border-rose-100 px-2.5 py-1.5 rounded-lg font-bold hover:bg-rose-100 btn-press"><i class="fa-solid fa-trash-can mr-1"></i>Hapus Semua</button>
                             <button onclick="muatLogMasuk()" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1.5 rounded-lg font-bold hover:bg-slate-200 btn-press"><i class="fa-solid fa-rotate"></i> Refresh</button>
                         </div>
                     </div>
                     
-                    <div id="logLoading" class="text-center py-6 text-slate-400 text-xs font-bold"><i class="fa-solid fa-circle-notch animate-spin text-xl mb-2 block"></i> Nuju milari data log...</div>
-                    <div id="logEmpty" class="hidden text-center py-6 text-slate-400 text-xs font-bold bg-slate-50 rounded-xl border border-dashed border-slate-300">Belum ada riwayat masuk dinten ieu.</div>
+                    <div id="logLoading" class="text-center py-6 text-slate-400 text-xs font-bold"><i class="fa-solid fa-circle-notch animate-spin text-xl mb-2 block"></i> Sedang mencari data log...</div>
+                    <div id="logEmpty" class="hidden text-center py-6 text-slate-400 text-xs font-bold bg-slate-50 rounded-xl border border-dashed border-slate-300">Belum ada riwayat masuk hari ini.</div>
                     
                     <div id="logList" class="space-y-1.5 max-h-[250px] overflow-y-auto chat-scroll pr-1"></div>
                 </div>
@@ -152,19 +152,19 @@
     <div id="editSandiModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden opacity-0 transition-opacity duration-200">
         <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl border border-slate-100 relative">
             <h3 class="font-extrabold text-sm text-slate-800"><i class="fa-solid fa-key text-emerald-600 mr-1.5"></i>Ganti Sandi Anggota</h3>
-            <p class="text-[11px] text-slate-500 font-medium">Ngarobih kecap sandi kanggo akun: <b id="modalUsername" class="text-slate-800"></b></p>
+            <p class="text-[11px] text-slate-500 font-medium">Mengubah kata sandi untuk akun: <b id="modalUsername" class="text-slate-800"></b></p>
             <input type="hidden" id="modalUserId">
-            <input type="text" id="modalNewPassword" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-slate-500 transition-all font-semibold text-center" placeholder="Sandi Anyar">
+            <input type="text" id="modalNewPassword" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-slate-500 transition-all font-semibold text-center" placeholder="Kata Sandi Baru">
             <div class="flex space-x-2 text-xs">
                 <button onclick="closeEditSandiModal()" class="flex-1 py-2.5 rounded-xl border border-slate-300 font-bold text-slate-600 hover:bg-slate-100 btn-press">Batal</button>
-                <button onclick="eksekusiGantiSandi()" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-white font-bold hover:bg-slate-900 btn-press">Simpen</button>
+                <button onclick="eksekusiGantiSandi()" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-white font-bold hover:bg-slate-900 btn-press">Simpan</button>
             </div>
         </div>
     </div>
 
     <!-- TOAST ALERT -->
     <div id="toast" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white text-[11px] px-4 py-2.5 rounded-full shadow-xl opacity-0 pointer-events-none transition-all duration-300 flex items-center space-x-2 z-[70]">
-        <span id="toastIcon"></span> <span id="toastMessage">Sistem Parantos Sayaga</span>
+        <span id="toastIcon"></span> <span id="toastMessage">Sistem Sudah Siap</span>
     </div>
 
     <script>
@@ -184,18 +184,18 @@
 
         async function panggilRpc(namaFungsi, isi) {
             const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/rpc/${namaFungsi}`, { method: 'POST', headers: authHeaders, body: JSON.stringify(isi || {}) });
-            if(!res.ok) throw new Error("Server nolak pamundut.");
+            if(!res.ok) throw new Error("Server menolak permintaan.");
             return res.json();
         }
 
         async function checkFallbackAuth() {
             const pwd = document.getElementById('fallbackPassword').value;
-            if(!pwd) return tunjukkanToast("Eusian sandi admin heula!", "warning");
+            if(!pwd) return tunjukkanToast("Isi kata sandi admin dulu!", "warning");
             try {
                 const leres = await panggilRpc('cek_admin', { p_sandi: pwd });
                 if(leres === true) { sessionStorage.setItem('admin_auth_kebun', 'true'); sessionStorage.setItem('admin_sandi_kebun', pwd); masukAdmin(); }
-                else { tunjukkanToast("Sandi Lepat!", "error"); }
-            } catch(e) { tunjukkanToast("Teu tiasa nyambung kana server.", "error"); }
+                else { tunjukkanToast("Kata Sandi Salah!", "error"); }
+            } catch(e) { tunjukkanToast("Tidak bisa tersambung ke server.", "error"); }
         }
 
         function masukAdmin() {
@@ -247,10 +247,10 @@
                         <div class="grid grid-cols-2 gap-2 text-xs">
                             <div class="bg-white p-2 rounded-lg border border-slate-200 flex flex-col justify-center">
                                 <span class="text-[9px] text-slate-400 font-bold uppercase">Sandi</span>
-                                <span class="font-semibold text-slate-400 tracking-wide"><i class="fa-solid fa-lock mr-1"></i>Aman (kaenkripsi)</span>
+                                <span class="font-semibold text-slate-400 tracking-wide"><i class="fa-solid fa-lock mr-1"></i>Aman (terenkripsi)</span>
                             </div>
                             <div class="bg-white p-2 rounded-lg border border-slate-200 flex flex-col justify-center">
-                                <span class="text-[9px] text-slate-400 font-bold uppercase">Kalungguhan</span>
+                                <span class="text-[9px] text-slate-400 font-bold uppercase">Jabatan</span>
                                 <select onchange="updatePeranAkun('${user.id}', this.value)" class="font-bold text-emerald-700 bg-transparent border-none focus:outline-none p-0 cursor-pointer text-xs">
                                     <option value="Anggota" ${role === 'Anggota' ? 'selected' : ''}>Anggota</option>
                                     <option value="Ketua" ${role === 'Ketua' ? 'selected' : ''}>Ketua</option>
@@ -266,21 +266,21 @@
                     </div>`;
                 });
                 grid.innerHTML = html;
-            } catch(e) { load.classList.add('hidden'); tunjukkanToast("Gagal nyandak data akun.", "error"); }
+            } catch(e) { load.classList.add('hidden'); tunjukkanToast("Gagal mengambil data akun.", "error"); }
         }
 
         // PENYELASAN DETAIL ERROR JIKA JABATAN GAGAL DIUBAH
         async function updatePeranAkun(id, peranBaru) {
             try {
                 const hasilPeran = await panggilRpc('admin_atur_peran', { p_sandi_admin: sandiAdmin(), p_id: id, p_peran_baru: peranBaru });
-                if(hasilPeran !== true) throw new Error("Server nolak parobihan kalungguhan.");
+                if(hasilPeran !== true) throw new Error("Server menolak perubahan jabatan.");
                 
-                tunjukkanToast(`Kalungguhan dirobih janten ${peranBaru}!`, "success");
+                tunjukkanToast(`Jabatan diubah menjadi ${peranBaru}!`, "success");
                 muatDataAkun();
             } catch(e) { 
                 console.error("Kesalahan Perubahan Peran:", e);
                 // Menampilkan alasan kegagalan asli secara transparan
-                tunjukkanToast("Gagal ngarobih kalungguhan: " + e.message, "error"); 
+                tunjukkanToast("Gagal mengubah jabatan: " + e.message, "error"); 
             }
         }
 
@@ -302,24 +302,24 @@
         async function eksekusiGantiSandi() {
             const id = document.getElementById('modalUserId').value;
             const newPwd = document.getElementById('modalNewPassword').value.trim();
-            if(!newPwd) return tunjukkanToast("Kecap sandi teu kenging kosong!", "warning");
+            if(!newPwd) return tunjukkanToast("Kata sandi tidak boleh kosong!", "warning");
             try {
                 const hasilSandi = await panggilRpc('admin_atur_sandi', { p_sandi_admin: sandiAdmin(), p_id: id, p_sandi_baru: newPwd });
                 if(hasilSandi !== true) throw new Error();
-                tunjukkanToast("Kecap sandi suksés dianyarkeun!", "success");
+                tunjukkanToast("Kata sandi berhasil diperbarui!", "success");
                 closeEditSandiModal();
                 muatDataAkun();
-            } catch(e) { tunjukkanToast("Gagal ngarobih kecap sandi.", "error"); }
+            } catch(e) { tunjukkanToast("Gagal mengubah kata sandi.", "error"); }
         }
 
         async function hapusAkun(id, nama) {
-            if(!confirm(`Naha leres Ibu badé ngahapus akun "${nama}"? Data pepelakannana moal leungit, mung anjeunna moal tiasa login deui.`)) return;
+            if(!confirm(`Apakah benar Ibu ingin menghapus akun "${nama}"? Data tanamannya tidak akan hilang, hanya saja ia tidak bisa masuk lagi.`)) return;
             try {
                 const hasilHapus = await panggilRpc('admin_hapus_pengguna', { p_sandi_admin: sandiAdmin(), p_id: id });
                 if(hasilHapus !== true) throw new Error();
-                tunjukkanToast(`Akun ${nama} parantos dihapus.`, "success");
+                tunjukkanToast(`Akun ${nama} sudah dihapus.`, "success");
                 muatDataAkun();
-            } catch(e) { tunjukkanToast("Gagal ngahapus akun.", "error"); }
+            } catch(e) { tunjukkanToast("Gagal menghapus akun.", "error"); }
         }
 
         // --- TAB 2: DATA TANAMAN & ALIH KEPEMILIKAN ---
@@ -353,7 +353,7 @@
                             </div>
                         </div>
                         <div class="flex items-center space-x-2 text-xs">
-                            <span class="text-[10px] text-slate-500 font-bold">Kagungan:</span>
+                            <span class="text-[10px] text-slate-500 font-bold">Milik:</span>
                             <select onchange="transferKepemilikan('${plant.id}', this.value)" class="bg-white border border-slate-200 text-slate-700 font-bold text-xs rounded-lg px-2 py-1.5 focus:outline-emerald-600 focus:bg-white cursor-pointer shadow-sm">
                                 ${optionsHTML}
                             </select>
@@ -361,7 +361,7 @@
                     </div>`;
                 });
                 list.innerHTML = html;
-            } catch(e) { load.classList.add('hidden'); tunjukkanToast("Gagal nyandak data tanaman.", "error"); }
+            } catch(e) { load.classList.add('hidden'); tunjukkanToast("Gagal mengambil data tanaman.", "error"); }
         }
 
         async function transferKepemilikan(plantId, newOwner) {
@@ -372,9 +372,9 @@
                     body: JSON.stringify({ pemilik: newOwner })
                 });
                 if(!res.ok) throw new Error();
-                tunjukkanToast("Hak milik pepelakan suksés dialihkeun!", "success");
+                tunjukkanToast("Kepemilikan tanaman berhasil dipindahkan!", "success");
                 muatDataTanaman();
-            } catch(e) { tunjukkanToast("Gagal mindahkeun hak milik.", "error"); }
+            } catch(e) { tunjukkanToast("Gagal memindahkan kepemilikan.", "error"); }
         }
 
         // --- TAB 3: PENGUMUMAN ---
@@ -398,29 +398,29 @@
                     </div>`;
                 });
                 list.innerHTML = html;
-            } catch(e) { load.classList.add('hidden'); tunjukkanToast("Gagal nyandak riwayat pengumuman.", "error"); }
+            } catch(e) { load.classList.add('hidden'); tunjukkanToast("Gagal mengambil riwayat pengumuman.", "error"); }
         }
 
         async function simpanPengumuman() {
             const pesan = document.getElementById('inputPengumuman').value.trim();
-            if(!pesan) return tunjukkanToast("Pesen pengumuman kedah dieusi heula!", "warning");
-            const btn = document.getElementById('btnSimpanPengumuman'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Nuju Ngintun...';
+            if(!pesan) return tunjukkanToast("Pesan pengumuman harus diisi dulu!", "warning");
+            const btn = document.getElementById('btnSimpanPengumuman'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Sedang Mengirim...';
             try {
                 await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengumuman_kebun?aktif=eq.true`, { method: 'PATCH', headers: authHeaders, body: JSON.stringify({ aktif: false }) });
                 const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengumuman_kebun`, { method: 'POST', headers: { ...authHeaders, 'Prefer': 'return=representation' }, body: JSON.stringify({ pesan: pesan, aktif: true }) });
                 if(!res.ok) throw new Error();
-                tunjukkanToast("Pengumuman parantos suksés sumebar!", "success");
+                tunjukkanToast("Pengumuman berhasil disebarkan!", "success");
                 document.getElementById('inputPengumuman').value = ""; muatDataPengumuman();
-            } catch(e) { tunjukkanToast("Gagal ngintun pengumuman.", "error"); }
-            finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Sebarkeun ayeuna</span>'; }
+            } catch(e) { tunjukkanToast("Gagal mengirim pengumuman.", "error"); }
+            finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Sebarkan sekarang</span>'; }
         }
 
         async function hapusPengumuman(id) {
-            if(!confirm("Badé leres ngahapus pengumuman ieu?")) return;
+            if(!confirm("Apakah benar ingin menghapus pengumuman ini?")) return;
             try {
                 await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengumuman_kebun?id=eq.${id}`, { method: 'DELETE', headers: authHeaders });
                 tunjukkanToast("Pengumuman dihapus.", "success"); muatDataPengumuman();
-            } catch(e) { tunjukkanToast("Gagal ngahapus pengumuman.", "error"); }
+            } catch(e) { tunjukkanToast("Gagal menghapus pengumuman.", "error"); }
         }
 
         // --- TAB 4: MODERASI CHAT NYI SARI & LOG MASUK ---
@@ -447,17 +447,17 @@
                     </div>`;
                 });
                 list.innerHTML = html;
-            } catch(e) { load.classList.add('hidden'); tunjukkanToast("Gagal nyandak obrolan.", "error"); }
+            } catch(e) { load.classList.add('hidden'); tunjukkanToast("Gagal mengambil obrolan.", "error"); }
         }
 
         async function hapusChat(id) {
-            if(!confirm("Ibu leres badé ngahapus pesen obrolan ieu?")) return;
+            if(!confirm("Apakah Ibu benar ingin menghapus pesan obrolan ini?")) return;
             try {
                 const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/farm_chat?id=eq.${id}`, { method: 'DELETE', headers: authHeaders });
                 if(!res.ok) throw new Error();
-                tunjukkanToast("Pesen obrolan parantos dihapus.", "success");
+                tunjukkanToast("Pesan obrolan sudah dihapus.", "success");
                 muatDataChat();
-            } catch(e) { tunjukkanToast("Gagal ngahapus obrolan.", "error"); }
+            } catch(e) { tunjukkanToast("Gagal menghapus obrolan.", "error"); }
         }
 
         async function muatLogMasuk() {
@@ -489,13 +489,13 @@
         }
 
         async function hapusSemuaLog() {
-            if(!confirm("Naha leres Ibu badé ngahapus sadaya riwayat log masuk dinten ieu?")) return;
+            if(!confirm("Apakah benar Ibu ingin menghapus semua riwayat log masuk hari ini?")) return;
             try {
                 const hasilLog = await panggilRpc('admin_bersihkan_log', { p_sandi_admin: sandiAdmin() });
                 if(hasilLog !== true) throw new Error();
-                tunjukkanToast("Sadaya log parantos dihapus.", "success");
+                tunjukkanToast("Semua log sudah dihapus.", "success");
                 muatLogMasuk();
-            } catch(e) { tunjukkanToast("Gagal ngahapus log masuk.", "error"); }
+            } catch(e) { tunjukkanToast("Gagal menghapus log masuk.", "error"); }
         }
 
         // --- TOAST NOTIFICATION UTILITY ---

@@ -79,20 +79,20 @@
             <div class="text-center space-y-2 mb-6 relative z-10">
                 <div class="w-16 h-16 bg-gradient-to-br from-emerald-600 to-green-700 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/30 text-white text-2xl mb-3"><i class="fa-solid fa-leaf"></i></div>
                 <h1 class="font-black text-xl text-stone-800 tracking-tight">Catetan Kebon Ibu</h1>
-                <p class="text-xs text-stone-500 font-medium" id="authSubtitle">Punten, lebetkeun nami sareng sandi Ibu.</p>
+                <p class="text-xs text-stone-500 font-medium" id="authSubtitle">Silakan masukkan nama dan kata sandi Ibu.</p>
             </div>
             <div id="loginForm" class="space-y-4 relative z-10">
-                <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Nami Panggero (ID)</label><input type="text" id="loginName" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Conto: Ibu Tati"></div>
-                <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Kecap Sandi (Password)</label><input type="password" id="loginPassword" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Lebetkeun sandi Ibu"></div>
-                <button onclick="doLogin()" id="btnLogin" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3.5 rounded-2xl shadow-md shadow-emerald-600/20 btn-press transition-all flex items-center justify-center space-x-2 text-sm mt-2"><i class="fa-solid fa-right-to-bracket"></i> <span id="btnLoginText">Lebet ka Aplikasi</span></button>
-                <div class="text-center mt-4"><button onclick="toggleAuthMode('register')" class="text-xs text-emerald-600 font-bold hover:text-emerald-700 underline underline-offset-2">Teu acan kagungan akun? Daptar di dieu.</button></div>
+                <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Nama Pengguna (ID)</label><input type="text" id="loginName" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Contoh: Ibu Tati"></div>
+                <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Kata Sandi (Password)</label><input type="password" id="loginPassword" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Masukkan kata sandi Ibu"></div>
+                <button onclick="doLogin()" id="btnLogin" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3.5 rounded-2xl shadow-md shadow-emerald-600/20 btn-press transition-all flex items-center justify-center space-x-2 text-sm mt-2"><i class="fa-solid fa-right-to-bracket"></i> <span id="btnLoginText">Masuk ke Aplikasi</span></button>
+                <div class="text-center mt-4"><button onclick="toggleAuthMode('register')" class="text-xs text-emerald-600 font-bold hover:text-emerald-700 underline underline-offset-2">Belum punya akun? Daftar di sini.</button></div>
             </div>
             <div id="registerForm" class="space-y-4 relative z-10 hidden">
-                <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 text-[10px] text-amber-800 font-medium mb-2">💡 <b class="font-bold">Tips:</b> Teu kedah nganggo email. Cekap damél nami sareng sandi anu gampil diémut.</div>
-                <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Nami Panggero Ibu</label><input type="text" id="regName" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Conto: Teh Yani"></div>
-                <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Damél Kecap Sandi</label><input type="password" id="regPassword" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Bebas, conto: mawar123"></div>
-                <button onclick="doRegister()" id="btnRegister" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 rounded-2xl shadow-md shadow-amber-500/20 btn-press transition-all flex items-center justify-center space-x-2 text-sm mt-2"><i class="fa-solid fa-user-plus"></i> <span id="btnRegText">Daptar Ayeuna</span></button>
-                <div class="text-center mt-4"><button onclick="toggleAuthMode('login')" class="text-xs text-stone-500 font-bold hover:text-stone-700">Parantos daptar? Uih deui ka menu Lebet.</button></div>
+                <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 text-[10px] text-amber-800 font-medium mb-2">💡 <b class="font-bold">Tips:</b> Tidak perlu pakai email. Cukup buat nama dan kata sandi yang mudah diingat.</div>
+                <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Nama Pengguna Ibu</label><input type="text" id="regName" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Contoh: Teh Yani"></div>
+                <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Buat Kata Sandi</label><input type="password" id="regPassword" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Bebas, contoh: mawar123"></div>
+                <button onclick="doRegister()" id="btnRegister" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 rounded-2xl shadow-md shadow-amber-500/20 btn-press transition-all flex items-center justify-center space-x-2 text-sm mt-2"><i class="fa-solid fa-user-plus"></i> <span id="btnRegText">Daftar Sekarang</span></button>
+                <div class="text-center mt-4"><button onclick="toggleAuthMode('login')" class="text-xs text-stone-500 font-bold hover:text-stone-700">Sudah daftar? Kembali ke menu Masuk.</button></div>
             </div>
         </div>
     </div>
@@ -105,7 +105,7 @@
             <input type="password" id="adminPasswordInput" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-slate-500 transition-all font-medium text-center tracking-widest" placeholder="••••••••">
             <div class="flex space-x-2 text-xs pt-1">
                 <button onclick="closeAdminPrompt()" class="flex-1 py-2.5 rounded-xl border border-stone-300 font-bold text-stone-600 hover:bg-stone-100 btn-press">Batal</button>
-                <button onclick="verifyAdmin()" class="flex-1 py-2.5 rounded-xl bg-slate-700 text-white font-bold hover:bg-slate-800 btn-press">Lebet</button>
+                <button onclick="verifyAdmin()" class="flex-1 py-2.5 rounded-xl bg-slate-700 text-white font-bold hover:bg-slate-800 btn-press">Masuk</button>
             </div>
         </div>
     </div>
@@ -117,7 +117,7 @@
         <div class="bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-800 text-[10px] font-bold py-2.5 px-4 flex items-center overflow-hidden border-b border-amber-200 shadow-sm relative">
             <div class="absolute left-0 bg-gradient-to-r from-amber-100 to-transparent w-12 h-full z-10"></div>
             <i class="fa-solid fa-bullhorn mr-2 text-amber-600 absolute left-4 z-20"></i>
-            <div class="marquee-container ml-5"><span id="pengumumanMarquee" class="marquee-content tracking-wide">Nuju mariksa pengumuman pangénggalna...</span></div>
+            <div class="marquee-container ml-5"><span id="pengumumanMarquee" class="marquee-content tracking-wide">Sedang memeriksa pengumuman terbaru...</span></div>
         </div>
 
         <header class="bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 text-white px-4 py-4 shadow-lg sticky top-0 z-40 rounded-b-[2rem] relative overflow-hidden">
@@ -129,7 +129,7 @@
                     <div class="flex items-center space-x-2 text-lime-300 font-bold"><i class="fa-regular fa-clock"></i> <span id="headerJamDigital">00:00:00 WIB</span></div>
                     <div class="flex items-center space-x-2">
                         <button onclick="toggleUbahUkuranHuruf()" class="bg-white/10 hover:bg-white/20 px-2 py-0.5 rounded font-bold text-white transition-all btn-press" title="Perbesar Tulisan"><i class="fa-solid fa-text-height text-[10px]"></i></button>
-                        <button onclick="doLogout()" class="bg-rose-500/20 hover:bg-rose-500/40 px-2 py-0.5 rounded font-bold text-rose-300 border border-rose-500/30 transition-all btn-press"><i class="fa-solid fa-arrow-right-from-bracket text-[10px]"></i> <span>Kaluar</span></button>
+                        <button onclick="doLogout()" class="bg-rose-500/20 hover:bg-rose-500/40 px-2 py-0.5 rounded font-bold text-rose-300 border border-rose-500/30 transition-all btn-press"><i class="fa-solid fa-arrow-right-from-bracket text-[10px]"></i> <span>Keluar</span></button>
                     </div>
                 </div>
 
@@ -138,7 +138,7 @@
                         <div class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/10 shadow-inner shrink-0"><i class="fa-solid fa-leaf text-xl text-lime-300"></i></div>
                         <div>
                             <h1 class="font-extrabold text-base tracking-tight leading-tight">Catetan Kebon Ibu</h1>
-                            <p id="headerSapaanIbu" class="text-[11px] text-emerald-100 font-medium">Wilujeng énjing!</p>
+                            <p id="headerSapaanIbu" class="text-[11px] text-emerald-100 font-medium">Selamat pagi!</p>
                             <!-- Wadah Lencana Kepemimpinan Teladan -->
                             <div id="headerBadges" class="flex flex-wrap gap-1 mt-1"></div>
                         </div>
@@ -152,8 +152,8 @@
                 <!-- TABS -->
                 <div class="flex bg-emerald-950/50 backdrop-blur-md p-1.5 rounded-2xl border border-emerald-400/20 text-sm overflow-x-auto hide-scrollbar">
                     <button onclick="switchTab('kebun')" id="tab-kebun" class="px-4 py-3 rounded-xl font-bold text-center bg-white text-emerald-900 shadow-sm shrink-0 transition-all flex items-center space-x-1"><i class="fa-solid fa-seedling"></i> <span>Tanaman</span></button>
-                    <button onclick="switchTab('kalender')" id="tab-kalender" class="px-4 py-3 rounded-xl font-bold text-center text-emerald-100 hover:text-white shrink-0 transition-all flex items-center space-x-1"><i class="fa-regular fa-calendar-days"></i> <span>Kalénder</span></button>
-                    <button onclick="switchTab('panen')" id="tab-panen" class="px-4 py-3 rounded-xl font-bold text-center text-emerald-100 hover:text-white shrink-0 transition-all flex items-center space-x-1"><i class="fa-solid fa-camera-retro text-amber-300"></i> <span>Galéri</span></button>
+                    <button onclick="switchTab('kalender')" id="tab-kalender" class="px-4 py-3 rounded-xl font-bold text-center text-emerald-100 hover:text-white shrink-0 transition-all flex items-center space-x-1"><i class="fa-regular fa-calendar-days"></i> <span>Kalender</span></button>
+                    <button onclick="switchTab('panen')" id="tab-panen" class="px-4 py-3 rounded-xl font-bold text-center text-emerald-100 hover:text-white shrink-0 transition-all flex items-center space-x-1"><i class="fa-solid fa-camera-retro text-amber-300"></i> <span>Galeri</span></button>
                     <button onclick="switchTab('tugas')" id="tab-tugas" class="px-4 py-3 rounded-xl font-bold text-center text-emerald-100 hover:text-white shrink-0 transition-all flex items-center space-x-1"><i class="fa-solid fa-shower"></i> <span>Siram</span></button>
                     <button onclick="switchTab('nutrisi')" id="tab-nutrisi" class="px-4 py-3 rounded-xl font-bold text-center text-emerald-100 hover:text-white shrink-0 transition-all flex items-center space-x-1"><i class="fa-solid fa-flask-vial"></i> <span>Nutrisi</span></button>
                     <button onclick="switchTab('ai')" id="tab-ai" class="px-4 py-3 rounded-xl font-bold text-center text-emerald-100 hover:text-white shrink-0 transition-all flex items-center space-x-1"><i class="fa-solid fa-wand-magic-sparkles text-lime-300"></i> <span>AI</span></button>
@@ -171,33 +171,33 @@
                     <div class="flex items-center space-x-3.5">
                         <div class="text-3xl shrink-0" id="cuacaIkon"><i class="fa-solid fa-cloud-sun animate-pulse text-amber-300"></i></div>
                         <div>
-                            <h3 class="font-extrabold text-xs" id="cuacaDeskripsi">Meneropong awan di luhur kebon Ibu...</h3>
-                            <p class="text-[10px] text-blue-100 mt-0.5 flex items-center space-x-2"><span><i class="fa-solid fa-temperature-high mr-1"></i>Suhu: <b id="cuacaSuhu">--°C</b></span><span class="text-blue-300">•</span><span><i class="fa-solid fa-droplet mr-1"></i>Kandungan Cai: <b id="cuacaKelembapan">--%</b></span></p>
+                            <h3 class="font-extrabold text-xs" id="cuacaDeskripsi">Melihat awan di atas kebun Ibu...</h3>
+                            <p class="text-[10px] text-blue-100 mt-0.5 flex items-center space-x-2"><span><i class="fa-solid fa-temperature-high mr-1"></i>Suhu: <b id="cuacaSuhu">--°C</b></span><span class="text-blue-300">•</span><span><i class="fa-solid fa-droplet mr-1"></i>Kadar Air: <b id="cuacaKelembapan">--%</b></span></p>
                         </div>
                     </div>
                     <div class="bg-white/20 border border-white/20 px-2.5 py-1 rounded-xl text-[10px] font-bold flex items-center space-x-1" id="hamaBadgeWaspada"><i class="fa-solid fa-bug text-lime-300"></i> <span id="hamaStatusText">Hama: Aman</span></div>
                 </div>
-                <div class="bg-white/10 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 text-[11px] text-blue-50 leading-relaxed relative z-10 overflow-hidden" id="cuacaSaranTani">Nuju milari data cuaca pangénggalna...</div>
+                <div class="bg-white/10 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 text-[11px] text-blue-50 leading-relaxed relative z-10 overflow-hidden" id="cuacaSaranTani">Sedang mencari data cuaca terbaru...</div>
             </section>
 
             <!-- SEKSYEN TANAMAN (KEBUN) -->
             <div id="section-kebun" class="space-y-4 tab-section">
                 <section class="grid grid-cols-4 gap-2 text-center">
-                    <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-stone-200/50"><span class="text-[9px] text-stone-400 font-bold block uppercase">Sadaya Pot</span><p id="dashTotal" class="text-base font-black text-stone-800 mt-0.5">0</p></div>
+                    <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-stone-200/50"><span class="text-[9px] text-stone-400 font-bold block uppercase">Semua Pot</span><p id="dashTotal" class="text-base font-black text-stone-800 mt-0.5">0</p></div>
                     <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-stone-200/50"><span class="text-[9px] text-amber-600 font-bold block uppercase">Semai</span><p id="dashSemai" class="text-base font-black text-amber-600 mt-0.5">0</p></div>
                     <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-stone-200/50"><span class="text-[9px] text-lime-600 font-bold block uppercase">Siap Pindah</span><p id="dashSiap" class="text-base font-black text-lime-600 mt-0.5">0</p></div>
                     <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-stone-200/50"><span class="text-[9px] text-red-500 block uppercase font-bold">Layu</span><p id="dashGagal" class="text-base font-black text-red-500 mt-0.5">0</p></div>
                 </section>
                 <section class="flex space-x-2 overflow-x-auto hide-scrollbar pb-1 text-[11px]">
-                    <button onclick="filterPlants('Semua')" id="filter-Semua" class="px-3.5 py-1.5 rounded-xl font-bold bg-emerald-800 text-white shadow-sm shrink-0 transition-all">Sadayana</button>
-                    <button onclick="filterPlants('Milik Saya')" id="filter-Saya" class="px-3.5 py-1.5 rounded-xl font-bold bg-white text-emerald-600 border border-emerald-200 shrink-0 transition-all"><i class="fa-solid fa-user mr-1"></i> Kagungan Abdi</button>
+                    <button onclick="filterPlants('Semua')" id="filter-Semua" class="px-3.5 py-1.5 rounded-xl font-bold bg-emerald-800 text-white shadow-sm shrink-0 transition-all">Semua</button>
+                    <button onclick="filterPlants('Milik Saya')" id="filter-Saya" class="px-3.5 py-1.5 rounded-xl font-bold bg-white text-emerald-600 border border-emerald-200 shrink-0 transition-all"><i class="fa-solid fa-user mr-1"></i> Milik Saya</button>
                     <button onclick="filterPlants('Semai')" id="filter-Semai" class="px-3.5 py-1.5 rounded-xl font-bold bg-white text-stone-600 border border-stone-200 shrink-0 transition-all">Semai</button>
                     <button onclick="filterPlants('Tumbuh Daun')" id="filter-Tumbuh" class="px-3.5 py-1.5 rounded-xl font-bold bg-white text-stone-600 border border-stone-200 shrink-0 transition-all">Tumbuh</button>
                     <button onclick="filterPlants('Siap Pindah')" id="filter-Siap" class="px-3.5 py-1.5 rounded-xl font-bold bg-white text-stone-600 border border-stone-200 shrink-0 transition-all">Siap Pindah</button>
                     <button onclick="filterPlants('Gagal')" id="filter-Gagal" class="px-3.5 py-1.5 rounded-xl font-bold bg-white text-stone-600 border border-stone-200 shrink-0 transition-all">Layu</button>
                 </section>
                 <div id="plantLoading" class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div class="skeleton h-64 w-full"></div><div class="skeleton h-64 w-full"></div></div>
-                <div id="plantEmpty" class="hidden bg-white text-center p-8 rounded-3xl border border-stone-200/60 max-w-sm mx-auto shadow-sm"><div class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-3"><i class="fa-solid fa-seedling text-2xl text-emerald-300"></i></div><p class="text-xs text-stone-500 font-medium">Teu acan aya pepelakan. Hayu urang melak!</p></div>
+                <div id="plantEmpty" class="hidden bg-white text-center p-8 rounded-3xl border border-stone-200/60 max-w-sm mx-auto shadow-sm"><div class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-3"><i class="fa-solid fa-seedling text-2xl text-emerald-300"></i></div><p class="text-xs text-stone-500 font-medium">Belum ada tanaman. Ayo kita menanam!</p></div>
                 <div id="plantGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
 
@@ -207,10 +207,10 @@
                     <div class="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/4"></div>
                     <div class="relative z-10 flex items-center space-x-3">
                         <div class="text-4xl text-indigo-200"><i class="fa-regular fa-calendar-check"></i></div>
-                        <div><h2 class="font-black text-lg">Kalénder Tatanén</h2><p class="text-[11px] font-medium text-indigo-50">Jadwal iraha pepelakan Ibu siap dipindah atawa dipanén.</p></div>
+                        <div><h2 class="font-black text-lg">Kalender Pertanian</h2><p class="text-[11px] font-medium text-indigo-50">Jadwal kapan tanaman Ibu siap dipindah atau dipanen.</p></div>
                     </div>
                 </div>
-                <div id="kalenderEmpty" class="hidden bg-white text-center p-8 rounded-3xl border border-stone-200/60 shadow-sm"><p class="text-xs text-stone-500 font-medium">Teu acan aya jadwal kamekaran kapayunna.</p></div>
+                <div id="kalenderEmpty" class="hidden bg-white text-center p-8 rounded-3xl border border-stone-200/60 shadow-sm"><p class="text-xs text-stone-500 font-medium">Belum ada jadwal pertumbuhan ke depan.</p></div>
                 
                 <!-- Timeline Calendar -->
                 <div class="timeline-line space-y-3 relative text-xs">
@@ -224,10 +224,10 @@
                     <div class="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/4"></div>
                     <div class="relative z-10 flex items-center space-x-3 text-white">
                         <div class="text-4xl text-amber-100"><i class="fa-solid fa-basket-shopping"></i></div>
-                        <div><h2 class="font-black text-lg">Galéri Panén Komunitas</h2><p class="text-[11px] font-medium text-amber-50">Pintonan hasil kebon ibu-ibu anu parantos suksés dipanén.</p></div>
+                        <div><h2 class="font-black text-lg">Galeri Panen Komunitas</h2><p class="text-[11px] font-medium text-amber-50">Hasil kebun ibu-ibu yang sudah berhasil dipanen.</p></div>
                     </div>
                 </div>
-                <div id="panenEmpty" class="hidden bg-white text-center p-8 rounded-3xl border border-stone-200/60 shadow-sm"><p class="text-xs text-stone-500 font-medium">Teu acan aya anu panén ieu téh. Hayu sing sumanget!</p></div>
+                <div id="panenEmpty" class="hidden bg-white text-center p-8 rounded-3xl border border-stone-200/60 shadow-sm"><p class="text-xs text-stone-500 font-medium">Belum ada yang panen nih. Ayo tetap semangat!</p></div>
                 <div id="panenGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
             </div>
 
@@ -236,7 +236,7 @@
                 <div class="bg-white p-4 rounded-3xl shadow-sm border border-stone-200/60">
                     <div class="flex items-center space-x-2.5 mb-3">
                         <div class="w-8 h-8 bg-blue-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-shower text-blue-500 text-sm"></i></div>
-                        <div><h2 class="font-bold text-xs text-stone-800">Daptar Pepelakan Komunitas</h2><p class="text-[10px] text-stone-400">Mangga silih siramkeun tanaman saha waé anu teu acan disiram dinten ieu!</p></div>
+                        <div><h2 class="font-bold text-xs text-stone-800">Daftar Tanaman Komunitas</h2><p class="text-[10px] text-stone-400">Silakan bantu siram tanaman siapa saja yang belum disiram hari ini!</p></div>
                     </div>
                     <div id="wateringList" class="space-y-2 text-xs"></div>
                 </div>
@@ -247,7 +247,7 @@
                 <div class="bg-white p-4 rounded-3xl shadow-sm border border-stone-200/60 space-y-4">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-100 pb-4">
                         <div class="flex items-center space-x-2"><div class="w-8 h-8 bg-emerald-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-flask-vial text-emerald-600 text-sm"></i></div><div><h2 class="font-extrabold text-xs text-stone-800 leading-tight">Buku Saku Nutrisi Dapur Organik</h2></div></div>
-                        <button onclick="openModalNutrisi()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 text-emerald-950 font-black px-4 py-2 rounded-2xl text-[11px] shadow-md btn-press shrink-0"><i class="fa-solid fa-wand-magic-sparkles"></i> Racik Énggal</button>
+                        <button onclick="openModalNutrisi()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 text-emerald-950 font-black px-4 py-2 rounded-2xl text-[11px] shadow-md btn-press shrink-0"><i class="fa-solid fa-wand-magic-sparkles"></i> Racik Baru</button>
                     </div>
                     <div id="nutritionList" class="space-y-4 text-xs"></div>
                 </div>
@@ -256,16 +256,16 @@
             <!-- SEKSYEN AI -->
             <div id="section-ai" class="hidden space-y-4 tab-section">
                 <div class="flex space-x-2 bg-stone-200/60 p-1 rounded-xl text-xs">
-                    <button onclick="switchTab('ai')" class="flex-1 py-2.5 rounded-lg font-bold text-center bg-white text-stone-800 shadow-sm transition-all">Ruang Obrolan Nyi Sari</button>
-                    <button onclick="switchSubAi('doctor')" id="btn-sub-doctor" class="flex-1 py-2.5 rounded-lg font-bold text-center text-stone-600 transition-all">Parios Panyakit Daun</button>
+                    <button onclick="switchTab('ai')" class="flex-1 py-2.5 rounded-lg font-bold text-center bg-white text-stone-800 shadow-sm transition-all">Ruang Ngobrol Nyi Sari</button>
+                    <button onclick="switchSubAi('doctor')" id="btn-sub-doctor" class="flex-1 py-2.5 rounded-lg font-bold text-center text-stone-600 transition-all">Periksa Penyakit Daun</button>
                 </div>
                 <div id="ai-sub-chat" class="bg-white p-4 rounded-3xl shadow-sm border border-stone-200/60 space-y-3">
                     
                     <!-- PILIHAN MODE WALERAN (SINGKET VS DETAIL) -->
                     <div class="flex items-center justify-between px-2 py-1.5 bg-stone-100 rounded-2xl text-[10px] font-bold text-stone-600">
-                        <span class="pl-1.5"><i class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i> Mode Waleran Nyi Sari:</span>
+                        <span class="pl-1.5"><i class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i> Mode Jawaban Nyi Sari:</span>
                         <div class="flex space-x-1">
-                            <button type="button" onclick="setNyiSariStyle('sederhana')" id="style-sederhana" class="px-3 py-1 rounded-xl transition-all bg-emerald-600 text-white shadow-sm font-bold">Singket</button>
+                            <button type="button" onclick="setNyiSariStyle('sederhana')" id="style-sederhana" class="px-3 py-1 rounded-xl transition-all bg-emerald-600 text-white shadow-sm font-bold">Singkat</button>
                             <button type="button" onclick="setNyiSariStyle('rinci')" id="style-rinci" class="px-3 py-1 rounded-xl transition-all text-stone-500 hover:text-stone-800 font-semibold">Rinci &amp; Detail</button>
                         </div>
                     </div>
@@ -279,10 +279,10 @@
                 <div id="ai-sub-doctor" class="hidden bg-white p-4 rounded-3xl shadow-sm border border-stone-200/60 space-y-3 text-xs">
                     <div class="flex items-center space-x-2 bg-stone-50 p-2.5 rounded-xl border border-stone-200">
                         <label class="cursor-pointer bg-white border border-stone-300 text-stone-700 px-3 py-2 rounded-lg font-bold shadow-sm transition-all hover:bg-stone-50"><input type="file" id="doctorImageFile" accept="image/*" class="hidden" onchange="previewDoctorImage(event)"><i class="fa-solid fa-camera text-rose-500 mr-1"></i> Pilih Foto Daun</label>
-                        <span id="doctorImgLabel" class="text-[10px] text-stone-400 truncate max-w-[180px]">Teu acan aya foto</span>
+                        <span id="doctorImgLabel" class="text-[10px] text-stone-400 truncate max-w-[180px]">Belum ada foto</span>
                     </div>
                     <div class="flex items-center justify-center bg-stone-50 p-1.5 rounded-2xl border border-dashed border-stone-300 hidden" id="doctorImgContainer"><img id="doctorImgPreview" src="" class="max-h-40 rounded-xl object-contain"></div>
-                    <button onclick="diagnosePlantImage()" id="btnDiagnose" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl shadow-md btn-press flex items-center justify-center space-x-1"><i class="fa-solid fa-wand-magic-sparkles"></i> <span>Mawitan Mariksa</span></button>
+                    <button onclick="diagnosePlantImage()" id="btnDiagnose" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl shadow-md btn-press flex items-center justify-center space-x-1"><i class="fa-solid fa-wand-magic-sparkles"></i> <span>Mulai Periksa</span></button>
                     <div id="diagnosisResult" class="hidden bg-emerald-50/60 p-3.5 rounded-[2rem] border border-emerald-100/80 space-y-2"><div id="diagnosisText" class="text-stone-700 text-[11px] leading-relaxed"></div></div>
                 </div>
             </div>
@@ -299,12 +299,12 @@
             <div class="p-4 overflow-y-auto space-y-3.5 text-xs">
                 <input type="hidden" id="editPlantId" value="">
                 
-                <div id="formAlert" class="hidden bg-rose-50 border border-rose-200 text-rose-700 p-2 rounded-xl text-[10px] font-bold flex items-center space-x-1.5"><i class="fa-solid fa-circle-exclamation"></i> <span id="formAlertText">Punten eusian heula kotak anu warna beureum!</span></div>
+                <div id="formAlert" class="hidden bg-rose-50 border border-rose-200 text-rose-700 p-2 rounded-xl text-[10px] font-bold flex items-center space-x-1.5"><i class="fa-solid fa-circle-exclamation"></i> <span id="formAlertText">Silakan isi dulu kotak yang berwarna merah!</span></div>
 
                 <!-- Bagian Dasar -->
                 <div class="bg-stone-50 border border-stone-200 p-3 rounded-2xl space-y-3">
                     <div>
-                        <label class="block font-bold text-stone-600 mb-1">Nami Bibit Pepelakan *</label>
+                        <label class="block font-bold text-stone-600 mb-1">Nama Bibit Tanaman *</label>
                         <div class="flex space-x-1.5">
                             <input type="text" id="formPlantName" class="flex-1 bg-white border border-stone-300 rounded-xl px-3 py-2.5 text-xs focus:outline-emerald-600 transition-all" placeholder="Contoh: Cabai Rawit" oninput="setValid(this)">
                             <button onclick="generateAiGuide()" id="btnAiGuide" type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 rounded-xl shadow-md btn-press transition-all flex items-center space-x-1">
@@ -313,20 +313,20 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                        <div><label class="block font-bold text-stone-600 mb-1">Kaping Awal Tani *</label><input type="date" id="formSowingDate" class="w-full bg-white border border-stone-300 rounded-xl px-2.5 py-2 focus:outline-emerald-600" oninput="setValid(this)"></div>
+                        <div><label class="block font-bold text-stone-600 mb-1">Tanggal Mulai Tanam *</label><input type="date" id="formSowingDate" class="w-full bg-white border border-stone-300 rounded-xl px-2.5 py-2 focus:outline-emerald-600" oninput="setValid(this)"></div>
                         <div><label class="block font-bold text-stone-600 mb-1">Wadah Media</label><input type="text" id="formMedium" class="w-full bg-white border border-stone-300 rounded-xl px-2.5 py-2 focus:outline-emerald-600" placeholder="Pot Gantung"></div>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block font-bold text-stone-600 mb-1">Tahap Kamekaran</label>
+                            <label class="block font-bold text-stone-600 mb-1">Tahap Pertumbuhan</label>
                             <select id="formStatus" class="w-full bg-white border border-stone-300 rounded-xl px-2 py-2 focus:outline-emerald-600">
-                                <option value="Semai">Nembé Tumbuh (Biji)</option><option value="Tumbuh Daun">Seueur Daun (Remaja)</option><option value="Siap Pindah">Siap Pindah Pot</option><option value="Panen" class="font-bold text-amber-600">Suksés Panén!</option><option value="Gagal">Layu / Paéh</option>
+                                <option value="Semai">Baru Tumbuh (Biji)</option><option value="Tumbuh Daun">Banyak Daun (Remaja)</option><option value="Siap Pindah">Siap Pindah Pot</option><option value="Panen" class="font-bold text-amber-600">Berhasil Panen!</option><option value="Gagal">Layu / Mati</option>
                             </select>
                         </div>
                         <div>
                             <label class="block font-bold text-stone-600 mb-1">Kategori Tanam</label>
                             <select id="formCategory" class="w-full bg-white border border-stone-300 rounded-xl px-2 py-2 focus:outline-emerald-600">
-                                <option value="Sayuran Daun">Sayuran Daun</option><option value="Sayuran Buah">Sayuran Buah</option><option value="Buah Pohon">Buah &amp; Tangkal</option><option value="Hias / Bunga">Kembang / Hias</option>
+                                <option value="Sayuran Daun">Sayuran Daun</option><option value="Sayuran Buah">Sayuran Buah</option><option value="Buah Pohon">Buah &amp; Pohon</option><option value="Hias / Bunga">Bunga / Hias</option>
                             </select>
                         </div>
                     </div>
@@ -335,8 +335,8 @@
                 <!-- Bagian Estimasi AI -->
                 <div class="bg-indigo-50 border border-indigo-200 p-3 rounded-2xl space-y-3">
                     <div class="flex items-center justify-between text-indigo-800 font-bold text-[10px]">
-                        <span><i class="fa-regular fa-calendar-days mr-1"></i> Éstimasi Jadwal Tatanén</span>
-                        <span class="text-[8px] bg-indigo-200 px-1.5 rounded text-indigo-600">Tiasa diédit</span>
+                        <span><i class="fa-regular fa-calendar-days mr-1"></i> Estimasi Jadwal Tanam</span>
+                        <span class="text-[8px] bg-indigo-200 px-1.5 rounded text-indigo-600">Bisa diedit</span>
                     </div>
                     <div class="grid grid-cols-3 gap-2 text-center">
                         <div>
@@ -348,43 +348,43 @@
                             <input type="date" id="formEstPindah" class="w-full bg-white border border-indigo-200 rounded-lg px-1 py-1.5 text-[9px] text-center focus:outline-indigo-500">
                         </div>
                         <div>
-                            <label class="block text-stone-600 text-[9px] mb-1 font-semibold">Siap Panén</label>
+                            <label class="block text-stone-600 text-[9px] mb-1 font-semibold">Siap Panen</label>
                             <input type="date" id="formEstPanen" class="w-full bg-white border border-indigo-200 rounded-lg px-1 py-1.5 text-[9px] text-center focus:outline-indigo-500 font-bold text-emerald-600">
                         </div>
                     </div>
-                    <p class="text-[8px] text-indigo-500 italic mt-1 leading-tight">Mangga klik tombol "Tanya AI" di luhur, Nyi Sari bakal ngitung otomatis kapingna dumasar kana tahap kamekaran ayeuna.</p>
+                    <p class="text-[8px] text-indigo-500 italic mt-1 leading-tight">Silakan klik tombol "Tanya AI" di atas, Nyi Sari akan menghitung otomatis tanggalnya berdasarkan tahap pertumbuhan saat ini.</p>
                 </div>
 
                 <div>
-                    <label class="block font-bold text-stone-600 mb-1">Tips / Catetan Pangurus</label>
+                    <label class="block font-bold text-stone-600 mb-1">Tips / Catatan Perawatan</label>
                     <textarea id="formNotes" rows="2" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-2.5 py-2 focus:outline-emerald-600 resize-none"></textarea>
                 </div>
                 <div>
-                    <label class="block font-bold text-stone-600 mb-1">Foto Pepelakan</label>
+                    <label class="block font-bold text-stone-600 mb-1">Foto Tanaman</label>
                     <div class="flex items-center space-x-2 bg-stone-50 p-2 rounded-xl border border-stone-200">
                         <div class="flex flex-col sm:flex-row gap-2 w-full">
                             <!-- Tombol Pilihan Foto dari Kamera -->
                             <button type="button" onclick="triggerPhotoCapture('camera')" class="bg-white border border-stone-300 text-stone-700 px-3 py-1.5 rounded-lg font-bold text-[10px] hover:bg-stone-50 flex items-center justify-center space-x-1 btn-press shadow-sm">
                                 <i class="fa-solid fa-camera text-emerald-600"></i>
-                                <span>Ambil Kaméra</span>
+                                <span>Ambil dari Kamera</span>
                             </button>
                             <!-- Tombol Pilihan Foto dari Galeri -->
                             <button type="button" onclick="triggerPhotoCapture('gallery')" class="bg-white border border-stone-300 text-stone-700 px-3 py-1.5 rounded-lg font-bold text-[10px] hover:bg-stone-50 flex items-center justify-center space-x-1 btn-press shadow-sm">
                                 <i class="fa-solid fa-images text-blue-500"></i>
-                                <span>Pilih ti Galéri</span>
+                                <span>Pilih dari Galeri</span>
                             </button>
                         </div>
                         <!-- Inputs File Tersembunyi (Satu kamera, satu galeri biasa) -->
                         <input type="file" id="formImageFileCamera" accept="image/*" capture="environment" class="hidden" onchange="previewFormImage(event)">
                         <input type="file" id="formImageFileGallery" accept="image/*" class="hidden" onchange="previewFormImage(event)">
-                        <span id="formImgLabel" class="text-[10px] text-stone-400 truncate max-w-[140px] ml-auto">Teu acan aya foto</span>
+                        <span id="formImgLabel" class="text-[10px] text-stone-400 truncate max-w-[140px] ml-auto">Belum ada foto</span>
                     </div>
                     <div class="flex items-center justify-center mt-2 bg-stone-50 p-1 rounded-xl border border-dashed border-stone-300 hidden" id="formImgPreviewContainer"><img id="formImgPreview" src="" class="max-h-24 object-contain"></div>
                 </div>
             </div>
             <div class="px-4 py-3 bg-stone-50 border-t border-stone-200 flex space-x-2">
                 <button onclick="closeModalTambah()" class="flex-1 py-2 rounded-xl border border-stone-300 font-bold text-stone-600 hover:bg-stone-100 btn-press">Batal</button>
-                <button id="modalSaveBtn" onclick="simpanBibit()" class="flex-1 py-2 rounded-xl bg-emerald-600 text-white font-bold flex items-center justify-center space-x-1 hover:bg-emerald-700 btn-press"><i class="fa-solid fa-floppy-disk"></i> <span id="modalSaveText">Simpen</span></button>
+                <button id="modalSaveBtn" onclick="simpanBibit()" class="flex-1 py-2 rounded-xl bg-emerald-600 text-white font-bold flex items-center justify-center space-x-1 hover:bg-emerald-700 btn-press"><i class="fa-solid fa-floppy-disk"></i> <span id="modalSaveText">Simpan</span></button>
             </div>
         </div>
     </div>
@@ -408,10 +408,10 @@
     <div id="modalHapusKonfirmasi" class="fixed inset-0 bg-stone-900/60 modal-backdrop flex items-center justify-center p-4 z-[60] hidden opacity-0 transition-opacity duration-200">
         <div class="bg-white rounded-3xl max-w-xs w-full p-4 text-center space-y-3 shadow-xl border border-stone-100">
             <div class="w-11 h-11 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mx-auto text-xl"><i class="fa-solid fa-trash-can"></i></div>
-            <h4 class="font-bold text-xs text-stone-800">Hapus Catatan Ieu?</h4>
+            <h4 class="font-bold text-xs text-stone-800">Hapus Catatan Ini?</h4>
             <div class="flex space-x-2 text-xs">
                 <button onclick="closeModalHapus()" class="flex-1 py-2 rounded-xl border border-stone-300 font-bold text-stone-600 hover:bg-stone-100 btn-press">Batal</button>
-                <button id="btnHapusKonfirmasiMurni" onclick="eksekusiHapusMurni()" class="flex-1 py-2 rounded-xl bg-rose-600 text-white font-bold hover:bg-rose-700 btn-press">Muhun, Hapus!</button>
+                <button id="btnHapusKonfirmasiMurni" onclick="eksekusiHapusMurni()" class="flex-1 py-2 rounded-xl bg-rose-600 text-white font-bold hover:bg-rose-700 btn-press">Ya, Hapus!</button>
             </div>
         </div>
     </div>
@@ -420,12 +420,12 @@
     <div id="modalNutrisi" class="fixed inset-0 bg-stone-900/60 modal-backdrop flex items-center justify-center p-4 z-50 hidden opacity-0 transition-all duration-200">
         <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-xl border border-stone-200 flex flex-col max-h-[90vh]">
             <div class="px-4 py-3 bg-emerald-800 text-white flex items-center justify-between text-xs">
-                <h3 class="font-bold flex items-center space-x-1.5"><i class="fa-solid fa-flask-vial"></i> <span>Racik Nutrisi Organik Anyar</span></h3>
+                <h3 class="font-bold flex items-center space-x-1.5"><i class="fa-solid fa-flask-vial"></i> <span>Racik Nutrisi Organik Baru</span></h3>
                 <button onclick="closeModalNutrisi()" class="hover:text-lime-300 transition-colors"><i class="fa-solid fa-xmark text-sm"></i></button>
             </div>
             <div class="p-4 overflow-y-auto space-y-3.5 text-xs">
                 <div>
-                    <label class="block font-bold text-stone-600 mb-1">Nami Pepelakan *</label>
+                    <label class="block font-bold text-stone-600 mb-1">Nama Tanaman *</label>
                     <input type="text" id="nutrisiInputTanaman" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2.5 text-xs focus:outline-emerald-600 focus:bg-white font-medium" placeholder="Contoh: Sawi Putih">
                 </div>
                 <div>
@@ -433,14 +433,14 @@
                     <select id="nutrisiInputKategori" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-2 py-2 focus:outline-emerald-600">
                         <option value="Sayuran Daun">Sayuran Daun</option>
                         <option value="Sayuran Buah">Sayuran Buah</option>
-                        <option value="Buah Pohon">Buah &amp; Tangkal</option>
-                        <option value="Hias / Bunga">Kembang / Hias</option>
+                        <option value="Buah Pohon">Buah &amp; Pohon</option>
+                        <option value="Hias / Bunga">Bunga / Hias</option>
                     </select>
                 </div>
                 <button onclick="generasiPreviewNutrisi()" id="btnGeneratePreview" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl flex items-center justify-center space-x-1.5 btn-press shadow-sm text-xs">
                     <i class="fa-solid fa-wand-magic-sparkles animate-pulse" id="previewAiIcon"></i>
                     <i class="fa-solid fa-circle-notch animate-spin hidden" id="previewAiLoading"></i>
-                    <span>Tanya Nyi Sari Resepna</span>
+                    <span>Tanya Resep ke Nyi Sari</span>
                 </button>
 
                 <!-- Section Preview Hasil Racikan AI -->
@@ -449,11 +449,11 @@
                         <i class="fa-solid fa-clipboard-check"></i> <span>Rekomendasi Nyi Sari:</span>
                     </h4>
                     <div>
-                        <label class="block font-bold text-stone-500 text-[9px] mb-0.5 uppercase">Nami Nutrisi</label>
+                        <label class="block font-bold text-stone-500 text-[9px] mb-0.5 uppercase">Nama Nutrisi</label>
                         <input type="text" id="nutrisiPreviewName" class="w-full bg-white border border-stone-200 rounded-lg px-2 py-1.5 font-bold text-stone-800" readonly>
                     </div>
                     <div>
-                        <label class="block font-bold text-stone-500 text-[9px] mb-0.5 uppercase">Mangpaat</label>
+                        <label class="block font-bold text-stone-500 text-[9px] mb-0.5 uppercase">Manfaat</label>
                         <textarea id="nutrisiPreviewBenefit" rows="2" class="w-full bg-white border border-stone-200 rounded-lg px-2 py-1 font-medium text-stone-600 resize-none text-xs leading-relaxed" readonly></textarea>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
@@ -471,7 +471,7 @@
             <div class="px-4 py-3 bg-stone-50 border-t border-stone-200 flex space-x-2">
                 <button onclick="closeModalNutrisi()" class="flex-1 py-2 rounded-xl border border-stone-300 font-bold text-stone-600 hover:bg-stone-100 btn-press">Batal</button>
                 <button id="btnSimpanNutrisi" onclick="simpanNutrisiKeDb()" class="flex-1 py-2 rounded-xl bg-emerald-600 text-white font-bold flex items-center justify-center space-x-1 hover:bg-emerald-700 btn-press" disabled>
-                    <i class="fa-solid fa-plus"></i> <span>Tambihkeun</span>
+                    <i class="fa-solid fa-plus"></i> <span>Tambahkan</span>
                 </button>
             </div>
         </div>
@@ -479,7 +479,7 @@
 
     <!-- TOAST ALERT -->
     <div id="toast" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-stone-900 text-white text-[11px] px-3.5 py-2 rounded-full shadow-xl opacity-0 pointer-events-none transition-all duration-300 flex items-center space-x-1.5 z-[70]">
-        <span id="toastIcon"></span> <span id="toastMessage">Sistem Parantos Sayaga</span>
+        <span id="toastIcon"></span> <span id="toastMessage">Sistem Sudah Siap</span>
     </div>
 
     <script>
@@ -494,14 +494,14 @@
 
         // PERSONA NYI SARI ADAPTIF & LUWES
         function dapatkanNyiSariPersona() {
-            let basePersona = `Anjeun nyaéta Nyi Sari, asisten kebun komunitas anu bageur, haneut, sareng calakan ti tatanén Sunda. 
-            Salawasna ngagunakeun Basa Sunda lemes (Sunda lemes/sopan) anu merenah tur pinuh ku kanyaah sapertos ka kulawarga sorangan.
-            Anjeun kedah mikawanoh jalma anu nuju ngobrol dumasar nami dina sajarah obrolan (contona: "Ibu Tati", "Teh Yani"). Upami ditaros saha nami anjeun, waler yén anjeun "Nyi Sari".`;
+            let basePersona = `Kamu adalah Nyi Sari, asisten kebun komunitas yang baik hati, hangat, dan pintar soal bertani. 
+            Selalu gunakan Bahasa Indonesia yang sopan, hangat, dan mudah dimengerti, penuh perhatian seperti kepada keluarga sendiri.
+            Kamu harus mengenali orang yang sedang mengobrol berdasarkan nama di riwayat obrolan (contohnya: "Ibu Tati", "Teh Yani"). Jika ditanya siapa namamu, jawablah bahwa kamu "Nyi Sari".`;
             
             if (nyiSariStyle === 'sederhana') {
-                basePersona += `\nMode waleran anjeun ayeuna nyaéta: SINGKET & SEDERHANA. Waler sacara haneut, ramah, tur singket (cukup 2-3 kalimah waé, ulah panjang-panjang).`;
+                basePersona += `\nMode jawabanmu saat ini adalah: SINGKAT & SEDERHANA. Jawablah dengan hangat, ramah, dan singkat (cukup 2-3 kalimat saja, jangan panjang-panjang).`;
             } else {
-                basePersona += `\nMode waleran anjeun ayeuna nyaéta: JÉNTRE, RINCI, TUR DETAIL. Waler kalayan lengkep, panjang lebar, tur detail, paké struktur poin-poin atanapi paragraf anu rapih supados gampil kahartos ku Ibu-ibu kebon perkawis cara melak, pupuk, hama, atanapi patarosan sanésna.`;
+                basePersona += `\nMode jawabanmu saat ini adalah: JELAS, RINCI, DAN DETAIL. Jawablah dengan lengkap dan detail, pakai struktur poin-poin atau paragraf yang rapi supaya mudah dimengerti oleh ibu-ibu kebun soal cara menanam, pupuk, hama, atau pertanyaan lainnya.`;
             }
             return basePersona;
         }
@@ -511,7 +511,7 @@
         let formSelectedFile = null; let doctorSelectedFile = null; let activeHapusId = null;
         let isLargeText = false; let nutrisiDraftSaved = false; let currentUser = null;
 
-        const DEFAULT_NUTRITION_RECIPES = [{ name: "Cai Pangumbahan Béas", benefit: "Nyuburkeun baktéri saé dina taneuh.", schedule: "Saban Dinten Senén", dosage: "Siramkeun langsung cai bilasan kahiji." }];
+        const DEFAULT_NUTRITION_RECIPES = [{ name: "Air Cucian Beras", benefit: "Menyuburkan bakteri baik di dalam tanah.", schedule: "Setiap Hari Senin", dosage: "Siramkan langsung air bilasan pertama." }];
 
         window.onload = function() { buatPartikelDaun(); inisialisasiKunciDefaultLokal(); pariksaStatusLogin(); };
 
@@ -524,7 +524,7 @@
             }
         }
 
-        function segarSemuaData() { loadPlants(); loadChatHistory(); loadNutritionFromDb(); ambilDataCuacaMeteo(); loadPengumuman(); tunjukkanToast("Data kebon parantos disegarkeun!", "success"); }
+        function segarSemuaData() { loadPlants(); loadChatHistory(); loadNutritionFromDb(); ambilDataCuacaMeteo(); loadPengumuman(); tunjukkanToast("Data kebun sudah disegarkan!", "success"); }
 
         function toggleUbahUkuranHuruf() {
             isLargeText = !isLargeText; const body = document.getElementById('bodyApp'); const label = document.getElementById('textScaleLabel');
@@ -581,10 +581,10 @@
                         const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                         if (res.status === 429 || res.status === 400 || res.status === 403) { if (model === models[models.length - 1]) { rotasiApiKeyGemini(); attempt++; break; } continue; }
                         if (!res.ok) throw new Error();
-                        const json = await res.json(); return json.candidates?.[0]?.content?.parts?.[0]?.text || "Hapunten Nyi Sari gagal ngawaler.";
+                        const json = await res.json(); return json.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, Nyi Sari gagal menjawab.";
                     } catch (error) { if (model === models[models.length - 1]) { rotasiApiKeyGemini(); attempt++; } }
                 }
-            } throw new Error("Sambungan kaganggu.");
+            } throw new Error("Sambungan terganggu.");
         }
 
         // --- AUTH ADMIN ---
@@ -596,13 +596,13 @@
         function closeAdminPrompt() { const m = document.getElementById('adminAuthModal'); if(m) { m.classList.remove('opacity-100'); setTimeout(() => m.classList.add('hidden'), 200); } }
         async function verifyAdmin() {
             const pwd = document.getElementById('adminPasswordInput').value;
-            if (!pwd) return tunjukkanToast("Punten eusian sandi admin!", "error");
+            if (!pwd) return tunjukkanToast("Silakan isi kata sandi admin!", "error");
             try {
                 const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/rpc/cek_admin`, { method: 'POST', headers: authHeaders, body: JSON.stringify({ p_sandi: pwd }) });
                 const leres = res.ok ? await res.json() : false;
                 if (leres === true) { sessionStorage.setItem('admin_auth_kebun', 'true'); sessionStorage.setItem('admin_sandi_kebun', pwd); window.location.href = "admin.html"; }
-                else { tunjukkanToast("Hapunten, sandi admin lepat!", "error"); }
-            } catch (e) { tunjukkanToast("Teu tiasa nyambung kana server.", "error"); }
+                else { tunjukkanToast("Maaf, kata sandi admin salah!", "error"); }
+            } catch (e) { tunjukkanToast("Tidak bisa tersambung ke server.", "error"); }
         }
 
         // --- AUTHENTICATION USER ---
@@ -623,48 +623,48 @@
         function toggleAuthMode(mode) {
             const loginForm = document.getElementById('loginForm'); const registerForm = document.getElementById('registerForm'); const subtitle = document.getElementById('authSubtitle');
             if (mode === 'register') { 
-                if(loginForm) loginForm.classList.add('hidden'); if(registerForm) registerForm.classList.remove('hidden'); if(subtitle) subtitle.innerText = "Mangga damél akun énggal di handap."; 
+                if(loginForm) loginForm.classList.add('hidden'); if(registerForm) registerForm.classList.remove('hidden'); if(subtitle) subtitle.innerText = "Silakan buat akun baru di bawah ini."; 
             } else { 
-                if(registerForm) registerForm.classList.add('hidden'); if(loginForm) loginForm.classList.remove('hidden'); if(subtitle) subtitle.innerText = "Punten, lebetkeun nami sareng sandi Ibu."; 
+                if(registerForm) registerForm.classList.add('hidden'); if(loginForm) loginForm.classList.remove('hidden'); if(subtitle) subtitle.innerText = "Silakan masukkan nama dan kata sandi Ibu."; 
             }
         }
 
         async function doRegister() {
             const name = document.getElementById('regName').value.trim(); const password = document.getElementById('regPassword').value.trim();
-            if (!name || !password) return tunjukkanToast("Punten eusian nami sareng sandi kalayan leres!", "error");
+            if (!name || !password) return tunjukkanToast("Silakan isi nama dan kata sandi dengan benar!", "error");
             const btn = document.getElementById('btnRegister'); const btnText = document.getElementById('btnRegText');
-            if(btn) btn.disabled = true; if(btnText) btnText.innerText = "Nuju Mariksa...";
+            if(btn) btn.disabled = true; if(btnText) btnText.innerText = "Sedang Memeriksa...";
             try {
                 const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/rpc/daftar_pengguna`, { method: 'POST', headers: authHeaders, body: JSON.stringify({ p_nama: name, p_sandi: password }) });
-                if (!res.ok) throw new Error("Gagal nyambung kana Supabase.");
+                if (!res.ok) throw new Error("Gagal tersambung ke Supabase.");
                 const hasilDaftar = await res.json();
-                if (!hasilDaftar.sukses) throw new Error(hasilDaftar.pesan || "Gagal ngadamel akun kana server.");
+                if (!hasilDaftar.sukses) throw new Error(hasilDaftar.pesan || "Gagal membuat akun ke server.");
                 
                 localStorage.setItem('ibu_kebun_user', name); 
                 localStorage.setItem('ibu_kebun_role', hasilDaftar.peran || 'Anggota');
 
-                tunjukkanToast("Hatur nuhun, akun parantos suksés didamel!", "success"); pariksaStatusLogin();
+                tunjukkanToast("Terima kasih, akun berhasil dibuat!", "success"); pariksaStatusLogin();
             } catch (err) { tununjukkanToast("Pendaftaran Gagal: " + err.message, "error"); } 
-            finally { if(btn) btn.disabled = false; if(btnText) btnText.innerText = "Daptar Ayeuna"; }
+            finally { if(btn) btn.disabled = false; if(btnText) btnText.innerText = "Daftar Sekarang"; }
         }
 
         async function doLogin() {
             const name = document.getElementById('loginName').value.trim(); const password = document.getElementById('loginPassword').value.trim();
-            if (!name || !password) return tunjukkanToast("Punten eusian nami sareng sandina!", "error");
+            if (!name || !password) return tunjukkanToast("Silakan isi nama dan kata sandinya!", "error");
             const btn = document.getElementById('btnLogin'); const btnText = document.getElementById('btnLoginText');
-            if(btn) btn.disabled = true; if(btnText) btnText.innerText = "Nuju Lebet...";
+            if(btn) btn.disabled = true; if(btnText) btnText.innerText = "Sedang Masuk...";
             try {
                 const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/rpc/masuk_pengguna`, { method: 'POST', headers: authHeaders, body: JSON.stringify({ p_nama: name, p_sandi: password }) });
-                if (!res.ok) throw new Error("Teu tiasa nyambung kana database.");
+                if (!res.ok) throw new Error("Tidak bisa tersambung ke database.");
                 const hasilMasuk = await res.json();
-                if (!hasilMasuk.sukses) throw new Error("Nami atanapi sandi anu dilebetkeun lepat.");
+                if (!hasilMasuk.sukses) throw new Error("Nama atau kata sandi yang dimasukkan salah.");
                 
                 localStorage.setItem('ibu_kebun_user', name); 
                 localStorage.setItem('ibu_kebun_role', hasilMasuk.peran || 'Anggota');
 
-                tunjukkanToast("Suksés lebet! Wilujeng sumping.", "success"); pariksaStatusLogin();
+                tunjukkanToast("Berhasil masuk! Selamat datang.", "success"); pariksaStatusLogin();
             } catch (err) { tununjukkanToast("Login Gagal: " + err.message, "error"); } 
-            finally { if(btn) btn.disabled = false; if(btnText) btnText.innerText = "Lebet ka Aplikasi"; }
+            finally { if(btn) btn.disabled = false; if(btnText) btnText.innerText = "Masuk ke Aplikasi"; }
         }
 
         function doLogout() { 
@@ -683,7 +683,7 @@
                     const el = document.getElementById('pengumumanMarquee');
                     if(data.length > 0 && el) el.innerText = data[0].pesan;
                 }
-            } catch(e) { console.log("Henteu aya pengumuman."); }
+            } catch(e) { console.log("Tidak ada pengumuman."); }
         }
 
         // --- SISTEM LENCANA APRESIASI ---
@@ -715,13 +715,13 @@
             }
 
             if (hasWateredToday) {
-                badgesHTML += `<span class="bg-blue-500/25 border border-blue-400 text-blue-100 font-extrabold text-[9px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu rajin nyiram pepelakan dinten ieu"><i class="fa-solid fa-shower text-[8px]"></i> <span>Penyiram Setia</span></span>`;
+                badgesHTML += `<span class="bg-blue-500/25 border border-blue-400 text-blue-100 font-extrabold text-[9px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu rajin menyiram tanaman hari ini"><i class="fa-solid fa-shower text-[8px]"></i> <span>Penyiram Setia</span></span>`;
             }
             if (hasHarvested) {
-                badgesHTML += `<span class="bg-amber-500/25 border border-amber-400 text-amber-100 font-extrabold text-[9px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu parantos suksés panén kebon"><i class="fa-solid fa-crown text-[8px]"></i> <span>Ibu Panen Raya</span></span>`;
+                badgesHTML += `<span class="bg-amber-500/25 border border-amber-400 text-amber-100 font-extrabold text-[9px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu sudah berhasil panen kebun"><i class="fa-solid fa-crown text-[8px]"></i> <span>Ibu Panen Raya</span></span>`;
             }
             if (myPlantsCount > 2) {
-                badgesHTML += `<span class="bg-lime-500/25 border border-lime-400 text-lime-100 font-extrabold text-[9px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu rajin ngurus rupa-rupa tanaman"><i class="fa-solid fa-seedling text-[8px]"></i> <span>Pakar Tani Dapur</span></span>`;
+                badgesHTML += `<span class="bg-lime-500/25 border border-lime-400 text-lime-100 font-extrabold text-[9px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu rajin merawat bermacam-macam tanaman"><i class="fa-solid fa-seedling text-[8px]"></i> <span>Pakar Tani Dapur</span></span>`;
             }
 
             badgeContainer.innerHTML = badgesHTML;
@@ -776,19 +776,19 @@
                         desc = "Hujan / Mendung";
                     } else if (temp > 32) {
                         ikHTML = '<i class="fa-solid fa-sun text-amber-400 animate-spin"></i>';
-                        desc = "Panas Pisan";
+                        desc = "Panas Sekali";
                     }
                     if(ikonDiv) ikonDiv.innerHTML = ikHTML; 
-                    if(deskripsiText) deskripsiText.innerText = `Cuaca Dinten Ieu: ${desc}`; 
+                    if(deskripsiText) deskripsiText.innerText = `Cuaca Hari Ini: ${desc}`; 
                     
                     let saranHTML = "";
                     if (temp > 32) {
-                        saranHTML += `<div class="bg-amber-500/20 text-yellow-100 p-2.5 rounded-xl mb-2 font-bold flex items-start space-x-1.5 border border-amber-500/30 text-xs shadow-inner animate-pulse">⚠️ <span>Ibu, dinten ieu katingalina bakal panas pisan (${temp}°C). Teu kenging hilap nyiram tanaman dua kali dinten ieu supados teu layu nya! ☀️</span></div>`;
+                        saranHTML += `<div class="bg-amber-500/20 text-yellow-100 p-2.5 rounded-xl mb-2 font-bold flex items-start space-x-1.5 border border-amber-500/30 text-xs shadow-inner animate-pulse">⚠️ <span>Ibu, hari ini sepertinya akan panas sekali (${temp}°C). Jangan lupa menyiram tanaman dua kali hari ini supaya tidak layu ya! ☀️</span></div>`;
                     } else if (code >= 51) {
-                        saranHTML += `<div class="bg-rose-500/20 text-rose-100 p-2.5 rounded-xl mb-2 font-bold flex items-start space-x-1.5 border border-rose-500/30 text-xs shadow-inner animate-pulse">⛈️ <span>Ibu, dinten ieu katingalina bade aya hujan ageung atanapi barat. Mangga amankeun pot-pot alit bilih palid!</span></div>`;
+                        saranHTML += `<div class="bg-rose-500/20 text-rose-100 p-2.5 rounded-xl mb-2 font-bold flex items-start space-x-1.5 border border-rose-500/30 text-xs shadow-inner animate-pulse">⛈️ <span>Ibu, hari ini sepertinya akan ada hujan besar atau badai. Silakan amankan pot-pot kecil supaya tidak hanyut!</span></div>`;
                     }
                     
-                    saranHTML += `Hawa nuju éndah tur iuh. Waktosna anu saé kanggo ngarawat kebon.`;
+                    saranHTML += `Udara sedang cerah dan sejuk. Waktu yang baik untuk merawat kebun.`;
                     if(saranText) saranText.innerHTML = saranHTML;
                 } catch (e) {}
             }
@@ -809,9 +809,9 @@
 
         function renderNutritionCards() {
             const listDiv = document.getElementById('nutritionList'); if(!listDiv) return;
-            if (nutritionData.length === 0) return listDiv.innerHTML = '<p class="text-stone-400 text-center py-4">Lomari resep nutrisi nuju kosong.</p>';
+            if (nutritionData.length === 0) return listDiv.innerHTML = '<p class="text-stone-400 text-center py-4">Lemari resep nutrisi sedang kosong.</p>';
             let html = '';
-            nutritionData.forEach(n => { html += `<div class="bg-stone-50 border border-stone-200/80 p-4 rounded-3xl space-y-2 shadow-sm"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5"><h4 class="font-extrabold text-xs text-emerald-800 flex items-center space-x-1.5"><i class="fa-solid fa-flask-vial text-emerald-600"></i><span>${n.name}</span></h4><div class="flex items-center space-x-2"><button onclick="bagikanKeWA('nutrisi', '${n.name}', '${n.benefit}')" class="text-emerald-600 hover:text-emerald-700 font-bold text-[10px] flex items-center space-x-1" title="Bagikeun ka WA"><i class="fa-brands fa-whatsapp text-xs"></i> <span>Bagikeun</span></button><span class="bg-lime-100 text-emerald-950 font-extrabold text-[9px] px-2.5 py-0.5 rounded-full flex items-center space-x-1 border border-lime-200"><i class="fa-solid fa-calendar-day text-[8px]"></i><span>Aplikasi: ${n.schedule}</span></span></div></div><p class="text-stone-600 font-medium text-[10.5px] leading-relaxed"><b class="text-stone-700 block mb-0.5"><i class="fa-solid fa-star text-amber-500 mr-1 text-[9px]"></i>Mangpaat:</b>${n.benefit}</p><p class="text-stone-500 text-[10.5px] leading-relaxed bg-white p-3 rounded-2xl border border-stone-200 shadow-inner"><b class="text-emerald-800 block mb-1"><i class="fa-solid fa-gears mr-1 text-[9px]"></i>Takaran:</b>${n.dosage}</p></div>`; });
+            nutritionData.forEach(n => { html += `<div class="bg-stone-50 border border-stone-200/80 p-4 rounded-3xl space-y-2 shadow-sm"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5"><h4 class="font-extrabold text-xs text-emerald-800 flex items-center space-x-1.5"><i class="fa-solid fa-flask-vial text-emerald-600"></i><span>${n.name}</span></h4><div class="flex items-center space-x-2"><button onclick="bagikanKeWA('nutrisi', '${n.name}', '${n.benefit}')" class="text-emerald-600 hover:text-emerald-700 font-bold text-[10px] flex items-center space-x-1" title="Bagikan ke WA"><i class="fa-brands fa-whatsapp text-xs"></i> <span>Bagikan</span></button><span class="bg-lime-100 text-emerald-950 font-extrabold text-[9px] px-2.5 py-0.5 rounded-full flex items-center space-x-1 border border-lime-200"><i class="fa-solid fa-calendar-day text-[8px]"></i><span>Aplikasi: ${n.schedule}</span></span></div></div><p class="text-stone-600 font-medium text-[10.5px] leading-relaxed"><b class="text-stone-700 block mb-0.5"><i class="fa-solid fa-star text-amber-500 mr-1 text-[9px]"></i>Manfaat:</b>${n.benefit}</p><p class="text-stone-500 text-[10.5px] leading-relaxed bg-white p-3 rounded-2xl border border-stone-200 shadow-inner"><b class="text-emerald-800 block mb-1"><i class="fa-solid fa-gears mr-1 text-[9px]"></i>Takaran:</b>${n.dosage}</p></div>`; });
             listDiv.innerHTML = html;
         }
 
@@ -884,11 +884,11 @@
                     if(totalHariTumbuh > 0) persenProgress = Math.min(100, Math.max(5, Math.round((hss / totalHariTumbuh) * 100)));
                 }
 
-                let teksEstimasi = sisaHari > 0 ? `Bade Panén: <b>${sisaHari} Dinten</b>` : "Waktosna dipetik, Ibu!";
+                let teksEstimasi = sisaHari > 0 ? `Akan Panen: <b>${sisaHari} Hari</b>` : "Waktunya dipetik, Ibu!";
                 let colorBadge = plant.status === 'Semai' ? 'bg-amber-100 text-amber-800' : (plant.status === 'Tumbuh Daun' ? 'bg-blue-100 text-blue-800' : (plant.status === 'Siap Pindah' ? 'bg-lime-100 text-lime-800' : 'bg-rose-100 text-rose-800'));
-                let statusIndo = plant.status === 'Semai' ? 'Nembé Tumbuh' : (plant.status === 'Tumbuh Daun' ? 'Seueur Daun' : (plant.status === 'Siap Pindah' ? 'Siap Pindah' : 'Layu'));
+                let statusIndo = plant.status === 'Semai' ? 'Baru Tumbuh' : (plant.status === 'Tumbuh Daun' ? 'Banyak Daun' : (plant.status === 'Siap Pindah' ? 'Siap Pindah' : 'Layu'));
                 
-                let siramText = '<span class="text-stone-400 font-bold text-[10px]">Teu acan disiram</span>';
+                let siramText = '<span class="text-stone-400 font-bold text-[10px]">Belum disiram</span>';
                 if (plant.last_watered && new Date(plant.last_watered).toDateString() === new Date().toDateString()) siramText = `<span class="text-emerald-600 font-bold text-[10px]"><i class="fa-solid fa-droplet"></i> Disiram ${new Date(plant.last_watered).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</span>`;
                 
                 let imageContainerHTML = "";
@@ -901,16 +901,16 @@
                 let actionButtons = `<button onclick="openModalDetail(${plant.id})" class="bg-stone-200 text-stone-700 font-bold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-stone-300 btn-press">Detail</button>`;
                 
                 if (isOwner) {
-                    actionButtons = `<button onclick="bagikanKeWA('tanam', '${plant.plant_name}')" class="bg-emerald-50 text-emerald-600 font-extrabold px-2 py-1.5 rounded-xl text-[10.5px] hover:bg-emerald-100 btn-press" title="Bagikeun ka WA"><i class="fa-brands fa-whatsapp text-xs"></i></button>${actionButtons}`;
+                    actionButtons = `<button onclick="bagikanKeWA('tanam', '${plant.plant_name}')" class="bg-emerald-50 text-emerald-600 font-extrabold px-2 py-1.5 rounded-xl text-[10.5px] hover:bg-emerald-100 btn-press" title="Bagikan ke WA"><i class="fa-brands fa-whatsapp text-xs"></i></button>${actionButtons}`;
                 }
 
-                actionButtons = `<button onclick="quickWater(${plant.id})" class="bg-blue-50 text-blue-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-blue-100 btn-press" title="Silih Siramkeun"><i class="fa-solid fa-shower"></i></button>${actionButtons}`;
+                actionButtons = `<button onclick="quickWater(${plant.id})" class="bg-blue-50 text-blue-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-blue-100 btn-press" title="Bantu Siram"><i class="fa-solid fa-shower"></i></button>${actionButtons}`;
 
                 if (canManage) {
-                    actionButtons = `<button onclick="openModalEdit(${plant.id})" class="bg-amber-50 text-amber-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-amber-100 btn-press" title="Kemas kini"><i class="fa-solid fa-pen-to-square"></i></button>${actionButtons}`;
+                    actionButtons = `<button onclick="openModalEdit(${plant.id})" class="bg-amber-50 text-amber-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-amber-100 btn-press" title="Perbarui"><i class="fa-solid fa-pen-to-square"></i></button>${actionButtons}`;
                 }
 
-                html += `<div class="plant-card bg-white rounded-[2rem] shadow-sm border border-stone-200/60 overflow-hidden flex flex-col justify-between"><div><div class="relative h-36 bg-stone-100 w-full overflow-hidden">${imageContainerHTML}<span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${colorBadge} backdrop-blur-sm">${statusIndo}</span><span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-white/80 text-stone-700 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-user mr-1 text-emerald-600"></i>${plant.pemilik || 'Anonim'}</span></div><div class="p-4 space-y-2.5"><div><h4 class="font-extrabold text-stone-800 text-xs leading-tight">${plant.plant_name}</h4><p class="text-[10px] text-emerald-700 font-extrabold mt-0.5"><i class="fa-solid fa-hourglass-half text-[9px]"></i> Umur: ${hss >= 0 ? hss : 0} Dinten</p></div><div class="space-y-1 bg-stone-50 p-2 rounded-xl border border-stone-100 text-[10px]"><div class="flex justify-between items-center text-stone-500"><span>Kamekaran</span><span>${teksEstimasi}</span></div><div class="w-full bg-stone-200 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-emerald-500 to-lime-400 h-full rounded-full progress-fill" style="width: ${persenProgress}%"></div></div></div><p class="text-[10px] text-stone-500 line-clamp-1 italic">Tips: ${notesClean || '-'}</p></div></div><div class="bg-stone-50/70 px-4 py-2.5 border-t border-stone-100 flex items-center justify-between text-[11px]">${siramText}<div class="flex space-x-1">${actionButtons}</div></div></div>`;
+                html += `<div class="plant-card bg-white rounded-[2rem] shadow-sm border border-stone-200/60 overflow-hidden flex flex-col justify-between"><div><div class="relative h-36 bg-stone-100 w-full overflow-hidden">${imageContainerHTML}<span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${colorBadge} backdrop-blur-sm">${statusIndo}</span><span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-white/80 text-stone-700 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-user mr-1 text-emerald-600"></i>${plant.pemilik || 'Anonim'}</span></div><div class="p-4 space-y-2.5"><div><h4 class="font-extrabold text-stone-800 text-xs leading-tight">${plant.plant_name}</h4><p class="text-[10px] text-emerald-700 font-extrabold mt-0.5"><i class="fa-solid fa-hourglass-half text-[9px]"></i> Umur: ${hss >= 0 ? hss : 0} Hari</p></div><div class="space-y-1 bg-stone-50 p-2 rounded-xl border border-stone-100 text-[10px]"><div class="flex justify-between items-center text-stone-500"><span>Pertumbuhan</span><span>${teksEstimasi}</span></div><div class="w-full bg-stone-200 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-emerald-500 to-lime-400 h-full rounded-full progress-fill" style="width: ${persenProgress}%"></div></div></div><p class="text-[10px] text-stone-500 line-clamp-1 italic">Tips: ${notesClean || '-'}</p></div></div><div class="bg-stone-50/70 px-4 py-2.5 border-t border-stone-100 flex items-center justify-between text-[11px]">${siramText}<div class="flex space-x-1">${actionButtons}</div></div></div>`;
             });
             grid.innerHTML = html;
         }
@@ -927,7 +927,7 @@
             allPlants.forEach(p => {
                 if(p.sowing_date) {
                     let d = new Date(p.sowing_date);
-                    events.push({ plant: p, date: d, title: 'Awal Tani / Melak', icon: 'fa-seedling', color: 'text-emerald-600', bg: 'bg-emerald-100', isPast: d < today });
+                    events.push({ plant: p, date: d, title: 'Awal Tanam / Menanam', icon: 'fa-seedling', color: 'text-emerald-600', bg: 'bg-emerald-100', isPast: d < today });
                 }
                 if(p.status === 'Panen' || p.status === 'Gagal') return;
                 
@@ -937,11 +937,11 @@
                 }
                 if(p.est_pindah_date && (p.status === 'Semai' || p.status === 'Tumbuh Daun')) {
                     let d = new Date(p.est_pindah_date);
-                    events.push({ plant: p, date: d, title: 'Pindah ka Pot Badag', icon: 'fa-arrows-up-down-left-right', color: 'text-lime-600', bg: 'bg-lime-100', isPast: d < today });
+                    events.push({ plant: p, date: d, title: 'Pindah ke Pot Besar', icon: 'fa-arrows-up-down-left-right', color: 'text-lime-600', bg: 'bg-lime-100', isPast: d < today });
                 }
                 if(p.est_panen_date) {
                     let d = new Date(p.est_panen_date);
-                    events.push({ plant: p, date: d, title: 'Waktosna Panén!', icon: 'fa-basket-shopping', color: 'text-amber-500', bg: 'bg-amber-100', isPast: d < today });
+                    events.push({ plant: p, date: d, title: 'Waktunya Panen!', icon: 'fa-basket-shopping', color: 'text-amber-500', bg: 'bg-amber-100', isPast: d < today });
                 }
             });
 
@@ -960,14 +960,14 @@
                 let cardOpacity = "";
 
                 if(e.isPast) {
-                    badgeHTML = `<span class="bg-stone-200 text-stone-500 px-2 py-0.5 rounded-full text-[9px] font-black"><i class="fa-solid fa-check mr-1"></i>Réngsé</span>`;
+                    badgeHTML = `<span class="bg-stone-200 text-stone-500 px-2 py-0.5 rounded-full text-[9px] font-black"><i class="fa-solid fa-check mr-1"></i>Selesai</span>`;
                     cardOpacity = "opacity-75";
                 } else if(diff === 0) {
-                    badgeHTML = `<span class="bg-rose-500 text-white px-2 py-0.5 rounded-full text-[9px] font-black animate-pulse">Dinten Ieu!</span>`;
+                    badgeHTML = `<span class="bg-rose-500 text-white px-2 py-0.5 rounded-full text-[9px] font-black animate-pulse">Hari Ini!</span>`;
                 } else if (diff === 1) {
-                    badgeHTML = `<span class="bg-amber-400 text-amber-950 px-2 py-0.5 rounded-full text-[9px] font-black">Énjing</span>`;
+                    badgeHTML = `<span class="bg-amber-400 text-amber-950 px-2 py-0.5 rounded-full text-[9px] font-black">Besok</span>`;
                 } else {
-                    badgeHTML = `<span class="bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full text-[9px] font-black">${diff} Dinten deui</span>`;
+                    badgeHTML = `<span class="bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full text-[9px] font-black">${diff} Hari lagi</span>`;
                 }
                 
                 const tglFormat = e.date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
@@ -984,7 +984,7 @@
                             ${badgeHTML}
                         </div>
                         <div class="text-[10px] text-stone-500 font-medium">Jadwal: ${e.title}</div>
-                        <div class="text-[9px] text-stone-400 mt-1.5"><i class="fa-solid fa-user text-stone-300 mr-1"></i>Kagungan: ${e.plant.pemilik || 'Anonim'}</div>
+                        <div class="text-[9px] text-stone-400 mt-1.5"><i class="fa-solid fa-user text-stone-300 mr-1"></i>Milik: ${e.plant.pemilik || 'Anonim'}</div>
                     </div>
                 </div>`;
             });
@@ -998,7 +998,7 @@
             let html = '';
             filteredPlants.forEach(plant => {
                 const imgCadangan = "https://images.unsplash.com/photo-1595856417726-2d164506c9e0?auto=format&fit=crop&w=350&q=80";
-                html += `<div class="plant-card bg-white rounded-[2rem] shadow-md border border-amber-200 overflow-hidden flex flex-col justify-between"><div class="relative h-48 bg-stone-100 w-full overflow-hidden"><img src="${plant.image_url || imgCadangan}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onerror="this.src='${imgCadangan}'" loading="lazy"><span class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4 pt-12"><h4 class="font-black text-white text-sm leading-tight shadow-sm">${plant.plant_name}</h4><p class="text-[10px] text-amber-300 font-bold mt-1"><i class="fa-solid fa-crown mr-1"></i> Dipanén ku: ${plant.pemilik || 'Anonim'}</p></span><div class="absolute top-3 right-3 bg-amber-400 text-amber-950 px-3 py-1 rounded-full text-[10px] font-black shadow-md flex items-center space-x-1"><i class="fa-solid fa-star"></i> <span>Panén!</span></div><button onclick="bagikanKeWA('panen', '${plant.plant_name}')" class="absolute top-3 left-3 bg-emerald-600 text-white px-2.5 py-1.5 rounded-full text-[10px] font-bold shadow-md flex items-center space-x-1 hover:bg-emerald-700 btn-press"><i class="fa-brands fa-whatsapp text-xs"></i> <span>Bagikeun</span></button></div></div>`;
+                html += `<div class="plant-card bg-white rounded-[2rem] shadow-md border border-amber-200 overflow-hidden flex flex-col justify-between"><div class="relative h-48 bg-stone-100 w-full overflow-hidden"><img src="${plant.image_url || imgCadangan}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onerror="this.src='${imgCadangan}'" loading="lazy"><span class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4 pt-12"><h4 class="font-black text-white text-sm leading-tight shadow-sm">${plant.plant_name}</h4><p class="text-[10px] text-amber-300 font-bold mt-1"><i class="fa-solid fa-crown mr-1"></i> Dipanen oleh: ${plant.pemilik || 'Anonim'}</p></span><div class="absolute top-3 right-3 bg-amber-400 text-amber-950 px-3 py-1 rounded-full text-[10px] font-black shadow-md flex items-center space-x-1"><i class="fa-solid fa-star"></i> <span>Panen!</span></div><button onclick="bagikanKeWA('panen', '${plant.plant_name}')" class="absolute top-3 left-3 bg-emerald-600 text-white px-2.5 py-1.5 rounded-full text-[10px] font-bold shadow-md flex items-center space-x-1 hover:bg-emerald-700 btn-press"><i class="fa-brands fa-whatsapp text-xs"></i> <span>Bagikan</span></button></div></div>`;
             });
             grid.innerHTML = html;
         }
@@ -1006,9 +1006,9 @@
         function renderWateringList() {
             const listDiv = document.getElementById('wateringList'); if(!listDiv) return;
             let targets = allPlants.filter(p => p.status !== 'Panen' && (!p.last_watered || new Date(p.last_watered).toDateString() !== new Date().toDateString()));
-            if (targets.length === 0) return listDiv.innerHTML = '<div class="text-center py-4 text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> Alhamdulillah! Sadaya pepelakan komunitas parantos beres disiram dinten ieu.</div>';
+            if (targets.length === 0) return listDiv.innerHTML = '<div class="text-center py-4 text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> Alhamdulillah! Semua tanaman komunitas sudah selesai disiram hari ini.</div>';
             let html = '';
-            targets.forEach(p => { html += `<div class="flex items-center justify-between p-2.5 bg-stone-50 rounded-xl border border-stone-100"><div class="pr-2"><h5 class="font-bold text-stone-800 leading-tight">${p.plant_name}</h5><p class="text-[10px] text-stone-450">Kagungan: <b class="text-emerald-700">${p.pemilik || 'Anonim'}</b> • Wadah: ${p.planting_medium || '-'}</p></div><button onclick="quickWater(${p.id}, true)" class="bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-[11px] flex items-center space-x-1.5 hover:bg-emerald-700 btn-press shadow-sm"><i class="fa-solid fa-shower"></i> <span>Siram</span></button></div>`; });
+            targets.forEach(p => { html += `<div class="flex items-center justify-between p-2.5 bg-stone-50 rounded-xl border border-stone-100"><div class="pr-2"><h5 class="font-bold text-stone-800 leading-tight">${p.plant_name}</h5><p class="text-[10px] text-stone-450">Milik: <b class="text-emerald-700">${p.pemilik || 'Anonim'}</b> • Media: ${p.planting_medium || '-'}</p></div><button onclick="quickWater(${p.id}, true)" class="bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-[11px] flex items-center space-x-1.5 hover:bg-emerald-700 btn-press shadow-sm"><i class="fa-solid fa-shower"></i> <span>Siram</span></button></div>`; });
             listDiv.innerHTML = html;
         }
 
@@ -1016,9 +1016,9 @@
             try {
                 const response = await fetch(`${SUPABASE_BASE_URL}/rest/v1/plant_farm?id=eq.${id}`, { method: 'PATCH', headers: authHeaders, body: JSON.stringify({ last_watered: new Date().toISOString() }) });
                 if (!response.ok) throw new Error();
-                tunjukkanToast("Panyiraman parantos kasimpen kana catetan!", "success");
+                tunjukkanToast("Penyiraman sudah tersimpan di catatan!", "success");
                 await loadPlants(); if (reloadSiram) renderWateringList();
-            } catch (e) { tununjukkanToast("Hapunten, sistem gagal nyatet siram.", "error"); }
+            } catch (e) { tununjukkanToast("Maaf, sistem gagal mencatat siraman.", "error"); }
         }
 
         async function loadChatHistory() {
@@ -1027,14 +1027,14 @@
                 const response = await fetch(`${SUPABASE_BASE_URL}/rest/v1/farm_chat?select=*&order=id.asc`, { method: 'GET', headers: authHeaders });
                 if (!response.ok) throw new Error();
                 const chats = await response.json();
-                if (chats.length === 0) return logs.innerHTML = '<p class="text-stone-400 p-2 text-center text-[11px]">Mangga Ibu, bilih aya nu palay ditaroskeun perkawis kebon, tiasa ketik di dieu...</p>';
+                if (chats.length === 0) return logs.innerHTML = '<p class="text-stone-400 p-2 text-center text-[11px]">Silakan Ibu, kalau ada yang ingin ditanyakan soal kebun, bisa ketik di sini...</p>';
                 let html = '';
                 chats.forEach(c => {
                     if (c.is_ai) html += `<div class="max-w-[90%] flex flex-col mt-2 chat-bubble-enter"><span class="text-[9px] font-bold nyi-sari-badge ml-1">Nyi Sari</span><div class="bg-emerald-50 text-stone-700 p-3 rounded-2xl border border-emerald-100/60 leading-relaxed">${formatAiResponse(c.message)}</div></div>`;
                     else html += `<div class="max-w-[90%] ml-auto text-right mt-2 chat-bubble-enter"><span class="text-[9px] font-bold text-emerald-700 mr-1">${c.sender}</span><div class="bg-white border border-emerald-200 text-stone-800 p-2.5 rounded-2xl text-left font-semibold shadow-sm">${c.message}</div></div>`;
                 });
                 logs.innerHTML = html; logs.scrollTop = logs.scrollHeight;
-            } catch (e) { logs.innerHTML = '<p class="text-stone-400 text-center py-4 text-[11px]">Sajarah obrolan parantos sayaga dipidangkeun.</p>'; }
+            } catch (e) { logs.innerHTML = '<p class="text-stone-400 text-center py-4 text-[11px]">Riwayat obrolan sudah siap ditampilkan.</p>'; }
         }
 
         // CHAT NYI SARI NYETAL MEMORI SAJARAH & PERSONA ADAPTIF
@@ -1061,7 +1061,7 @@
                         });
                     }
                 } catch (historyErr) {
-                    console.log("Gagal nyandak sajarah obrolan:", historyErr);
+                    console.log("Gagal mengambil riwayat obrolan:", historyErr);
                 }
 
                 if (chatContext.length === 0) {
@@ -1073,10 +1073,10 @@
                 await fetch(`${SUPABASE_BASE_URL}/rest/v1/farm_chat`, { method: 'POST', headers: authHeaders, body: JSON.stringify({ sender: "Nyi Sari", message: aiAns, is_ai: true }) });
                 await loadChatHistory();
             } catch (error) {
-                tunjukkanToast("Gagal nyambung ka Nyi Sari", "error");
+                tunjukkanToast("Gagal tersambung ke Nyi Sari", "error");
                 const logs = document.getElementById('chatAiLogs');
                 if(logs) {
-                    logs.innerHTML += `<div class="max-w-[90%] flex flex-col mt-1 chat-bubble-enter"><span class="text-[9px] font-bold text-rose-700 ml-1">Sistem (Error)</span><div class="bg-rose-50 text-rose-800 p-2.5 rounded-2xl border border-rose-100 leading-relaxed font-semibold">Punten pisan Ibu, Nyi Sari nuju teu tiasa komunikasi sakedap. Mangga dicobian deui sawios.</div></div>`;
+                    logs.innerHTML += `<div class="max-w-[90%] flex flex-col mt-1 chat-bubble-enter"><span class="text-[9px] font-bold text-rose-700 ml-1">Sistem (Error)</span><div class="bg-rose-50 text-rose-800 p-2.5 rounded-2xl border border-rose-100 leading-relaxed font-semibold">Mohon maaf Ibu, Nyi Sari sedang tidak bisa dihubungi sebentar. Silakan dicoba lagi ya.</div></div>`;
                     logs.scrollTop = logs.scrollHeight;
                 }
             } finally { btn.disabled = false; icon.classList.remove('hidden'); loading.classList.add('hidden'); }
@@ -1094,7 +1094,7 @@
                 btnSederhana.className = "px-3 py-1 rounded-xl transition-all text-stone-500 hover:text-stone-800 font-semibold";
                 btnRinci.className = "px-3 py-1 rounded-xl transition-all bg-emerald-600 text-white shadow-sm font-bold";
             }
-            tunjukkanToast("Mode waleran dirobih janten: " + (style === 'sederhana' ? 'Singket' : 'Rinci & Detail'), "success");
+            tunjukkanToast("Mode jawaban diubah menjadi: " + (style === 'sederhana' ? 'Singkat' : 'Rinci & Detail'), "success");
         }
 
         function setValid(el) { el.classList.remove('input-error'); const alert = document.getElementById('formAlert'); if(alert) alert.classList.add('hidden'); }
@@ -1153,10 +1153,10 @@
             if (!sowingDate) { dateInput.classList.add('input-error'); isKososng = true; }
             if (isKososng) { 
                 const alert = document.getElementById('formAlert'); if(alert) alert.classList.remove('hidden'); 
-                return tunjukkanToast("Punten eusian kotak anu warna beureum heula nya!", "warning"); 
+                return tunjukkanToast("Silakan isi dulu kotak yang berwarna merah ya!", "warning"); 
             }
 
-            const btn = document.getElementById('modalSaveBtn'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Nuju Nyimpen...';
+            const btn = document.getElementById('modalSaveBtn'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Sedang Menyimpan...';
             let imgUrl = editId ? (allPlants.find(p => p.id == editId)?.image_url || "") : "";
             
             try {
@@ -1187,28 +1187,28 @@
                 const res = await fetch(url, { method: method, headers: authHeaders, body: JSON.stringify(payload) });
                 if (!res.ok) throw new Error();
                 
-                tunjukkanToast("Buku catetan kebon parantos diropéa!", "success");
+                tunjukkanToast("Buku catatan kebun sudah diperbarui!", "success");
                 closeModalTambah(); await loadPlants();
-            } catch (e) { tununjukkanToast("Gagal Nyimpen Data.", "error"); } finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpen'; }
+            } catch (e) { tununjukkanToast("Gagal Menyimpan Data.", "error"); } finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan'; }
         }
 
         async function eksekusiHapusMurni() {
             if (!activeHapusId) return;
-            const btn = document.getElementById('btnHapusKonfirmasiMurni'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Nuju Ngahapus...';
+            const btn = document.getElementById('btnHapusKonfirmasiMurni'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Sedang Menghapus...';
             try {
                 let headers = { ...authHeaders, 'Prefer': 'return=representation' };
                 const response = await fetch(`${SUPABASE_BASE_URL}/rest/v1/plant_farm?id=eq.${activeHapusId}`, { method: 'DELETE', headers: headers });
-                if (!response.ok) { const err = await response.json().catch(()=>({})); throw new Error(err.message || "Gagal ngahapus ti server."); }
-                tunjukkanToast("Catetan parantos suksés dihapus!", "success");
+                if (!response.ok) { const err = await response.json().catch(()=>({})); throw new Error(err.message || "Gagal menghapus dari server."); }
+                tunjukkanToast("Catatan berhasil dihapus!", "success");
                 closeModalHapus(); activeHapusId = null; await loadPlants();
-            } catch (e) { tununjukkanToast("Gagal: " + e.message, "error"); } finally { btn.disabled = false; btn.innerHTML = 'Muhun, Hapus!'; }
+            } catch (e) { tununjukkanToast("Gagal: " + e.message, "error"); } finally { btn.disabled = false; btn.innerHTML = 'Ya, Hapus!'; }
         }
 
         function openModalTambah() {
             const alert = document.getElementById('formAlert'); if(alert) alert.classList.add('hidden'); 
             document.getElementById('formPlantName').classList.remove('input-error'); document.getElementById('formSowingDate').classList.remove('input-error');
             
-            document.getElementById('editPlantId').value = ""; document.getElementById('modalTitle').innerText = "Catat Tanaman Baru Ibu"; document.getElementById('formPlantName').value = ""; document.getElementById('formMedium').value = ""; document.getElementById('formStatus').value = "Semai"; document.getElementById('formCategory').value = "Sayuran Daun"; document.getElementById('formNotes').value = ""; formSelectedFile = null; document.getElementById('formImgLabel').innerText = "Teu acan aya foto"; document.getElementById('formImgPreviewContainer').classList.add('hidden');
+            document.getElementById('editPlantId').value = ""; document.getElementById('modalTitle').innerText = "Catat Tanaman Baru Ibu"; document.getElementById('formPlantName').value = ""; document.getElementById('formMedium').value = ""; document.getElementById('formStatus').value = "Semai"; document.getElementById('formCategory').value = "Sayuran Daun"; document.getElementById('formNotes').value = ""; formSelectedFile = null; document.getElementById('formImgLabel').innerText = "Belum ada foto"; document.getElementById('formImgPreviewContainer').classList.add('hidden');
             document.getElementById('formEstTumbuh').value = ""; document.getElementById('formEstPindah').value = ""; document.getElementById('formEstPanen').value = "";
             
             document.getElementById('formImageFileCamera').value = "";
@@ -1222,9 +1222,9 @@
             const alert = document.getElementById('formAlert'); if(alert) alert.classList.add('hidden'); 
             document.getElementById('formPlantName').classList.remove('input-error'); document.getElementById('formSowingDate').classList.remove('input-error');
 
-            document.getElementById('editPlantId').value = plant.id; document.getElementById('modalTitle').innerText = "Kemas Kini Catetan (Edit)"; document.getElementById('formPlantName').value = plant.plant_name || ""; document.getElementById('formSowingDate').value = plant.sowing_date || ""; document.getElementById('formMedium').value = plant.planting_medium || ""; document.getElementById('formStatus').value = plant.status || "Semai";
+            document.getElementById('editPlantId').value = plant.id; document.getElementById('modalTitle').innerText = "Perbarui Catatan (Edit)"; document.getElementById('formPlantName').value = plant.plant_name || ""; document.getElementById('formSowingDate').value = plant.sowing_date || ""; document.getElementById('formMedium').value = plant.planting_medium || ""; document.getElementById('formStatus').value = plant.status || "Semai";
             let cat = plant.category || "Sayuran Daun"; let notesClean = plant.notes || "";
-            document.getElementById('formCategory').value = cat; document.getElementById('formNotes').value = notesClean; formSelectedFile = null; document.getElementById('formImgLabel').innerText = plant.image_url ? "Mertahankeun foto lami" : "Teu acan aya foto";
+            document.getElementById('formCategory').value = cat; document.getElementById('formNotes').value = notesClean; formSelectedFile = null; document.getElementById('formImgLabel').innerText = plant.image_url ? "Pertahankan foto lama" : "Belum ada foto";
             if (plant.image_url) { document.getElementById('formImgPreview').src = plant.image_url; document.getElementById('formImgPreviewContainer').classList.remove('hidden'); } else document.getElementById('formImgPreviewContainer').classList.add('hidden');
             
             document.getElementById('formEstTumbuh').value = plant.est_tumbuh_date || "";
@@ -1253,7 +1253,7 @@
                 ? `<img src="${plant.image_url}" class="w-full h-full object-cover">` 
                 : dapatkanTunasGraphicSVG(cat);
 
-            document.getElementById('detailBodyContent').innerHTML = `<div class="h-32 bg-stone-100 rounded-xl overflow-hidden border flex items-center justify-center">${detailImageHTML}</div><div class="space-y-1"><h4 class="font-extrabold text-stone-800 text-sm leading-tight">${plant.plant_name}</h4><p class="text-[10px] text-stone-400">Nu Kagungan: <b class="text-emerald-600">${plant.pemilik || 'Anonim'}</b> • Kategori: ${cat}</p></div><div class="bg-stone-50 p-2.5 rounded-xl border border-stone-100 text-[11px] leading-relaxed text-stone-600"><b>Panduan Pangurus:</b><br>${notesClean || 'Teu acan aya catetan khusus.'}</div>`;
+            document.getElementById('detailBodyContent').innerHTML = `<div class="h-32 bg-stone-100 rounded-xl overflow-hidden border flex items-center justify-center">${detailImageHTML}</div><div class="space-y-1"><h4 class="font-extrabold text-stone-800 text-sm leading-tight">${plant.plant_name}</h4><p class="text-[10px] text-stone-400">Pemilik: <b class="text-emerald-600">${plant.pemilik || 'Anonim'}</b> • Kategori: ${cat}</p></div><div class="bg-stone-50 p-2.5 rounded-xl border border-stone-100 text-[11px] leading-relaxed text-stone-600"><b>Panduan Perawatan:</b><br>${notesClean || 'Belum ada catatan khusus.'}</div>`;
             const btnHapus = document.getElementById('detailHapusBtn');
             if(canManage) { btnHapus.classList.remove('hidden'); btnHapus.onclick = () => openModalHapus(); } else { btnHapus.classList.add('hidden'); }
             m.classList.remove('hidden'); setTimeout(() => m.classList.add('opacity-100'), 10);
@@ -1281,11 +1281,11 @@
             const baseDateVal = document.getElementById('formSowingDate').value;
             const statusVal = document.getElementById('formStatus').value;
             
-            if (!pName || !baseDateVal) return tunjukkanToast("Mangga serat heula nami pepelakanna sareng kaping semai!", "error");
+            if (!pName || !baseDateVal) return tunjukkanToast("Silakan tulis dulu nama tanamannya dan tanggal semainya!", "error");
             
             const btn = document.getElementById('btnAiGuide'); const icon = document.getElementById('btnAiGuideIcon'); const loading = document.getElementById('btnAiGuideLoading');
             btn.disabled = true; icon.classList.add('hidden'); loading.classList.remove('hidden');
-            tunjukkanToast("Nyi Sari nuju ngitung jadwal tatanén...", "warning");
+            tunjukkanToast("Nyi Sari sedang menghitung jadwal tanam...", "warning");
             
             let statusContext = "";
             if (statusVal === "Semai") statusContext = "Tanaman ini baru saja disemai dari biji.";
@@ -1326,8 +1326,8 @@
                     el.classList.add('field-ai-filled'); setTimeout(() => el.classList.remove('field-ai-filled'), 2000);
                 });
 
-                tunjukkanToast("Éstimasi ti Nyi Sari parantos dicatetkeun!", "success");
-            } catch (e) { tununjukkanToast("Gagal ngadamel éstimasi.", "error"); } 
+                tunjukkanToast("Estimasi dari Nyi Sari sudah dicatat!", "success");
+            } catch (e) { tununjukkanToast("Gagal membuat estimasi.", "error"); } 
             finally { btn.disabled = false; icon.classList.remove('hidden'); loading.classList.add('hidden'); }
         }
 
@@ -1343,12 +1343,12 @@
             
             if (!name || !benefit || !schedule || !dosage) { 
                 nutrisiDraftSaved = false; 
-                return tunjukkanToast("Punten pisan Ibu, aya kénéh kotak anu teu acan dieusi.", "error"); 
+                return tunjukkanToast("Mohon maaf Ibu, masih ada kotak yang belum diisi.", "error"); 
             }
             
             const btn = document.getElementById('btnSimpanNutrisi'); 
             btn.disabled = true; 
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Nuju Nyimpen...';
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Sedang Menyimpan...';
             
             try {
                 let headers = { ...authHeaders, 'Prefer': 'return=representation' };
@@ -1360,19 +1360,19 @@
                 
                 if (!res.ok) {
                     const errInfo = await res.json().catch(() => ({}));
-                    throw new Error(errInfo.message || errInfo.details || "Penolakan akses ti database server.");
+                    throw new Error(errInfo.message || errInfo.details || "Penolakan akses dari database server.");
                 }
                 
-                tunjukkanToast("Hatur nuhun Ibu! Resep anyar parantos kasimpen.", "success");
+                tunjukkanToast("Terima kasih Ibu! Resep baru sudah tersimpan.", "success");
                 closeModalNutrisi(); 
                 await loadNutritionFromDb();
             } catch (error) { 
-                console.error("Gagal nyimpen resep nutrisi:", error);
-                tunjukkanToast("Gagal nyimpen resep: " + error.message, "error"); 
+                console.error("Gagal menyimpan resep nutrisi:", error);
+                tunjukkanToast("Gagal menyimpan resep: " + error.message, "error"); 
                 nutrisiDraftSaved = false; 
             } finally { 
                 btn.disabled = false; 
-                btn.innerHTML = '<i class="fa-solid fa-plus"></i> <span>Tambihkeun</span>'; 
+                btn.innerHTML = '<i class="fa-solid fa-plus"></i> <span>Tambahkan</span>'; 
             }
         }
 
@@ -1419,17 +1419,17 @@
 
         async function generasiPreviewNutrisi() {
             const namaTanaman = document.getElementById('nutrisiInputTanaman').value.trim(); 
-            if (!namaTanaman) return tunjukkanToast("Punten pisan Ibu, nami pepelakan kedah dieusi heula nya!", "error");
+            if (!namaTanaman) return tunjukkanToast("Mohon maaf Ibu, nama tanaman harus diisi dulu ya!", "error");
             const btn = document.getElementById('btnGeneratePreview'); const icon = document.getElementById('previewAiIcon'); const loading = document.getElementById('previewAiLoading');
-            btn.disabled = true; btn.classList.add('opacity-75'); icon.classList.add('hidden'); loading.classList.remove('hidden'); tunjukkanToast("Nyi Sari nuju milarikeun resepna...", "warning");
+            btn.disabled = true; btn.classList.add('opacity-75'); icon.classList.add('hidden'); loading.classList.remove('hidden'); tunjukkanToast("Nyi Sari sedang mencarikan resepnya...", "warning");
             try {
                 const prompt = `Buatkan resep nutrisi organik pakai bahan dapur untuk tanaman "${namaTanaman}". Berikan penjelasan rincinya.`;
                 const jsonSchema = { type: "OBJECT", properties: { name: { type: "STRING" }, benefit: { type: "STRING" }, schedule: { type: "STRING" }, dosage: { type: "STRING" } }, required: ["name", "benefit", "schedule", "dosage"] };
                 const rawResponse = await panggilGeminiAPI(prompt, dapatkanNyiSariPersona(), null, jsonSchema); const parsed = JSON.parse(rawResponse);
                 document.getElementById('nutrisiPreviewName').value = parsed.name || ""; document.getElementById('nutrisiPreviewBenefit').value = parsed.benefit || ""; document.getElementById('nutrisiPreviewSchedule').value = parsed.schedule || ""; document.getElementById('nutrisiPreviewDosage').value = parsed.dosage || "";
                 document.getElementById('nutrisiPreviewSection').classList.remove('hidden'); document.getElementById('btnSimpanNutrisi').disabled = false; nutrisiDraftSaved = false;
-                tunjukkanToast("Resep ti Nyi Sari parantos sayaga Ibu!", "success");
-            } catch (error) { tununjukkanToast("Hapunten Nyi Sari gagal: " + error.message, "error"); } finally { btn.disabled = false; btn.classList.remove('opacity-75'); icon.classList.remove('hidden'); loading.classList.add('hidden'); }
+                tunjukkanToast("Resep dari Nyi Sari sudah siap Ibu!", "success");
+            } catch (error) { tununjukkanToast("Maaf, Nyi Sari gagal: " + error.message, "error"); } finally { btn.disabled = false; btn.classList.remove('opacity-75'); icon.classList.remove('hidden'); loading.classList.add('hidden'); }
         }
 
         function switchSubAi(sId) {
@@ -1456,14 +1456,14 @@
         }
 
         async function diagnosePlantImage() {
-            if (!doctorSelectedFile) return tunjukkanToast("Punten Ibu, kedah milih poto daunna heula!", "error");
-            const btn = document.getElementById('btnDiagnose'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-1"></i> Nuju Mariksa...';
+            if (!doctorSelectedFile) return tunjukkanToast("Maaf Ibu, harus memilih foto daunnya dulu!", "error");
+            const btn = document.getElementById('btnDiagnose'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-1"></i> Sedang Memeriksa...';
             try {
                 const base64Data = await fileToBase64(doctorSelectedFile); 
-                const prompt = "Ibu, mangga parios foto daun ieu sacara jentre tur rinci pisan. Sebutkeun nami panyakitna dina basa Sunda sareng Indonesia, gejala-gejalana, sarta 2 dugi ka 3 cara nungkulanana nganggo bahan herbal organik dapur sacara jentre tur detail.";
+                const prompt = "Ibu, tolong periksa foto daun ini secara jelas dan sangat rinci. Sebutkan nama penyakitnya dalam Bahasa Indonesia, gejala-gejalanya, serta 2 sampai 3 cara mengatasinya memakai bahan herbal organik dari dapur secara jelas dan detail.";
                 const dataText = await panggilGeminiAPI(prompt, dapatkanNyiSariPersona(), { base64: base64Data, mimeType: doctorSelectedFile.type });
                 document.getElementById('diagnosisText').innerHTML = formatAiResponse(dataText); document.getElementById('diagnosisResult').classList.remove('hidden');
-            } catch (error) { tununjukkanToast("Gagal: " + error.message, "error"); } finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Mawitan Mariksa Panyakit</span>'; }
+            } catch (error) { tununjukkanToast("Gagal: " + error.message, "error"); } finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Mulai Periksa Penyakit</span>'; }
         }
 
         function tununjukkanToast(msg, tipe) { tunjukkanToast(msg, tipe); } // Alias
@@ -1486,8 +1486,8 @@
                 if (line.match(/^\d+\.\s+\*\*([^*]+)\*\*:/) || line.match(/^\d+\.\s+([^*]+):/)) { let parts = line.replace(/^\d+\.\s*/, "").replace(/\*\*/g, "").trim().split(":"); resultHTML.push(`<div class="bg-white/80 border border-emerald-100 p-3 rounded-2xl my-2.5 shadow-sm space-y-1"><span class="font-black text-xs text-emerald-800 block flex items-center space-x-1.5"><i class="fa-solid fa-flask-vial text-lime-600"></i><span>${parts[0].trim()}</span></span><p class="text-[10.5px] text-stone-600 leading-relaxed">${parts.slice(1).join(":").trim()}</p></div>`); continue; }
                 if (line.startsWith("*") || line.startsWith("-")) {
                     let cleanBullet = line.replace(/^[*-\s]+/, "").trim();
-                    if (cleanBullet.startsWith("**Caranya:**") || cleanBullet.startsWith("Caranya:")) resultHTML.push(`<div class="bg-amber-50/70 border border-amber-200/50 p-2 rounded-xl my-1 text-[10.5px]"><b class="text-amber-800"><i class="fa-solid fa-circle-play mr-1"></i>Carana:</b> ${cleanBullet.replace(/\*\*|:/g, "").replace(/^Caranya/i, "").trim()}</div>`);
-                    else if (cleanBullet.startsWith("**Kegunaan:**") || cleanBullet.startsWith("Kegunaan:")) resultHTML.push(`<div class="bg-blue-50/70 border border-blue-200/50 p-2 rounded-xl my-1 text-[10.5px]"><b class="text-blue-800"><i class="fa-solid fa-circle-check mr-1"></i>Mangpaat:</b> ${cleanBullet.replace(/\*\*|:/g, "").replace(/^Kegunaan/i, "").trim()}</div>`);
+                    if (cleanBullet.startsWith("**Caranya:**") || cleanBullet.startsWith("Caranya:")) resultHTML.push(`<div class="bg-amber-50/70 border border-amber-200/50 p-2 rounded-xl my-1 text-[10.5px]"><b class="text-amber-800"><i class="fa-solid fa-circle-play mr-1"></i>Caranya:</b> ${cleanBullet.replace(/\*\*|:/g, "").replace(/^Caranya/i, "").trim()}</div>`);
+                    else if (cleanBullet.startsWith("**Kegunaan:**") || cleanBullet.startsWith("Kegunaan:")) resultHTML.push(`<div class="bg-blue-50/70 border border-blue-200/50 p-2 rounded-xl my-1 text-[10.5px]"><b class="text-blue-800"><i class="fa-solid fa-circle-check mr-1"></i>Manfaat:</b> ${cleanBullet.replace(/\*\*|:/g, "").replace(/^Kegunaan/i, "").trim()}</div>`);
                     else resultHTML.push(`<p class="pl-3.5 relative text-[11px] text-stone-600 leading-relaxed my-1"><span class="absolute left-1.5 text-emerald-500 font-bold">•</span>${cleanBullet.replace(/\*\*([^*]+)\*\*/g, '<b class="text-emerald-800 font-bold">$1</b>')}</p>`);
                     continue;
                 }
