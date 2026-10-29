@@ -191,7 +191,7 @@
                 const as = document.getElementById('authScreen'); if(as) as.classList.add('hidden'); 
                 const aps = document.getElementById('appScreen'); if(aps) aps.classList.remove('hidden');
                 const sd = document.getElementById('formSowingDate'); if(sd) sd.value = new Date().toISOString().split('T')[0];
-                segarSemuaData(); startJamSapaan(); mungkinMulaiTour();
+                segarSemuaData(); startJamSapaan(); mungkinMulaiTour(); mungkinTanyaNotifikasi();
             } else {
                 const aps = document.getElementById('appScreen'); if(aps) aps.classList.add('hidden'); 
                 const as = document.getElementById('authScreen'); if(as) as.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
@@ -430,7 +430,7 @@
                 const dSemai = document.getElementById('dashSemai'); if(dSemai) dSemai.innerText = semai;
                 const dSiap = document.getElementById('dashSiap'); if(dSiap) dSiap.innerText = siap;
                 const dGagal = document.getElementById('dashGagal'); if(dGagal) dGagal.innerText = gagal;
-                perbaruiIndikatorPanen(); perbaruiPengingatPupuk(); perbaruiTombolSiramSemua();
+                perbaruiIndikatorPanen(); perbaruiPengingatPupuk(); perbaruiTombolSiramSemua(); cekNotifikasiPengingat();
                 
                 filterPlants(currentFilterStatus);
                 renderKalender();
@@ -1488,6 +1488,53 @@
             } return `<div class="space-y-2.5 font-medium">${resultHTML.join("")}</div>`;
         }
         function fileToBase64(file) { return new Promise((res, rej) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => res(reader.result.split(',')[1]); reader.onerror = error => rej(error); }); }
+
+        // --- INTIP KATA SANDI (tombol mata) ---
+        function intipSandi(idInput, btn) { const inp = document.getElementById(idInput); if (!inp) return; const tampil = inp.type === 'password'; inp.type = tampil ? 'text' : 'password'; if (btn) btn.innerHTML = '<i class="fa-solid ' + (tampil ? 'fa-eye-slash' : 'fa-eye') + '"></i>'; }
+
+        // --- NOTIFIKASI / PENGINGAT ---
+        function tampilkanNotifikasi(judul, isi) {
+            const opsi = { body: isi, icon: 'https://zaueuvplevtgkthqifsk.supabase.co/storage/v1/object/public/images-bucket/logo-mekarwangi-v3-256.png', tag: 'catetan-kebon-ibu' };
+            if ('serviceWorker' in navigator && navigator.serviceWorker.controller) { navigator.serviceWorker.ready.then(reg => { if (reg) reg.showNotification(judul, opsi); }).catch(() => {}); return; }
+            try { new Notification(judul, opsi); } catch (e) {}
+        }
+        async function mintaIzinNotifikasi() {
+            if (!('Notification' in window)) { tunjukkanToast('Maaf, peramban ini tidak mendukung pemberitahuan.', 'error'); return 'tidak-dukungan'; }
+            let hasil = Notification.permission;
+            if (hasil === 'default') { try { hasil = await Notification.requestPermission(); } catch (e) {} }
+            if (hasil === 'granted') { tunjukkanToast('Pengingat diaktifkan. Terima kasih, Ibu!', 'success'); tampilkanNotifikasi('Pengingat Kebun Aktif \u{1F33F}', 'Mulai sekarang Ibu akan diingatkan bila ada tanaman yang belum disiram atau waktunya dipupuk.'); }
+            else if (hasil === 'denied') tunjukkanToast('Izin ditolak. Bila berubah pikiran, aktifkan lewat pengaturan situs di peramban.', 'warning');
+            return hasil;
+        }
+        function bukaPengaturanNotifikasi() {
+            if (!('Notification' in window)) return tunjukkanToast('Maaf, peramban ini tidak mendukung pemberitahuan.', 'error');
+            const s = Notification.permission;
+            if (s === 'granted') tunjukkanToast('Pengingat sudah aktif di perangkat ini.', 'success');
+            else if (s === 'denied') tunjukkanToast('Izin pemberitahuan sedang mati. Aktifkan lewat ikon gembok pada alamat peramban, pilih Izin situs, lalu Notifikasi.', 'warning');
+            else mintaIzinNotifikasi();
+        }
+        function mungkinTanyaNotifikasi() {
+            if (!('Notification' in window) || Notification.permission !== 'default') return;
+            if (localStorage.getItem('ibu_kebun_notif_ditanya')) return;
+            if (!localStorage.getItem('ibu_kebun_tour_selesai')) return;
+            setTimeout(() => { const k = document.getElementById('kartuIzinNotif'); if (k && currentUser) k.classList.remove('hidden'); }, 1500);
+        }
+        function setujuiIzinNotifikasi() { try { localStorage.setItem('ibu_kebun_notif_ditanya', '1'); } catch (e) {} const k = document.getElementById('kartuIzinNotif'); if (k) k.classList.add('hidden'); mintaIzinNotifikasi(); }
+        function tolakIzinNotifikasi() { try { localStorage.setItem('ibu_kebun_notif_ditanya', '1'); } catch (e) {} const k = document.getElementById('kartuIzinNotif'); if (k) k.classList.add('hidden'); tunjukkanToast('Baik, Ibu bisa mengaktifkannya kapan saja lewat tombol lonceng di atas.', 'success'); }
+        function cekNotifikasiPengingat() {
+            if (!('Notification' in window) || Notification.permission !== 'granted' || !Array.isArray(allPlants)) return;
+            const kunci = 'ibu_kebun_notif_terakhir'; const hariIni = new Date().toDateString();
+            try { if (localStorage.getItem(kunci) === hariIni) return; } catch (e) { return; }
+            const belumSiram = allPlants.filter(p => p.status !== 'Panen' && p.status !== 'Gagal' && !(p.last_watered && new Date(p.last_watered).toDateString() === hariIni)).length;
+            const kini = new Date(); kini.setHours(0, 0, 0, 0);
+            const pupukJatuh = allPlants.filter(p => p.next_fertilize_date && p.status !== 'Panen' && p.status !== 'Gagal' && new Date(p.next_fertilize_date) <= kini).length;
+            if (!belumSiram && !pupukJatuh) return;
+            try { localStorage.setItem(kunci, hariIni); } catch (e) {}
+            const bagian = [];
+            if (belumSiram) bagian.push(belumSiram + ' tanaman belum disiram');
+            if (pupukJatuh) bagian.push(pupukJatuh + ' tanaman waktunya dipupuk');
+            tampilkanNotifikasi('Pengingat Kebun Hari Ini', bagian.join(' \u2022 ') + '. Buka aplikasi untuk melihatnya.');
+        }
 
         // --- PERAN: siapa yang boleh merawat tanaman ---
         function peranSaya() { return localStorage.getItem('ibu_kebun_role') || 'Anggota'; }

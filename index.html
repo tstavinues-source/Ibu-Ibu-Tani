@@ -39,14 +39,14 @@
             </div>
             <div id="loginForm" class="space-y-4 relative z-10">
                 <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Nama Pengguna (ID)</label><input type="text" id="loginName" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Contoh: Ibu Tati"></div>
-                <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Kata Sandi (Password)</label><input type="password" id="loginPassword" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Masukkan kata sandi Ibu"></div>
+                <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Kata Sandi (Password)</label><div class="relative"><input type="password" id="loginPassword" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 pr-11 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Masukkan kata sandi Ibu"><button type="button" onclick="intipSandi('loginPassword', this)" class="absolute right-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 btn-press p-1.5" title="Tampilkan / sembunyikan kata sandi"><i class="fa-solid fa-eye text-sm"></i></button></div></div>
                 <button onclick="doLogin()" id="btnLogin" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3.5 rounded-2xl shadow-md shadow-emerald-600/20 btn-press transition-all flex items-center justify-center space-x-2 text-sm mt-2"><i class="fa-solid fa-right-to-bracket"></i> <span id="btnLoginText">Masuk ke Aplikasi</span></button>
                 <div class="text-center mt-4"><button onclick="toggleAuthMode('register')" class="text-xs text-emerald-600 font-bold hover:text-emerald-700 underline underline-offset-2">Belum punya akun? Daftar di sini.</button></div>
             </div>
             <div id="registerForm" class="space-y-4 relative z-10 hidden">
                 <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 text-xs text-amber-800 font-medium mb-2">💡 <b class="font-bold">Tips:</b> Tidak perlu pakai email. Cukup buat nama dan kata sandi yang mudah diingat.</div>
                 <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Nama Pengguna Ibu</label><input type="text" id="regName" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Contoh: Teh Yani"></div>
-                <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Buat Kata Sandi</label><input type="password" id="regPassword" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Bebas, contoh: mawar123"></div>
+                <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Buat Kata Sandi</label><div class="relative"><input type="password" id="regPassword" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 pr-11 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Bebas, contoh: mawar123"><button type="button" onclick="intipSandi('regPassword', this)" class="absolute right-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 btn-press p-1.5" title="Tampilkan / sembunyikan kata sandi"><i class="fa-solid fa-eye text-sm"></i></button></div></div>
                 <button onclick="doRegister()" id="btnRegister" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 rounded-2xl shadow-md shadow-amber-500/20 btn-press transition-all flex items-center justify-center space-x-2 text-sm mt-2"><i class="fa-solid fa-user-plus"></i> <span id="btnRegText">Daftar Sekarang</span></button>
                 <div class="text-center mt-4"><button onclick="toggleAuthMode('login')" class="text-xs text-stone-500 font-bold hover:text-stone-700">Sudah daftar? Kembali ke menu Masuk.</button></div>
             </div>
@@ -58,7 +58,7 @@
         <div class="bg-white rounded-3xl max-w-xs w-full p-5 text-center space-y-4 shadow-2xl border border-emerald-100 relative">
             <div class="w-12 h-12 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center mx-auto text-xl"><i class="fa-solid fa-user-shield"></i></div>
             <h4 class="font-black text-sm text-stone-800">Mode Admin</h4>
-            <input type="password" id="adminPasswordInput" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-slate-500 transition-all font-medium text-center tracking-widest" placeholder="••••••••">
+            <div class="relative"><input type="password" id="adminPasswordInput" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 pr-11 text-sm focus:outline-slate-500 transition-all font-medium text-center tracking-widest" placeholder="••••••••"><button type="button" onclick="intipSandi('adminPasswordInput', this)" class="absolute right-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 btn-press p-1.5" title="Tampilkan / sembunyikan kata sandi"><i class="fa-solid fa-eye"></i></button></div>
             <div class="flex space-x-2 text-xs pt-1">
                 <button onclick="closeAdminPrompt()" class="flex-1 py-2.5 rounded-xl border border-stone-300 font-bold text-stone-600 hover:bg-stone-100 btn-press">Batal</button>
                 <button onclick="verifyAdmin()" class="flex-1 py-2.5 rounded-xl bg-slate-700 text-white font-bold hover:bg-slate-800 btn-press">Masuk</button>
@@ -104,6 +104,7 @@
                         </div>
                     </div>
                     <div class="flex items-center space-x-1">
+                        <button onclick="bukaPengaturanNotifikasi()" class="bg-white/10 hover:bg-white/20 btn-press p-2 rounded-xl border border-white/5" title="Pengingat notifikasi"><i class="fa-solid fa-bell text-xs"></i></button>
                         <button onclick="bukaModalTentang()" class="bg-white/10 hover:bg-white/20 btn-press p-2 rounded-xl border border-white/5" title="Tentang aplikasi ini"><i class="fa-solid fa-circle-info text-xs"></i></button>
                         <button onclick="mulaiTour()" class="bg-white/10 hover:bg-white/20 btn-press p-2 rounded-xl border border-white/5" title="Panduan fitur untuk pemula"><i class="fa-solid fa-compass text-xs"></i></button>
                         <button onclick="segarSemuaData()" class="bg-white/10 hover:bg-white/20 btn-press p-2 rounded-xl border border-white/5"><i class="fa-solid fa-rotate text-xs"></i></button>
@@ -623,6 +624,21 @@
 
     <!-- Wadah laporan khusus cetak/PDF (diisi otomatis saat ekspor) -->
     <div id="laporanCetak"></div>
+
+    <!-- Kartu permintaan izin notifikasi -->
+    <div id="kartuIzinNotif" class="hidden fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 z-40 bg-white rounded-3xl shadow-2xl border border-emerald-100 p-4">
+        <div class="flex items-start gap-3">
+            <div class="w-10 h-10 bg-emerald-50 text-emerald-700 rounded-full flex items-center justify-center shrink-0 text-base"><i class="fa-solid fa-bell"></i></div>
+            <div class="flex-1">
+                <p class="font-black text-sm text-stone-800">Aktifkan Pengingat Kebun?</p>
+                <p class="text-xs text-stone-500 leading-relaxed mt-0.5">Supaya tidak lupa: Ibu akan diberi tahu bila ada tanaman yang belum disiram atau sudah waktunya dipupuk.</p>
+                <div class="flex gap-2 mt-3">
+                    <button onclick="setujuiIzinNotifikasi()" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs py-2.5 rounded-xl btn-press min-h-[44px]">Aktifkan</button>
+                    <button onclick="tolakIzinNotifikasi()" class="flex-1 bg-stone-100 text-stone-600 font-bold text-xs py-2.5 rounded-xl btn-press min-h-[44px]">Nanti Saja</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- ================= PANDUAN FITUR (TUR PEMULA) ================= -->
     <div id="tourLayar" class="hidden"></div>

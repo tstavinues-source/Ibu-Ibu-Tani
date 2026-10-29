@@ -16,7 +16,7 @@
             <div class="w-16 h-16 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center mx-auto text-2xl"><i class="fa-solid fa-lock"></i></div>
             <h2 class="font-black text-xl text-slate-800">Verifikasi Admin</h2>
             <p class="text-xs text-slate-500">Silakan masukkan lagi kata sandi admin untuk memastikan keamanan.</p>
-            <input type="password" id="fallbackPassword" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-slate-500 text-center tracking-widest" placeholder="Sandi Admin">
+            <div class="relative"><input type="password" id="fallbackPassword" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 pr-11 text-sm focus:outline-slate-500 text-center tracking-widest" placeholder="Sandi Admin"><button type="button" onclick="intipSandi('fallbackPassword', this)" class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 btn-press p-1.5" title="Tampilkan / sembunyikan kata sandi"><i class="fa-solid fa-eye"></i></button></div>
             <button onclick="checkFallbackAuth()" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-3 rounded-xl shadow-md btn-press transition-all">Lanjutkan</button>
             <button onclick="window.location.href='index.html'" class="w-full text-xs text-slate-500 font-bold hover:text-slate-700 underline pt-2">Kembali ke Aplikasi Utama</button>
         </div>
