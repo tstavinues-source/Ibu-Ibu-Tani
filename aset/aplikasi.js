@@ -485,8 +485,12 @@
                 let colorBadge = plant.status === 'Semai' ? 'bg-amber-100 text-amber-800' : (plant.status === 'Tumbuh Daun' ? 'bg-blue-100 text-blue-800' : (plant.status === 'Siap Pindah' ? 'bg-lime-100 text-lime-800' : 'bg-rose-100 text-rose-800'));
                 let statusIndo = plant.status === 'Semai' ? 'Baru Tumbuh' : (plant.status === 'Tumbuh Daun' ? 'Banyak Daun' : (plant.status === 'Siap Pindah' ? 'Siap Pindah' : 'Layu'));
                 
+                const olehSiram = plant.disiram_oleh ? ' oleh ' + escapeHtml(plant.disiram_oleh) : '';
                 let siramText = '<span class="text-stone-400 font-bold text-xs">Belum disiram</span>';
-                if (plant.last_watered && new Date(plant.last_watered).toDateString() === new Date().toDateString()) siramText = `<span class="text-emerald-600 font-bold text-xs"><i class="fa-solid fa-droplet"></i> Disiram ${new Date(plant.last_watered).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</span>`;
+                if (plant.last_watered && new Date(plant.last_watered).toDateString() === new Date().toDateString()) siramText = `<span class="text-emerald-600 font-bold text-xs"><i class="fa-solid fa-droplet"></i> Disiram ${new Date(plant.last_watered).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}${olehSiram}</span>`;
+                else if (plant.last_watered) siramText = `<span class="text-stone-400 font-bold text-xs"><i class="fa-solid fa-droplet"></i> Terakhir disiram ${new Date(plant.last_watered).toLocaleDateString('id-ID',{day:'numeric',month:'short'})} ${new Date(plant.last_watered).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}${olehSiram}</span>`;
+                let pupukText = '';
+                if (plant.terakhir_dipupuk) pupukText = `<p><span class="text-violet-600 font-bold text-xs"><i class="fa-solid fa-flask-vial"></i> Dipupuk ${new Date(plant.terakhir_dipupuk).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}${plant.dipupuk_oleh ? ' oleh ' + escapeHtml(plant.dipupuk_oleh) : ''}</span></p>`;
                 
                 let imageContainerHTML = "";
                 if (plant.image_url) {
@@ -497,44 +501,49 @@
                 
                 let warnaAksen = plant.status === 'Semai' ? 'border-l-amber-400' : (plant.status === 'Tumbuh Daun' ? 'border-l-blue-400' : (plant.status === 'Siap Pindah' ? 'border-l-lime-500' : (plant.status === 'Panen' ? 'border-l-amber-500' : 'border-l-rose-400')));
                 const sudahSiramHariIni = plant.last_watered && new Date(plant.last_watered).toDateString() === new Date().toDateString();
-                let tombolSiram = sudahSiramHariIni
-                    ? `<button disabled class="flex-1 bg-emerald-500 text-white font-extrabold px-3 py-3 rounded-2xl text-xs min-h-[48px]"><i class="fa-solid fa-check mr-1"></i> Sudah Disiram</button>`
-                    : `<button onclick="quickWater(${plant.id})" class="flex-1 bg-blue-600 text-white font-extrabold px-3 py-3 rounded-2xl text-xs hover:bg-blue-700 btn-press min-h-[48px]"><i class="fa-solid fa-droplet mr-1"></i> Siram</button>`;
+                let tombolSiram;
+                if (sudahSiramHariIni) tombolSiram = `<button disabled class="flex-1 bg-emerald-500 text-white font-extrabold px-3 py-3 rounded-2xl text-xs min-h-[48px]"><i class="fa-solid fa-check mr-1"></i> Sudah Disiram</button>`;
+                else if (canManage) tombolSiram = `<button onclick="quickWater(${plant.id})" class="flex-1 bg-blue-600 text-white font-extrabold px-3 py-3 rounded-2xl text-xs hover:bg-blue-700 btn-press min-h-[48px]"><i class="fa-solid fa-droplet mr-1"></i> Siram</button>`;
+                else tombolSiram = `<div class="flex-1 bg-stone-100 text-stone-400 font-bold px-3 py-3 rounded-2xl text-xs min-h-[48px] flex items-center justify-center text-center"><i class="fa-solid fa-lock mr-1"></i> Dirawat Pemilik / Ketua</div>`;
                 let tombolBagikan = isOwner ? `<button onclick="bagikanKeWA('tanam', '${escapeJsString(plant.plant_name)}')" class="flex-1 bg-amber-100 text-amber-900 font-extrabold px-3 py-3 rounded-2xl text-xs hover:bg-amber-200 btn-press min-h-[48px]"><i class="fa-solid fa-share-nodes mr-1"></i> Bagikan</button>` : '';
                 let tombolUbah = canManage ? `<button onclick="openModalEdit(${plant.id})" class="absolute top-2 right-2 bg-white/90 text-amber-700 w-9 h-9 rounded-xl shadow btn-press flex items-center justify-center z-10" title="Ubah catatan"><i class="fa-solid fa-pen-to-square"></i></button>` : '';
                 const tglTanamFmt = new Date(plant.sowing_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 
-                html += `<div class="plant-card relative bg-white rounded-[1.75rem] shadow-sm border border-stone-200/60 border-l-8 ${warnaAksen} overflow-hidden p-3.5">${tombolUbah}<div class="flex space-x-3.5"><div class="w-24 h-24 rounded-2xl overflow-hidden bg-stone-100 shrink-0 relative">${imageContainerHTML}</div><div class="flex-1 min-w-0"><h4 class="font-extrabold text-stone-800 text-base leading-tight">${escapeHtml(plant.plant_name)}</h4><p class="text-xs text-stone-500 mt-1 leading-relaxed">Ditanam ${tglTanamFmt} • Umur ${hss >= 0 ? hss : 0} hari<br>Pemilik: ${escapeHtml(plant.pemilik || 'Anonim')}</p><span class="inline-block mt-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${colorBadge}">${statusIndo}</span></div></div><div class="mt-3 bg-stone-50 p-2.5 rounded-xl border border-stone-100 text-xs space-y-1"><div class="flex justify-between items-center text-stone-500"><span>Pertumbuhan</span><span>${teksEstimasi}</span></div><div class="w-full bg-stone-200 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-emerald-500 to-lime-400 h-full rounded-full progress-fill" style="width: ${persenProgress}%"></div></div><p class="text-stone-500 line-clamp-1 italic">Tips: ${escapeHtml(notesClean || '-')}</p><p>${siramText}</p></div><div class="flex space-x-2 mt-3">${tombolSiram}${tombolBagikan}<button onclick="openModalDetail(${plant.id})" class="flex-1 bg-stone-100 text-stone-700 font-extrabold px-3 py-3 rounded-2xl text-xs hover:bg-stone-200 btn-press min-h-[48px]">Detail <i class="fa-solid fa-chevron-right ml-0.5"></i></button></div></div>`;
+                html += `<div class="plant-card relative bg-white rounded-[1.75rem] shadow-sm border border-stone-200/60 border-l-8 ${warnaAksen} overflow-hidden p-3.5">${tombolUbah}<div class="flex space-x-3.5"><div class="w-24 h-24 rounded-2xl overflow-hidden bg-stone-100 shrink-0 relative">${imageContainerHTML}</div><div class="flex-1 min-w-0"><h4 class="font-extrabold text-stone-800 text-base leading-tight">${escapeHtml(plant.plant_name)}</h4><p class="text-xs text-stone-500 mt-1 leading-relaxed">Ditanam ${tglTanamFmt} • Umur ${hss >= 0 ? hss : 0} hari<br>Pemilik: ${escapeHtml(plant.pemilik || 'Anonim')}</p><span class="inline-block mt-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${colorBadge}">${statusIndo}</span></div></div><div class="mt-3 bg-stone-50 p-2.5 rounded-xl border border-stone-100 text-xs space-y-1"><div class="flex justify-between items-center text-stone-500"><span>Pertumbuhan</span><span>${teksEstimasi}</span></div><div class="w-full bg-stone-200 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-emerald-500 to-lime-400 h-full rounded-full progress-fill" style="width: ${persenProgress}%"></div></div><p class="text-stone-500 line-clamp-1 italic">Tips: ${escapeHtml(notesClean || '-')}</p><p>${siramText}</p>${pupukText}</div><div class="flex space-x-2 mt-3">${tombolSiram}${tombolBagikan}<button onclick="openModalDetail(${plant.id})" class="flex-1 bg-stone-100 text-stone-700 font-extrabold px-3 py-3 rounded-2xl text-xs hover:bg-stone-200 btn-press min-h-[48px]">Detail <i class="fa-solid fa-chevron-right ml-0.5"></i></button></div></div>`;
             });
             grid.innerHTML = html;
         }
 
         async function siramSemuaTanaman() {
             const belum = p => p.status !== 'Panen' && p.status !== 'Gagal' && !(p.last_watered && new Date(p.last_watered).toDateString() === new Date().toDateString());
-            const target = allPlants.filter(belum);
-            if (!target.length) return tunjukkanToast('Semua tanaman sudah disiram hari ini. Hebat!', 'success');
+            const semuaBelum = allPlants.filter(belum);
+            if (!semuaBelum.length) return tunjukkanToast('Semua tanaman sudah disiram hari ini. Hebat!', 'success');
+            const target = semuaBelum.filter(p => bolehRawatTanaman(p));
+            if (!target.length) return tunjukkanToast('Tanaman Ibu sudah disiram semua hari ini. Tanaman ibu lain dirawat oleh pemiliknya atau Ketua.', 'success');
             const ids = target.map(p => p.id).join(',');
             try {
-                const res = await fetch(SUPABASE_BASE_URL + '/rest/v1/plant_farm?id=in.(' + ids + ')', { method: 'PATCH', headers: authHeaders, body: JSON.stringify({ last_watered: new Date().toISOString() }) });
+                const res = await fetch(SUPABASE_BASE_URL + '/rest/v1/plant_farm?id=in.(' + ids + ')', { method: 'PATCH', headers: authHeaders, body: JSON.stringify({ last_watered: new Date().toISOString(), disiram_oleh: currentUser }) });
                 if (!res.ok) throw new Error();
-                tunjukkanToast(target.length + ' tanaman sudah disiram sekaligus. Terima kasih!', 'success');
+                tunjukkanToast(target.length + (sayaKetuaAtauAdmin() ? ' tanaman sudah disiram sekaligus. Terima kasih!' : ' tanaman Ibu sudah disiram sekaligus. Terima kasih!'), 'success');
                 await loadPlants(); renderWateringList();
             } catch (e) { tunjukkanToast('Gagal menyiram semua. Coba lagi.', 'error'); }
         }
         function perbaruiTombolSiramSemua() {
-            const belum = allPlants.filter(p => p.status !== 'Panen' && p.status !== 'Gagal' && !(p.last_watered && new Date(p.last_watered).toDateString() === new Date().toDateString())).length;
-            ['btnSiramSemua', 'btnSiramSemuaTab'].forEach(id => { const b = document.getElementById(id); if (b) b.innerHTML = '<i class="fa-solid fa-shower mr-1"></i> Siram Semua Tanaman (' + belum + ' belum disiram)'; });
+            const belum = allPlants.filter(p => p.status !== 'Panen' && p.status !== 'Gagal' && !(p.last_watered && new Date(p.last_watered).toDateString() === new Date().toDateString()) && bolehRawatTanaman(p)).length;
+            const labelSiram = sayaKetuaAtauAdmin() ? 'Siram Semua Tanaman' : 'Siram Tanaman Saya';
+            ['btnSiramSemua', 'btnSiramSemuaTab'].forEach(id => { const b = document.getElementById(id); if (b) b.innerHTML = '<i class="fa-solid fa-shower mr-1"></i> ' + labelSiram + ' (' + belum + ' belum disiram)'; });
         }
 
         async function tandaiSudahPupuk(id) {
             const p = allPlants.find(x => x.id == id); if (!p) return;
+            if (!bolehRawatTanaman(p)) return tunjukkanToast('Tanaman ini hanya bisa dipupuk oleh pemiliknya atau Ketua.', 'warning');
             const interval = p.pupuk_interval_hari || 14;
             const hariIni = new Date(); hariIni.setHours(0, 0, 0, 0);
             let dasar = p.next_fertilize_date ? new Date(p.next_fertilize_date) : hariIni;
             if (dasar < hariIni) dasar = hariIni;
             const baru = nambihDinten(dasar.toISOString().split('T')[0], interval);
             try {
-                const res = await fetch(SUPABASE_BASE_URL + '/rest/v1/plant_farm?id=eq.' + id, { method: 'PATCH', headers: authHeaders, body: JSON.stringify({ next_fertilize_date: baru }) });
+                const res = await fetch(SUPABASE_BASE_URL + '/rest/v1/plant_farm?id=eq.' + id, { method: 'PATCH', headers: authHeaders, body: JSON.stringify({ next_fertilize_date: baru, dipupuk_oleh: currentUser, terakhir_dipupuk: new Date().toISOString() }) });
                 if (!res.ok) throw new Error();
                 tunjukkanToast('Pemupukan ' + p.plant_name + ' tercatat. Berikutnya ' + new Date(baru + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) + '.', 'success');
                 loadPlants();
@@ -547,7 +556,7 @@
             const batas = new Date(kini); batas.setDate(batas.getDate() + 1);
             const jatuh = allPlants.filter(p => p.next_fertilize_date && p.status !== 'Panen' && p.status !== 'Gagal' && new Date(p.next_fertilize_date) <= batas);
             if (!jatuh.length) { el.classList.add('hidden'); el.innerHTML = ''; return; }
-            el.innerHTML = '<div class="space-y-1.5">' + jatuh.map(p => '<p class="flex items-center justify-between gap-2"><span><i class="fa-solid fa-flask-vial mr-1"></i>' + escapeHtml(p.plant_name) + (p.pupuk_jenis ? ' — ' + escapeHtml(p.pupuk_jenis) : '') + '</span><button onclick="tandaiSudahPupuk(' + p.id + ')" class="bg-white text-violet-700 font-extrabold px-2.5 py-1.5 rounded-lg text-[11px] btn-press shrink-0 min-h-[36px]">Sudah Dipupuk ✓</button></p>').join('') + '<p class="text-[11px] text-violet-200 font-medium">Jadwal lengkapnya ada di Kalender.</p></div>';
+            el.innerHTML = '<div class="space-y-1.5">' + jatuh.map(p => '<p class="flex items-center justify-between gap-2"><span><i class="fa-solid fa-flask-vial mr-1"></i>' + escapeHtml(p.plant_name) + (p.pupuk_jenis ? ' — ' + escapeHtml(p.pupuk_jenis) : '') + '</span>' + (bolehRawatTanaman(p) ? '<button onclick="tandaiSudahPupuk(' + p.id + ')" class="bg-white text-violet-700 font-extrabold px-2.5 py-1.5 rounded-lg text-[11px] btn-press shrink-0 min-h-[36px]">Sudah Dipupuk ✓</button>' : '<span class="text-[11px] text-violet-200 font-bold shrink-0">Milik ' + escapeHtml(p.pemilik || 'anggota lain') + '</span>') + '</p>').join('') + '<p class="text-[11px] text-violet-200 font-medium">Jadwal lengkapnya ada di Kalender.</p></div>';
             el.classList.remove('hidden');
         }
 
@@ -790,7 +799,7 @@
             let targets = allPlants.filter(p => p.status !== 'Panen' && (!p.last_watered || new Date(p.last_watered).toDateString() !== new Date().toDateString()));
             if (targets.length === 0) return listDiv.innerHTML = '<div class="text-center py-4 text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> Alhamdulillah! Semua tanaman komunitas sudah selesai disiram hari ini.</div>';
             let html = '';
-            targets.forEach(p => { html += `<div class="flex items-center justify-between p-2.5 bg-stone-50 rounded-xl border border-stone-100"><div class="pr-2"><h5 class="font-bold text-stone-800 leading-tight">${escapeHtml(p.plant_name)}</h5><p class="text-xs text-stone-500">Milik: <b class="text-emerald-700">${escapeHtml(p.pemilik || 'Anonim')}</b> • Media: ${escapeHtml(p.planting_medium || '-')}</p></div><button onclick="quickWater(${p.id}, true)" class="bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-[11px] flex items-center space-x-1.5 hover:bg-emerald-700 btn-press shadow-sm"><i class="fa-solid fa-shower"></i> <span>Siram</span></button></div>`; });
+            targets.forEach(p => { html += `<div class="flex items-center justify-between p-2.5 bg-stone-50 rounded-xl border border-stone-100"><div class="pr-2"><h5 class="font-bold text-stone-800 leading-tight">${escapeHtml(p.plant_name)}</h5><p class="text-xs text-stone-500">Milik: <b class="text-emerald-700">${escapeHtml(p.pemilik || 'Anonim')}</b> • Media: ${escapeHtml(p.planting_medium || '-')}</p></div>${bolehRawatTanaman(p) ? '<button onclick="quickWater(' + p.id + ', true)" class="bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-[11px] flex items-center space-x-1.5 hover:bg-emerald-700 btn-press shadow-sm"><i class="fa-solid fa-shower"></i> <span>Siram</span></button>' : '<span class="text-[11px] font-bold text-stone-400 shrink-0"><i class="fa-solid fa-lock mr-1"></i>Dirawat pemiliknya</span>'}</div>`; });
             listDiv.innerHTML = html;
         }
 
@@ -815,8 +824,10 @@
         }
 
         async function quickWater(id, reloadSiram = false) {
+            const tanamanQW = allPlants.find(x => x.id == id);
+            if (tanamanQW && !bolehRawatTanaman(tanamanQW)) return tunjukkanToast('Tanaman ini hanya bisa disiram oleh pemiliknya atau Ketua.', 'warning');
             try {
-                const response = await fetch(`${SUPABASE_BASE_URL}/rest/v1/plant_farm?id=eq.${id}`, { method: 'PATCH', headers: authHeaders, body: JSON.stringify({ last_watered: new Date().toISOString() }) });
+                const response = await fetch(`${SUPABASE_BASE_URL}/rest/v1/plant_farm?id=eq.${id}`, { method: 'PATCH', headers: authHeaders, body: JSON.stringify({ last_watered: new Date().toISOString(), disiram_oleh: currentUser }) });
                 if (!response.ok) throw new Error();
                 tunjukkanToast("Penyiraman sudah tersimpan di catatan!", "success");
                 await loadPlants(); if (reloadSiram) renderWateringList();
@@ -1478,6 +1489,11 @@
         }
         function fileToBase64(file) { return new Promise((res, rej) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => res(reader.result.split(',')[1]); reader.onerror = error => rej(error); }); }
 
+        // --- PERAN: siapa yang boleh merawat tanaman ---
+        function peranSaya() { return localStorage.getItem('ibu_kebun_role') || 'Anggota'; }
+        function sayaKetuaAtauAdmin() { const r = peranSaya(); return r === 'Ketua' || r === 'Admin'; }
+        function bolehRawatTanaman(p) { return !!p && (p.pemilik === currentUser || sayaKetuaAtauAdmin()); }
+
         // --- EKSPOR LAPORAN (PDF & EXCEL) ---
         const BULAN_ID = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         const BULAN_ID_SINGKAT = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
@@ -1619,6 +1635,7 @@
             { tab: 'benih', target: '#benihList', judul: 'Bank Benih Bersama', teks: 'Di sini tercatat benih dan bibit milik bersama. Ada tanda Ada (boleh diminta) dan Habis. Ibu juga bisa menambah stok lewat tombol Tambah Stok Benih.' },
             { tab: 'ai', target: '#chatAiInput', judul: 'Ngobrol dengan Nyi Sari', teks: 'Nyi Sari adalah asisten kebun yang pintar. Tulis pertanyaan apa saja soal tanaman di kotak ini — misalnya cara merawat cabai — lalu ketuk tombol kirim berwarna hijau.' },
             { tab: 'ai', sub: 'doctor', target: '#btnDiagnose', judul: 'Periksa Penyakit Daun', teks: 'Daun tanaman Ibu bercak atau menguning? Foto daunnya di sini. Nyi Sari akan memeriksa penyakitnya dan memberi saran pengobatannya.' },
+            { tab: 'kebun', target: '#plantGrid', alt: '#plantEmpty', judul: 'Peran Ketua & Anggota', teks: 'Semua ibu bisa saling melihat tanaman di kebun. Tetapi menyiram dan memupuk tanaman ibu lain hanya boleh dilakukan oleh pemiliknya sendiri atau oleh Ketua kelompok. Bila Ketua membantu merawat, di kartu tanamannya akan tertulis siapa yang menyiram atau memupuknya.' },
             { judul: 'Selesai! Selamat Berkebun 🌱', teks: 'Panduan selesai. Kalau nanti ingin mengulang panduan ini, ketuk tombol kompas di bagian atas aplikasi. Selamat berkebun, Ibu!' }
         ];
         let tourIdx = -1; let tourJalan = false; let tourFormTerbuka = false; let tourTentangTerbuka = false;
