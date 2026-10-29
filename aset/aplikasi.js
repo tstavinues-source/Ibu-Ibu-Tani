@@ -1514,6 +1514,7 @@
             }, langkah.target ? 420 : 30);
         }
         let tourTargetEl = null; let tourTimerPosisi = null;
+        function faktorZoomTour() { const b = document.getElementById('bodyApp'); const z = b ? parseFloat(getComputedStyle(b).zoom) : NaN; return (z && z > 0) ? z : 1; }
         function gambarTour(el, langkah, i) {
             const sorot = document.getElementById('tourSorot'); const kartu = document.getElementById('tourKartu');
             document.getElementById('tourJudul').innerText = langkah.judul;
@@ -1524,9 +1525,10 @@
             tourTargetEl = el;
             if (tourTimerPosisi) { clearInterval(tourTimerPosisi); tourTimerPosisi = null; }
             if (!el) {
+                const z = faktorZoomTour();
                 sorot.classList.remove('hidden');
-                sorot.style.left = '50%'; sorot.style.top = '50%'; sorot.style.width = '0px'; sorot.style.height = '0px'; sorot.style.borderColor = 'transparent';
-                kartu.style.left = '50%'; kartu.style.top = '50%'; kartu.style.transform = 'translate(-50%,-50%)';
+                sorot.style.left = (window.innerWidth / 2 / z) + 'px'; sorot.style.top = (window.innerHeight / 2 / z) + 'px'; sorot.style.width = '0px'; sorot.style.height = '0px'; sorot.style.borderColor = 'transparent';
+                kartu.style.left = (window.innerWidth / 2 / z) + 'px'; kartu.style.top = (window.innerHeight / 2 / z) + 'px'; kartu.style.transform = 'translate(-50%,-50%)';
                 return;
             }
             sorot.style.borderColor = '#a3e635';
@@ -1544,14 +1546,15 @@
         function tempatkanSorot(el) {
             if (!el) return;
             const sorot = document.getElementById('tourSorot'); const kartu = document.getElementById('tourKartu');
+            const z = faktorZoomTour();
             const r = el.getBoundingClientRect(); const pad = 6;
             sorot.classList.remove('hidden');
-            sorot.style.left = (r.left - pad) + 'px'; sorot.style.top = (r.top - pad) + 'px';
-            sorot.style.width = (r.width + pad * 2) + 'px'; sorot.style.height = (r.height + pad * 2) + 'px';
-            const kw = kartu.offsetWidth; const kh = kartu.offsetHeight;
+            sorot.style.left = ((r.left - pad) / z) + 'px'; sorot.style.top = ((r.top - pad) / z) + 'px';
+            sorot.style.width = ((r.width + pad * 2) / z) + 'px'; sorot.style.height = ((r.height + pad * 2) / z) + 'px';
+            const kw = kartu.offsetWidth * z; const kh = kartu.offsetHeight * z;
             let kx = Math.min(Math.max(8, r.left + r.width / 2 - kw / 2), window.innerWidth - kw - 8);
             let ky = r.bottom + 14; if (ky + kh > window.innerHeight - 8) ky = r.top - kh - 14; if (ky < 8) ky = Math.max(8, window.innerHeight - kh - 8);
-            kartu.style.left = kx + 'px'; kartu.style.top = ky + 'px';
+            kartu.style.left = (kx / z) + 'px'; kartu.style.top = (ky / z) + 'px';
         }
         function tourGeser(arah) { tourKe(tourIdx + arah, arah); }
         function selesaiTour(dilewati) { tourJalan = false; tourIdx = -1; tourTargetEl = null; if (tourTimerPosisi) { clearInterval(tourTimerPosisi); tourTimerPosisi = null; } try { localStorage.setItem('ibu_kebun_tour_selesai', '1'); } catch (e) {} ['tourLayar', 'tourSorot', 'tourKartu'].forEach(id => document.getElementById(id).classList.add('hidden')); if (typeof switchTab === 'function') switchTab('kebun'); if (!dilewati) tunjukkanToast('Panduan selesai. Selamat berkebun! 🌿', 'success'); }
