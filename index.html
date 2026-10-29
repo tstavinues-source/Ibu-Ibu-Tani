@@ -235,6 +235,7 @@
                     </div>
                 </div>
                 <div id="panenEmpty" class="hidden bg-white text-center p-8 rounded-3xl border border-stone-200/60 shadow-sm"><p class="text-xs text-stone-500 font-medium">Belum ada yang panen nih. Ayo tetap semangat!</p></div>
+                <div id="rekapPanenBulan" class="bg-white p-4 rounded-3xl shadow-sm border border-amber-200/70 text-xs text-stone-600">Sedang menghitung panen bulan ini...</div>
                 <div id="panenGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
             </div>
 
@@ -984,6 +985,7 @@
 
         function renderPanenCards() {
             const grid = document.getElementById('panenGrid'); if(!grid) return;
+            loadRekapPanen();
             if (filteredPlants.length === 0) { const empty = document.getElementById('panenEmpty'); if(empty) empty.classList.remove('hidden'); grid.innerHTML = ''; return; }
             const empty = document.getElementById('panenEmpty'); if(empty) empty.classList.add('hidden');
             let html = '';
@@ -1251,6 +1253,50 @@
 
         function closeModalTambah() { const m = document.getElementById('modalTambah'); m.classList.remove('opacity-100'); setTimeout(() => m.classList.add('hidden'), 200); }
         
+        function formatTanggalID(tgl) { if (!tgl) return '-'; const d = new Date(tgl); if (isNaN(d)) return '-'; return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }); }
+
+        async function muatCatatanPanen(plantId) {
+            try { const r = await fetch(`${SUPABASE_BASE_URL}/rest/v1/catatan_panen?plant_id=eq.${plantId}&order=tanggal.desc&select=*`, { headers: authHeaders }); if (!r.ok) return []; return await r.json(); } catch (e) { return []; }
+        }
+
+        async function bukaIsiPanenDetail(plant) {
+            const wadah = document.getElementById('detailPanenList'); if (!wadah) return;
+            const rows = await muatCatatanPanen(plant.id);
+            if (!rows.length) { wadah.innerHTML = '<p class="text-[11px] text-stone-400">Belum ada catatan panen untuk tanaman ini.</p>'; return; }
+            wadah.innerHTML = rows.map(r => `<div class="flex justify-between items-center bg-white border border-amber-100 rounded-xl px-2.5 py-1.5"><span class="font-bold text-stone-700">\u{1F9FA} ${escapeHtml(String(r.jumlah))} ${escapeHtml(r.satuan)}</span><span class="text-[10px] text-stone-400">${formatTanggalID(r.tanggal)}</span></div>`).join('');
+        }
+
+        async function simpanHasilPanen(plantId) {
+            const jumlahEl = document.getElementById('panenJumlah'); const satuanEl = document.getElementById('panenSatuan'); const tanggalEl = document.getElementById('panenTanggal');
+            const jumlah = parseFloat((jumlahEl.value || '').replace(',', '.'));
+            if (!jumlah || jumlah <= 0) return tunjukkanToast("Isi dulu jumlah hasil panennya ya, Bu.", "error");
+            const plant = allPlants.find(p => p.id == plantId); if (!plant) return;
+            try {
+                const r = await fetch(`${SUPABASE_BASE_URL}/rest/v1/catatan_panen`, { method: 'POST', headers: authHeaders, body: JSON.stringify({ plant_id: plant.id, plant_name: plant.plant_name, pemilik: plant.pemilik, jumlah: jumlah, satuan: satuanEl.value, tanggal: tanggalEl.value || new Date().toISOString().slice(0, 10) }) });
+                if (!r.ok) throw new Error();
+                tunjukkanToast("Hasil panen tercatat. Alhamdulillah!", "success");
+                jumlahEl.value = '';
+                bukaIsiPanenDetail(plant);
+                loadRekapPanen();
+            } catch (e) { tunjukkanToast("Maaf, hasil panen gagal dicatat.", "error"); }
+        }
+
+        async function loadRekapPanen() {
+            const el = document.getElementById('rekapPanenBulan'); if (!el) return;
+            try {
+                const awal = new Date(); awal.setDate(1);
+                const iso = awal.toISOString().slice(0, 10);
+                const r = await fetch(`${SUPABASE_BASE_URL}/rest/v1/catatan_panen?tanggal=gte.${iso}&select=jumlah,satuan`, { headers: authHeaders });
+                if (!r.ok) throw new Error();
+                const rows = await r.json();
+                if (!rows.length) { el.innerHTML = '\u{1F331} Belum ada panen tercatat bulan ini. Semangat merawat tanamannya, Bu!'; return; }
+                const total = {};
+                rows.forEach(x => { total[x.satuan] = (total[x.satuan] || 0) + parseFloat(x.jumlah || 0); });
+                const ringkasan = Object.keys(total).map(k => `<b>${total[k]} ${escapeHtml(k)}</b>`).join(' \u{2022} ');
+                el.innerHTML = `\u{1F9FA} <b>Panen bulan ini:</b> ${ringkasan} <span class="text-stone-400">(dari ${rows.length} kali panen)</span>`;
+            } catch (e) { el.innerHTML = 'Rekap panen belum bisa dimuat.'; }
+        }
+
         function openModalDetail(id) {
             const plant = allPlants.find(p => p.id == id); if (!plant) return; activeHapusId = plant.id;
             const isOwner = plant.pemilik === currentUser; 
@@ -1265,7 +1311,16 @@
                 ? `<img src="${escapeHtml(plant.image_url)}" class="w-full h-full object-cover">` 
                 : dapatkanTunasGraphicSVG(cat);
 
-            document.getElementById('detailBodyContent').innerHTML = `<div class="h-32 bg-stone-100 rounded-xl overflow-hidden border flex items-center justify-center">${detailImageHTML}</div><div class="space-y-1"><h4 class="font-extrabold text-stone-800 text-sm leading-tight">${escapeHtml(plant.plant_name)}</h4><p class="text-[10px] text-stone-400">Pemilik: <b class="text-emerald-600">${escapeHtml(plant.pemilik || 'Anonim')}</b> • Kategori: ${escapeHtml(cat)}</p></div><div class="bg-stone-50 p-2.5 rounded-xl border border-stone-100 text-[11px] leading-relaxed text-stone-600"><b>Panduan Perawatan:</b><br>${escapeHtml(notesClean || 'Belum ada catatan khusus.')}</div>`;
+            const langkah = [];
+            if (plant.sowing_date) langkah.push({ ikon: '\u{1F331}', label: 'Disemai / ditanam', tgl: plant.sowing_date });
+            if (plant.est_tumbuh_date) langkah.push({ ikon: '\u{1F33F}', label: 'Perkiraan tumbuh daun', tgl: plant.est_tumbuh_date });
+            if (plant.est_pindah_date) langkah.push({ ikon: '\u{1FAB4}', label: 'Perkiraan pindah tanam', tgl: plant.est_pindah_date });
+            if (plant.last_watered) langkah.push({ ikon: '\u{1F4A7}', label: 'Terakhir disiram', tgl: plant.last_watered });
+            if (plant.est_panen_date) langkah.push({ ikon: '\u{1F9FA}', label: 'Perkiraan panen', tgl: plant.est_panen_date });
+            const timelineHTML = langkah.length ? `<div class="bg-white border border-stone-200 rounded-xl p-2.5"><p class="font-extrabold text-stone-700 mb-1.5">\u{1F550} Garis Waktu Tumbuh</p><div class="space-y-1.5">${langkah.map(l => `<div class="flex justify-between text-[11px]"><span>${l.ikon} ${l.label}</span><b class="text-stone-500">${formatTanggalID(l.tgl)}</b></div>`).join('')}</div></div>` : '';
+            const panenHTML = `<div class="bg-amber-50/60 border border-amber-100 rounded-xl p-2.5 space-y-2"><p class="font-extrabold text-stone-700">\u{1F9FA} Catat Hasil Panen</p><div class="flex space-x-1.5"><input type="number" id="panenJumlah" step="0.1" min="0" placeholder="Jumlah" class="w-20 bg-white border border-stone-300 rounded-lg px-2 py-1.5 text-[11px]"><select id="panenSatuan" class="bg-white border border-stone-300 rounded-lg px-2 py-1.5 text-[11px]"><option value="kg">kg</option><option value="ikat">ikat</option><option value="buah">buah</option><option value="pot">pot</option><option value="baskom">baskom</option></select><input type="date" id="panenTanggal" class="flex-1 bg-white border border-stone-300 rounded-lg px-2 py-1.5 text-[11px]" value="${new Date().toISOString().slice(0, 10)}"></div><button onclick="simpanHasilPanen(${plant.id})" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 rounded-xl btn-press">Simpan Hasil Panen</button><div id="detailPanenList" class="space-y-1.5"></div></div>`;
+            document.getElementById('detailBodyContent').innerHTML = `<div class="h-32 bg-stone-100 rounded-xl overflow-hidden border flex items-center justify-center">${detailImageHTML}</div><div class="space-y-1"><h4 class="font-extrabold text-stone-800 text-sm leading-tight">${escapeHtml(plant.plant_name)}</h4><p class="text-[10px] text-stone-400">Pemilik: <b class="text-emerald-600">${escapeHtml(plant.pemilik || 'Anonim')}</b> • Kategori: ${escapeHtml(cat)}</p></div><div class="bg-stone-50 p-2.5 rounded-xl border border-stone-100 text-[11px] leading-relaxed text-stone-600"><b>Panduan Perawatan:</b><br>${escapeHtml(notesClean || 'Belum ada catatan khusus.')}</div>` + timelineHTML + panenHTML;
+            bukaIsiPanenDetail(plant);
             const btnHapus = document.getElementById('detailHapusBtn');
             if(canManage) { btnHapus.classList.remove('hidden'); btnHapus.onclick = () => openModalHapus(); } else { btnHapus.classList.add('hidden'); }
             m.classList.remove('hidden'); setTimeout(() => m.classList.add('opacity-100'), 10);
