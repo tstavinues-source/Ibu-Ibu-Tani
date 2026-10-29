@@ -156,6 +156,7 @@
                     <button onclick="switchTab('panen')" id="tab-panen" class="px-4 py-3 rounded-xl font-bold text-center text-emerald-100 hover:text-white shrink-0 transition-all flex items-center space-x-1"><i class="fa-solid fa-camera-retro text-amber-300"></i> <span>Galeri</span></button>
                     <button onclick="switchTab('tugas')" id="tab-tugas" class="px-4 py-3 rounded-xl font-bold text-center text-emerald-100 hover:text-white shrink-0 transition-all flex items-center space-x-1"><i class="fa-solid fa-shower"></i> <span>Siram</span></button>
                     <button onclick="switchTab('nutrisi')" id="tab-nutrisi" class="px-4 py-3 rounded-xl font-bold text-center text-emerald-100 hover:text-white shrink-0 transition-all flex items-center space-x-1"><i class="fa-solid fa-flask-vial"></i> <span>Nutrisi</span></button>
+                    <button onclick="switchTab('benih')" id="tab-benih" class="px-4 py-3 rounded-xl font-bold text-center text-emerald-100 hover:text-white shrink-0 transition-all flex items-center space-x-1"><i class="fa-solid fa-box-open"></i> <span>Benih</span></button>
                     <button onclick="switchTab('ai')" id="tab-ai" class="px-4 py-3 rounded-xl font-bold text-center text-emerald-100 hover:text-white shrink-0 transition-all flex items-center space-x-1"><i class="fa-solid fa-wand-magic-sparkles text-lime-300"></i> <span>AI</span></button>
                 </div>
             </div>
@@ -262,6 +263,17 @@
                 </div>
             </div>
 
+            <!-- SEKSYEN BANK BENIH -->
+            <div id="section-benih" class="hidden space-y-4 tab-section">
+                <div class="bg-white p-4 rounded-3xl shadow-sm border border-stone-200/60 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-100 pb-4">
+                        <div class="flex items-center space-x-2"><div class="w-8 h-8 bg-lime-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-box-open text-lime-600 text-sm"></i></div><div><h2 class="font-extrabold text-xs text-stone-800 leading-tight">Bank Benih Bersama</h2><p class="text-[10px] text-stone-400">Benih dan bibit milik ibu-ibu yang boleh diminta atau ditukar.</p></div></div>
+                        <button onclick="bukaModalBenih()" class="bg-gradient-to-r from-lime-500 to-emerald-600 hover:from-lime-600 text-white font-black px-4 py-2 rounded-2xl text-[11px] shadow-md btn-press shrink-0"><i class="fa-solid fa-plus"></i> Tambah Stok Benih</button>
+                    </div>
+                    <div id="benihList" class="space-y-2.5 text-xs"></div>
+                </div>
+            </div>
+
             <!-- SEKSYEN AI -->
             <div id="section-ai" class="hidden space-y-4 tab-section">
                 <div class="flex space-x-2 bg-stone-200/60 p-1 rounded-xl text-xs">
@@ -296,6 +308,22 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- ================= MODAL BANK BENIH ================= -->
+    <div id="modalBenih" class="fixed inset-0 bg-stone-900/60 modal-backdrop flex items-center justify-center p-4 z-50 hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-xl border border-stone-200 flex flex-col max-h-[90vh]">
+            <div class="px-4 py-3 bg-emerald-800 text-white flex items-center justify-between text-xs">
+                <h3 class="font-bold">Tambah Stok Benih</h3>
+                <button onclick="tutupModalBenih()" class="hover:text-lime-300 transition-colors"><i class="fa-solid fa-xmark text-sm"></i></button>
+            </div>
+            <div class="p-4 space-y-3 text-xs">
+                <div><label class="font-bold text-stone-600 block mb-1">Nama Benih / Bibit</label><input type="text" id="benihNama" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2.5 font-medium" placeholder="Contoh: Kangkung Bangkok"></div>
+                <div><label class="font-bold text-stone-600 block mb-1">Jumlah Stok</label><input type="text" id="benihJumlah" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2.5 font-medium" placeholder="Contoh: 2 bungkus, ±50 biji, 10 polybag"></div>
+                <div><label class="font-bold text-stone-600 block mb-1">Catatan</label><input type="text" id="benihCatatan" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2.5 font-medium" placeholder="Contoh: Silakan ambil di rumah saya"></div>
+                <button onclick="simpanBenih()" class="w-full py-2.5 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 btn-press"><i class="fa-solid fa-floppy-disk"></i> Simpan Stok</button>
+            </div>
+        </div>
     </div>
 
     <!-- ================= MODAL TAMBAH/EDIT ================= -->
@@ -536,7 +564,7 @@
             }
         }
 
-        function segarSemuaData() { loadPlants(); loadChatHistory(); loadNutritionFromDb(); ambilDataCuacaMeteo(); loadPengumuman(); tunjukkanToast("Data kebun sudah disegarkan!", "success"); }
+        function segarSemuaData() { loadPlants(); loadChatHistory(); loadNutritionFromDb(); ambilDataCuacaMeteo(); loadPengumuman(); loadBankBenih(); tunjukkanToast("Data kebun sudah disegarkan!", "success"); }
 
         function toggleUbahUkuranHuruf() {
             isLargeText = !isLargeText; const body = document.getElementById('bodyApp'); const label = document.getElementById('textScaleLabel');
@@ -1297,6 +1325,53 @@
             } catch (e) { el.innerHTML = 'Rekap panen belum bisa dimuat.'; }
         }
 
+        async function loadBankBenih() {
+            const list = document.getElementById('benihList'); if (!list) return;
+            try {
+                const r = await fetch(`${SUPABASE_BASE_URL}/rest/v1/bank_benih?order=created_at.desc&select=*`, { headers: authHeaders });
+                if (!r.ok) throw new Error();
+                const rows = await r.json();
+                if (!rows.length) { list.innerHTML = '<div class="text-center py-6 text-stone-400 font-medium">Belum ada stok benih. Ibu yang punya benih lebih, silakan bagikan di sini.</div>'; return; }
+                list.innerHTML = rows.map(b => {
+                    const habis = !b.masih_ada;
+                    const milikSaya = b.pemilik === currentUser;
+                    const peran = localStorage.getItem('ibu_kebun_role') || 'Anggota';
+                    const bolehAtur = milikSaya || peran === 'Ketua' || peran === 'Admin';
+                    const tombol = bolehAtur ? (habis
+                        ? `<button onclick="aturStokBenih(${b.id}, true)" class="bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-[11px] btn-press shrink-0">Ada Lagi</button>`
+                        : `<button onclick="aturStokBenih(${b.id}, false)" class="bg-stone-100 text-stone-600 border border-stone-300 font-bold px-3 py-2 rounded-xl text-[11px] btn-press shrink-0">Tandai Habis</button>`) : '';
+                    return `<div class="flex items-center justify-between p-3 bg-stone-50 rounded-2xl border border-stone-100 ${habis ? 'opacity-60' : ''}"><div class="pr-2"><h5 class="font-bold text-stone-800 leading-tight">${escapeHtml(b.nama_benih)} ${habis ? '<span class="text-[9px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-black align-middle">HABIS</span>' : ''}</h5><p class="text-[10px] text-stone-500 mt-0.5">Stok: <b class="text-emerald-700">${escapeHtml(b.jumlah || '-')}</b> \u{2022} Milik: <b class="text-emerald-700">${escapeHtml(b.pemilik || 'Anonim')}</b></p>${b.catatan ? `<p class="text-[10px] text-stone-400 italic mt-0.5">${escapeHtml(b.catatan)}</p>` : ''}</div>${tombol}</div>`;
+                }).join('');
+            } catch (e) { list.innerHTML = '<div class="text-center py-6 text-rose-500 font-medium">Bank benih belum bisa dimuat.</div>'; }
+        }
+
+        function bukaModalBenih() { const m = document.getElementById('modalBenih'); m.classList.remove('hidden'); setTimeout(() => m.classList.add('opacity-100'), 10); }
+        function tutupModalBenih() { const m = document.getElementById('modalBenih'); m.classList.remove('opacity-100'); setTimeout(() => m.classList.add('hidden'), 200); }
+
+        async function simpanBenih() {
+            const nama = document.getElementById('benihNama').value.trim();
+            const jumlah = document.getElementById('benihJumlah').value.trim();
+            const catatan = document.getElementById('benihCatatan').value.trim();
+            if (!nama) return tunjukkanToast("Isi dulu nama benihnya ya, Bu.", "error");
+            try {
+                const r = await fetch(`${SUPABASE_BASE_URL}/rest/v1/bank_benih`, { method: 'POST', headers: authHeaders, body: JSON.stringify({ nama_benih: nama, jumlah: jumlah, pemilik: currentUser || 'Anonim', catatan: catatan }) });
+                if (!r.ok) throw new Error();
+                tunjukkanToast("Stok benih tersimpan. Terima kasih sudah berbagi!", "success");
+                document.getElementById('benihNama').value = ''; document.getElementById('benihJumlah').value = ''; document.getElementById('benihCatatan').value = '';
+                tutupModalBenih();
+                loadBankBenih();
+            } catch (e) { tunjukkanToast("Maaf, stok benih gagal disimpan.", "error"); }
+        }
+
+        async function aturStokBenih(id, masihAda) {
+            try {
+                const r = await fetch(`${SUPABASE_BASE_URL}/rest/v1/bank_benih?id=eq.${id}`, { method: 'PATCH', headers: authHeaders, body: JSON.stringify({ masih_ada: masihAda }) });
+                if (!r.ok) throw new Error();
+                tunjukkanToast(masihAda ? "Stok ditandai ada lagi." : "Stok ditandai habis.", "success");
+                loadBankBenih();
+            } catch (e) { tunjukkanToast("Maaf, perubahan stok gagal disimpan.", "error"); }
+        }
+
         function openModalDetail(id) {
             const plant = allPlants.find(p => p.id == id); if (!plant) return; activeHapusId = plant.id;
             const isOwner = plant.pemilik === currentUser; 
@@ -1330,14 +1405,15 @@
         function closeModalHapus() { const m = document.getElementById('modalHapusKonfirmasi'); m.classList.remove('opacity-100'); setTimeout(() => m.classList.add('hidden'), 200); }
 
         function switchTab(tId) {
-            currentTab = tId; ['kebun', 'kalender', 'panen', 'tugas', 'nutrisi', 'ai'].forEach(s => { const sec = document.getElementById(`section-${s}`); if(sec) sec.classList.add('hidden'); });
+            currentTab = tId; ['kebun', 'kalender', 'panen', 'tugas', 'nutrisi', 'ai', 'benih'].forEach(s => { const sec = document.getElementById(`section-${s}`); if(sec) sec.classList.add('hidden'); });
             const sec = document.getElementById(`section-${tId}`); if(sec) { sec.classList.remove('hidden'); sec.classList.remove('tab-section'); void sec.offsetWidth; sec.classList.add('tab-section'); }
-            ['kebun', 'kalender', 'panen', 'tugas', 'nutrisi', 'ai'].forEach(t => { 
+            ['kebun', 'kalender', 'panen', 'tugas', 'nutrisi', 'ai', 'benih'].forEach(t => { 
                 const btn = document.getElementById(`tab-${t}`);
                 if(btn) btn.className = t === tId ? "px-4 py-3 rounded-xl font-bold text-center bg-white text-emerald-900 shadow-sm transition-all flex items-center justify-center space-x-1 shrink-0" : "px-4 py-3 rounded-xl font-bold text-center text-emerald-100 hover:text-white transition-all flex items-center justify-center space-x-1 shrink-0"; 
             });
             if (tId === 'kalender') renderKalender();
             if (tId === 'tugas') renderWateringList();
+            if (tId === 'benih') loadBankBenih();
             if (tId === 'panen') filterPlants('Semua');
             if (tId === 'kebun') filterPlants(currentFilterStatus);
         }
