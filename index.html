@@ -156,6 +156,7 @@
                 <i class="fa-solid fa-camera text-xl ml-auto shrink-0"></i>
             </button>
 
+                <section id="pupukReminder" class="hidden bg-violet-600 text-white p-3.5 rounded-3xl shadow-md text-xs font-bold leading-relaxed"></section>
                 <section class="grid grid-cols-4 gap-2 text-center">
                     <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-stone-200/50"><span class="text-[9px] text-stone-400 font-bold block uppercase">Semua Pot</span><p id="dashTotal" class="text-base font-black text-stone-800 mt-0.5">0</p></div>
                     <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-stone-200/50"><span class="text-[9px] text-amber-600 font-bold block uppercase">Semai</span><p id="dashSemai" class="text-base font-black text-amber-600 mt-0.5">0</p></div>
@@ -197,6 +198,7 @@
                         <span><span class="inline-block w-2 h-2 rounded-full bg-blue-500 mr-1"></span>Tumbuh</span>
                         <span><span class="inline-block w-2 h-2 rounded-full bg-lime-500 mr-1"></span>Pindah</span>
                         <span><span class="inline-block w-2 h-2 rounded-full bg-amber-500 mr-1"></span>Panen</span>
+                        <span><span class="inline-block w-2 h-2 rounded-full bg-violet-500 mr-1"></span>Pupuk</span>
                     </div>
                     <p id="kalenderInfoPilih" class="hidden text-xs text-stone-500 bg-indigo-50 border border-indigo-100 rounded-xl px-3 py-2"></p>
                 </div>
@@ -403,6 +405,16 @@
                         </div>
                     </div>
                     <p class="text-[8px] text-indigo-500 italic mt-1 leading-tight">Silakan klik tombol "Tanya AI" di atas, Nyi Sari akan menghitung otomatis tanggalnya berdasarkan tahap pertumbuhan saat ini.</p>
+                </div>
+
+                <div class="bg-violet-50 p-3 rounded-2xl border border-violet-100 space-y-2">
+                    <label class="block text-violet-800 text-xs font-bold"><i class="fa-solid fa-flask-vial mr-1"></i> Jadwal Pemupukan</label>
+                    <input type="text" id="formPupukJenis" placeholder="Jenis pupuk (mis. Kompos, NPK, pupuk kandang)" class="w-full bg-white border border-violet-200 rounded-lg px-2.5 py-2 text-xs focus:outline-violet-500">
+                    <div>
+                        <label class="block text-stone-600 text-[11px] mb-1 font-semibold">Tanggal pemupukan berikutnya</label>
+                        <input type="date" id="formPupukTanggal" class="w-full bg-white border border-violet-200 rounded-lg px-2.5 py-2 text-xs focus:outline-violet-500">
+                    </div>
+                    <p class="text-[11px] text-violet-500 italic leading-tight">Pengingat pemupukan muncul di dashboard dan kalender. Setelah memupuk, majukan tanggalnya lewat tombol Ubah.</p>
                 </div>
 
                 <div>
