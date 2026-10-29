@@ -117,3 +117,8 @@ html.sudah-login #appScreen { display: flex !important; }
 .maskot-login { display: block; position: relative; z-index: 20; width: min(228px, 33vh); margin: 0 auto calc(min(228px, 33vh) * -0.166); filter: drop-shadow(0 10px 14px rgba(2, 44, 34, .35)); pointer-events: none; }
 #authScreen .kartu-masuk { padding-top: 62px; }
 .auth-container { overflow-y: auto; }
+
+/* Perbaikan ikon mata intip sandi: kelas top-1/2 dan pr-11 belum ada di
+   tailwind.css terbangun, jadi ikon mata meleset dari tengah kolom sandi. */
+button[onclick^="intipSandi"] { top: 50% !important; transform: translateY(-50%) !important; }
+#loginPassword, #regPassword, #adminPasswordInput { padding-right: 2.75rem; }
