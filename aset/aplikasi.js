@@ -1116,3 +1116,8 @@
             } return `<div class="space-y-2.5 font-medium">${resultHTML.join("")}</div>`;
         }
         function fileToBase64(file) { return new Promise((res, rej) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => res(reader.result.split(',')[1]); reader.onerror = error => rej(error); }); }
+
+// --- PWA: daftarkan service worker (aplikasi bisa dipasang & dibuka luring) ---
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+}
