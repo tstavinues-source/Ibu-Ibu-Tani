@@ -428,7 +428,7 @@
                 const dSemai = document.getElementById('dashSemai'); if(dSemai) dSemai.innerText = semai;
                 const dSiap = document.getElementById('dashSiap'); if(dSiap) dSiap.innerText = siap;
                 const dGagal = document.getElementById('dashGagal'); if(dGagal) dGagal.innerText = gagal;
-                perbaruiIndikatorPanen(); perbaruiPengingatPupuk();
+                perbaruiIndikatorPanen(); perbaruiPengingatPupuk(); perbaruiTombolSiramSemua();
                 
                 filterPlants(currentFilterStatus);
                 renderKalender();
@@ -507,13 +507,45 @@
             grid.innerHTML = html;
         }
 
+        async function siramSemuaTanaman() {
+            const belum = p => p.status !== 'Panen' && p.status !== 'Gagal' && !(p.last_watered && new Date(p.last_watered).toDateString() === new Date().toDateString());
+            const target = allPlants.filter(belum);
+            if (!target.length) return tunjukkanToast('Semua tanaman sudah disiram hari ini. Hebat!', 'success');
+            const ids = target.map(p => p.id).join(',');
+            try {
+                const res = await fetch(SUPABASE_BASE_URL + '/rest/v1/plant_farm?id=in.(' + ids + ')', { method: 'PATCH', headers: authHeaders, body: JSON.stringify({ last_watered: new Date().toISOString() }) });
+                if (!res.ok) throw new Error();
+                tunjukkanToast(target.length + ' tanaman sudah disiram sekaligus. Terima kasih!', 'success');
+                await loadPlants(); renderWateringList();
+            } catch (e) { tunjukkanToast('Gagal menyiram semua. Coba lagi.', 'error'); }
+        }
+        function perbaruiTombolSiramSemua() {
+            const belum = allPlants.filter(p => p.status !== 'Panen' && p.status !== 'Gagal' && !(p.last_watered && new Date(p.last_watered).toDateString() === new Date().toDateString())).length;
+            ['btnSiramSemua', 'btnSiramSemuaTab'].forEach(id => { const b = document.getElementById(id); if (b) b.innerHTML = '<i class="fa-solid fa-shower mr-1"></i> Siram Semua Tanaman (' + belum + ' belum disiram)'; });
+        }
+
+        async function tandaiSudahPupuk(id) {
+            const p = allPlants.find(x => x.id == id); if (!p) return;
+            const interval = p.pupuk_interval_hari || 14;
+            const hariIni = new Date(); hariIni.setHours(0, 0, 0, 0);
+            let dasar = p.next_fertilize_date ? new Date(p.next_fertilize_date) : hariIni;
+            if (dasar < hariIni) dasar = hariIni;
+            const baru = nambihDinten(dasar.toISOString().split('T')[0], interval);
+            try {
+                const res = await fetch(SUPABASE_BASE_URL + '/rest/v1/plant_farm?id=eq.' + id, { method: 'PATCH', headers: authHeaders, body: JSON.stringify({ next_fertilize_date: baru }) });
+                if (!res.ok) throw new Error();
+                tunjukkanToast('Pemupukan ' + p.plant_name + ' tercatat. Berikutnya ' + new Date(baru + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) + '.', 'success');
+                loadPlants();
+            } catch (e) { tunjukkanToast('Gagal mencatat pemupukan.', 'error'); }
+        }
+
         function perbaruiPengingatPupuk() {
             const el = document.getElementById('pupukReminder'); if (!el) return;
             const kini = new Date(); kini.setHours(0, 0, 0, 0);
             const batas = new Date(kini); batas.setDate(batas.getDate() + 1);
             const jatuh = allPlants.filter(p => p.next_fertilize_date && p.status !== 'Panen' && p.status !== 'Gagal' && new Date(p.next_fertilize_date) <= batas);
             if (!jatuh.length) { el.classList.add('hidden'); el.innerHTML = ''; return; }
-            el.innerHTML = '<i class="fa-solid fa-flask-vial mr-1"></i> Waktunya memupuk: ' + jatuh.map(p => escapeHtml(p.plant_name)).join(', ') + '. Jadwal lengkapnya ada di Kalender.';
+            el.innerHTML = '<div class="space-y-1.5">' + jatuh.map(p => '<p class="flex items-center justify-between gap-2"><span><i class="fa-solid fa-flask-vial mr-1"></i>' + escapeHtml(p.plant_name) + (p.pupuk_jenis ? ' — ' + escapeHtml(p.pupuk_jenis) : '') + '</span><button onclick="tandaiSudahPupuk(' + p.id + ')" class="bg-white text-violet-700 font-extrabold px-2.5 py-1.5 rounded-lg text-[11px] btn-press shrink-0 min-h-[36px]">Sudah Dipupuk ✓</button></p>').join('') + '<p class="text-[11px] text-violet-200 font-medium">Jadwal lengkapnya ada di Kalender.</p></div>';
             el.classList.remove('hidden');
         }
 
@@ -915,8 +947,9 @@
             const eTumbuh = document.getElementById('formEstTumbuh').value;
             const ePindah = document.getElementById('formEstPindah').value;
             const ePanen = document.getElementById('formEstPanen').value;
-            const pupukJenis = document.getElementById('formPupukJenis').value.trim();
+            const pupukJenis = kumpulkanPupukTerpilih();
             const pupukTanggal = document.getElementById('formPupukTanggal').value;
+            const pupukInterval = parseInt(document.getElementById('formPupukInterval').value) || null;
             
             let isKososng = false;
             if (!name) { nameInput.classList.add('input-error'); isKososng = true; }
@@ -949,7 +982,7 @@
                 const payload = { 
                     plant_name: name, sowing_date: sowingDate, planting_medium: medium || null, status: status, 
                     category: category, notes: notes, image_url: imgUrl || null, pemilik: editId ? (allPlants.find(p => p.id == editId)?.pemilik || currentUser) : currentUser,
-                    est_tumbuh_date: eTumbuh || null, est_pindah_date: ePindah || null, est_panen_date: ePanen || null, next_fertilize_date: pupukTanggal || null, pupuk_jenis: pupukJenis || null
+                    est_tumbuh_date: eTumbuh || null, est_pindah_date: ePindah || null, est_panen_date: ePanen || null, next_fertilize_date: pupukTanggal || null, pupuk_jenis: pupukJenis || null, pupuk_interval_hari: pupukInterval
                 };
                 let url = `${SUPABASE_BASE_URL}/rest/v1/plant_farm`; let method = 'POST';
                 if (editId) { url += `?id=eq.${editId}`; method = 'PATCH'; }
@@ -978,7 +1011,7 @@
             const alert = document.getElementById('formAlert'); if(alert) alert.classList.add('hidden'); 
             document.getElementById('formPlantName').classList.remove('input-error'); document.getElementById('formSowingDate').classList.remove('input-error');
             
-            document.getElementById('editPlantId').value = ""; document.getElementById('modalTitle').innerText = "Catat Tanaman Baru Ibu"; document.getElementById('formPlantName').value = ""; document.getElementById('formMedium').value = ""; document.getElementById('formStatus').value = "Semai"; document.getElementById('formCategory').value = "Sayuran Daun"; document.getElementById('formNotes').value = ""; document.getElementById('formPupukJenis').value = ""; document.getElementById('formPupukTanggal').value = ""; formSelectedFile = null; document.getElementById('formImgLabel').innerText = "Belum ada foto"; document.getElementById('formImgPreviewContainer').classList.add('hidden');
+            document.getElementById('editPlantId').value = ""; document.getElementById('modalTitle').innerText = "Catat Tanaman Baru Ibu"; document.getElementById('formPlantName').value = ""; document.getElementById('formMedium').value = ""; document.getElementById('formStatus').value = "Semai"; document.getElementById('formCategory').value = "Sayuran Daun"; document.getElementById('formNotes').value = ""; document.getElementById('formPupukTanggal').value = ""; document.getElementById('formPupukInterval').value = ""; aturPupukDariTeks(''); formSelectedFile = null; document.getElementById('formImgLabel').innerText = "Belum ada foto"; document.getElementById('formImgPreviewContainer').classList.add('hidden');
             document.getElementById('formEstTumbuh').value = ""; document.getElementById('formEstPindah').value = ""; document.getElementById('formEstPanen').value = "";
             
             document.getElementById('formImageFileCamera').value = "";
@@ -1000,8 +1033,9 @@
             document.getElementById('formEstTumbuh').value = plant.est_tumbuh_date || "";
             document.getElementById('formEstPindah').value = plant.est_pindah_date || "";
             document.getElementById('formEstPanen').value = plant.est_panen_date || "";
-            document.getElementById('formPupukJenis').value = plant.pupuk_jenis || "";
+            aturPupukDariTeks(plant.pupuk_jenis || "");
             document.getElementById('formPupukTanggal').value = plant.next_fertilize_date || "";
+            document.getElementById('formPupukInterval').value = plant.pupuk_interval_hari || "";
 
             document.getElementById('formImageFileCamera').value = "";
             document.getElementById('formImageFileGallery').value = "";
@@ -1182,6 +1216,33 @@
         }
 
         // --- MINTA SARAN AI UNTUK TANGGAL PANEN ---
+        // --- PILIHAN JENIS PUPUK (chip, boleh banyak; dipakai formulir + AI) ---
+        const PUPUK_OPSI = ['Kompos', 'Pupuk Kandang', 'Kascing', 'NPK', 'POC (Organik Cair)', 'Eco-Enzyme', 'Pupuk Daun', 'Dolomit'];
+        let pupukTerpilih = new Set();
+        function renderPupukPilihan() {
+            const wadah = document.getElementById('pupukPilihan'); if (!wadah) return;
+            wadah.innerHTML = PUPUK_OPSI.map(nama => {
+                const aktif = pupukTerpilih.has(nama);
+                return '<button type="button" onclick="togglePupukOpsi(\'' + nama + '\')" class="' + (aktif ? 'bg-violet-600 text-white' : 'bg-white text-violet-700') + ' border border-violet-300 font-bold px-3 py-2 rounded-full text-xs btn-press min-h-[40px]">' + (aktif ? '✓ ' : '') + nama + '</button>';
+            }).join('');
+        }
+        function togglePupukOpsi(nama) { if (pupukTerpilih.has(nama)) pupukTerpilih.delete(nama); else pupukTerpilih.add(nama); renderPupukPilihan(); }
+        function kumpulkanPupukTerpilih() {
+            const el = document.getElementById('formPupukLainnya');
+            const lain = el ? el.value.trim() : '';
+            const semua = [...pupukTerpilih]; if (lain) semua.push(lain);
+            return semua.join(', ');
+        }
+        function aturPupukDariTeks(teks) {
+            pupukTerpilih = new Set(); const sisa = [];
+            (teks || '').split(',').map(x => x.trim()).filter(Boolean).forEach(item => {
+                const cocok = PUPUK_OPSI.find(o => o.toLowerCase() === item.toLowerCase());
+                if (cocok) pupukTerpilih.add(cocok); else sisa.push(item);
+            });
+            const el = document.getElementById('formPupukLainnya'); if (el) el.value = sisa.join(', ');
+            renderPupukPilihan();
+        }
+
         function nambihDinten(tanggal, jumlahHari) { const d = new Date(tanggal); d.setDate(d.getDate() + jumlahHari); return d.toISOString().split('T')[0]; }
 
         async function generateAiGuide() {
@@ -1206,6 +1267,7 @@
                 const prompt = `Berikan panduan menanam singkat 1 paragraf untuk tanaman: "${pName}".
                 Lokasi kebun: ${lokasiKebun.nama} (koordinat ${lokasiKebun.lat}, ${lokasiKebun.lon}, wilayah Tasikmalaya, Jawa Barat — tropis).${infoCuacaAI}
                 Sesuaikan estimasi jumlah hari dengan iklim dan kondisi lokasi tersebut.
+                Tentukan juga jenis pupuk yang cocok dari daftar pilihan, kapan pemupukan berikutnya (dalam hari, dihitung dari HARI INI), dan interval pengulangan pemupukannya.
                 PENTING: ${statusContext}
                 Berdasarkan status/kondisi saat ini, berikan estimasi JUMALAH HARI (dihitung dari HARI INI) untuk mencapai tahap selanjutnya.
                 Jika suatu tahap sudah terlewati (misal karena mulainya dari bibit besar), isi angkanya dengan 0.
@@ -1217,9 +1279,12 @@
                         tips: { type: "STRING" }, 
                         hari_tumbuh: { type: "INTEGER", description: "Hari menuju mulai tumbuh daun (isi 0 jika sudah lewat)" }, 
                         hari_pindah: { type: "INTEGER", description: "Hari menuju siap pindah pot (isi 0 jika sudah lewat)" }, 
-                        hari_panen: { type: "INTEGER", description: "Hari menuju siap panen" } 
+                        hari_panen: { type: "INTEGER", description: "Hari menuju siap panen" },
+                        pupuk_pilihan: { type: "ARRAY", items: { type: "STRING" }, description: "Jenis pupuk yang dianjurkan, pilih satu atau lebih HANYA dari: Kompos, Pupuk Kandang, Kascing, NPK, POC (Organik Cair), Eco-Enzyme, Pupuk Daun, Dolomit" },
+                        hari_pupuk: { type: "INTEGER", description: "Hari dari HARI INI sampai pemupukan berikutnya yang dianjurkan" },
+                        interval_pupuk: { type: "INTEGER", description: "Pemupukan diulang tiap berapa hari" }
                     }, 
-                    required: ["tips", "hari_tumbuh", "hari_pindah", "hari_panen"] 
+                    required: ["tips", "hari_tumbuh", "hari_pindah", "hari_panen", "pupuk_pilihan", "hari_pupuk", "interval_pupuk"] 
                 };
                 
                 const answerJSON = await panggilGeminiAPI(prompt, dapatkanNyiSariPersona(), null, schema);
@@ -1232,7 +1297,11 @@
                 document.getElementById('formEstPindah').value = parsed.hari_pindah > 0 ? nambihDinten(baseDate, parsed.hari_pindah) : "";
                 document.getElementById('formEstPanen').value = parsed.hari_panen > 0 ? nambihDinten(baseDate, parsed.hari_panen) : "";
                 
-                ['formEstTumbuh', 'formEstPindah', 'formEstPanen', 'formNotes'].forEach(id => {
+                if (Array.isArray(parsed.pupuk_pilihan)) { pupukTerpilih = new Set(parsed.pupuk_pilihan.filter(n => PUPUK_OPSI.includes(n))); renderPupukPilihan(); }
+                if (parsed.hari_pupuk > 0) document.getElementById('formPupukTanggal').value = nambihDinten(new Date().toISOString().split('T')[0], parsed.hari_pupuk);
+                if (parsed.interval_pupuk > 0) document.getElementById('formPupukInterval').value = parsed.interval_pupuk;
+
+                ['formEstTumbuh', 'formEstPindah', 'formEstPanen', 'formNotes', 'formPupukTanggal', 'formPupukInterval'].forEach(id => {
                     const el = document.getElementById(id);
                     el.classList.add('field-ai-filled'); setTimeout(() => el.classList.remove('field-ai-filled'), 2000);
                 });

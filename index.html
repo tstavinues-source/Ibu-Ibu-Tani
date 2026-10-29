@@ -157,6 +157,7 @@
             </button>
 
                 <section id="pupukReminder" class="hidden bg-violet-600 text-white p-3.5 rounded-3xl shadow-md text-xs font-bold leading-relaxed"></section>
+                <button id="btnSiramSemua" onclick="siramSemuaTanaman()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3.5 rounded-3xl shadow-md btn-press text-sm min-h-[52px]"><i class="fa-solid fa-shower mr-1"></i> Siram Semua Tanaman</button>
                 <section class="grid grid-cols-4 gap-2 text-center">
                     <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-stone-200/50"><span class="text-[9px] text-stone-400 font-bold block uppercase">Semua Pot</span><p id="dashTotal" class="text-base font-black text-stone-800 mt-0.5">0</p></div>
                     <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-stone-200/50"><span class="text-[9px] text-amber-600 font-bold block uppercase">Semai</span><p id="dashSemai" class="text-base font-black text-amber-600 mt-0.5">0</p></div>
@@ -244,6 +245,7 @@
                         <div><h2 class="font-bold text-sm text-stone-800">Daftar Tanaman Komunitas</h2><p class="text-xs text-stone-500">Silakan bantu siram tanaman siapa saja yang belum disiram hari ini!</p></div>
                     </div>
                     <div id="siramBanner" class="mb-3"></div>
+                    <button id="btnSiramSemuaTab" onclick="siramSemuaTanaman()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3 rounded-2xl shadow-md btn-press text-sm min-h-[48px] mb-3"><i class="fa-solid fa-shower mr-1"></i> Siram Semua Tanaman</button>
                     <div id="wateringList" class="space-y-2 text-xs"></div>
                 </div>
             </div>
@@ -408,13 +410,20 @@
                 </div>
 
                 <div class="bg-violet-50 p-3 rounded-2xl border border-violet-100 space-y-2">
-                    <label class="block text-violet-800 text-xs font-bold"><i class="fa-solid fa-flask-vial mr-1"></i> Jadwal Pemupukan</label>
-                    <input type="text" id="formPupukJenis" placeholder="Jenis pupuk (mis. Kompos, NPK, pupuk kandang)" class="w-full bg-white border border-violet-200 rounded-lg px-2.5 py-2 text-xs focus:outline-violet-500">
-                    <div>
-                        <label class="block text-stone-600 text-[11px] mb-1 font-semibold">Tanggal pemupukan berikutnya</label>
-                        <input type="date" id="formPupukTanggal" class="w-full bg-white border border-violet-200 rounded-lg px-2.5 py-2 text-xs focus:outline-violet-500">
+                    <label class="block text-violet-800 text-xs font-bold"><i class="fa-solid fa-flask-vial mr-1"></i> Jadwal Pemupukan <span class="text-[10px] bg-violet-200 px-1.5 rounded text-violet-700 ml-1">Bisa diatur AI</span></label>
+                    <div id="pupukPilihan" class="flex flex-wrap gap-1.5"></div>
+                    <input type="text" id="formPupukLainnya" placeholder="Pupuk lain, sebutkan (boleh kosong)" class="w-full bg-white border border-violet-200 rounded-lg px-2.5 py-2 text-xs focus:outline-violet-500">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-stone-600 text-[11px] mb-1 font-semibold">Pemupukan berikutnya</label>
+                            <input type="date" id="formPupukTanggal" class="w-full bg-white border border-violet-200 rounded-lg px-2.5 py-2 text-xs focus:outline-violet-500">
+                        </div>
+                        <div>
+                            <label class="block text-stone-600 text-[11px] mb-1 font-semibold">Ulangi tiap (hari)</label>
+                            <input type="number" id="formPupukInterval" min="1" max="365" placeholder="cth. 14" class="w-full bg-white border border-violet-200 rounded-lg px-2.5 py-2 text-xs focus:outline-violet-500">
+                        </div>
                     </div>
-                    <p class="text-[11px] text-violet-500 italic leading-tight">Pengingat pemupukan muncul di dashboard dan kalender. Setelah memupuk, majukan tanggalnya lewat tombol Ubah.</p>
+                    <p class="text-[11px] text-violet-500 italic leading-tight">Ketuk pilihan pupuknya (boleh lebih dari satu), atau biarkan Nyi Sari memilihkan lewat tombol Tanya AI. Pengingat muncul di dashboard dan kalender.</p>
                 </div>
 
                 <div>
