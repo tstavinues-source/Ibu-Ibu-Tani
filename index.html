@@ -486,6 +486,10 @@
         const SUPABASE_BASE_URL = "https://zaueuvplevtgkthqifsk.supabase.co";
         const SUPABASE_KEY = "sb_publishable_27mT7S6Eo9cBKN6xmujYqg_y2T20wSf";
         const authHeaders = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' };
+        // --- PEMBANTU KEAMANAN TEKS (ANTI-XSS) ---
+        function escapeHtml(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+        function escapeJsString(s) { return escapeHtml(String(s ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\r\n|\r|\n/g, '\\n')); }
+
 
         const OBFUSCATED_KEY_1 = [65, 81, 46, 65, 98, 56, 82, 78, 54, 76, 72, 81, 89, 65, 80, 52, 87, 88, 121, 117, 53, 121, 72, 55, 104, 95, 68, 112, 106, 79, 98, 112, 69, 77, 51, 55, 102, 85, 81, 115, 111, 48, 110, 69, 86, 65, 67, 70, 95, 122, 48, 70, 119];
         const OBFUSCATED_KEY_2 = [65, 81, 46, 65, 98, 56, 82, 78, 54, 76, 121, 56, 80, 83, 81, 87, 121, 122, 111, 104, 81, 118, 106, 87, 111, 108, 82, 122, 108, 51, 74, 89, 52, 87, 85, 68, 78, 119, 51, 51, 52, 79, 80, 73, 115, 85, 80, 67, 100, 104, 98, 112, 81];
@@ -811,7 +815,7 @@
             const listDiv = document.getElementById('nutritionList'); if(!listDiv) return;
             if (nutritionData.length === 0) return listDiv.innerHTML = '<p class="text-stone-400 text-center py-4">Lemari resep nutrisi sedang kosong.</p>';
             let html = '';
-            nutritionData.forEach(n => { html += `<div class="bg-stone-50 border border-stone-200/80 p-4 rounded-3xl space-y-2 shadow-sm"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5"><h4 class="font-extrabold text-xs text-emerald-800 flex items-center space-x-1.5"><i class="fa-solid fa-flask-vial text-emerald-600"></i><span>${n.name}</span></h4><div class="flex items-center space-x-2"><button onclick="bagikanKeWA('nutrisi', '${n.name}', '${n.benefit}')" class="text-emerald-600 hover:text-emerald-700 font-bold text-[10px] flex items-center space-x-1" title="Bagikan ke WA"><i class="fa-brands fa-whatsapp text-xs"></i> <span>Bagikan</span></button><span class="bg-lime-100 text-emerald-950 font-extrabold text-[9px] px-2.5 py-0.5 rounded-full flex items-center space-x-1 border border-lime-200"><i class="fa-solid fa-calendar-day text-[8px]"></i><span>Aplikasi: ${n.schedule}</span></span></div></div><p class="text-stone-600 font-medium text-[10.5px] leading-relaxed"><b class="text-stone-700 block mb-0.5"><i class="fa-solid fa-star text-amber-500 mr-1 text-[9px]"></i>Manfaat:</b>${n.benefit}</p><p class="text-stone-500 text-[10.5px] leading-relaxed bg-white p-3 rounded-2xl border border-stone-200 shadow-inner"><b class="text-emerald-800 block mb-1"><i class="fa-solid fa-gears mr-1 text-[9px]"></i>Takaran:</b>${n.dosage}</p></div>`; });
+            nutritionData.forEach(n => { html += `<div class="bg-stone-50 border border-stone-200/80 p-4 rounded-3xl space-y-2 shadow-sm"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5"><h4 class="font-extrabold text-xs text-emerald-800 flex items-center space-x-1.5"><i class="fa-solid fa-flask-vial text-emerald-600"></i><span>${escapeHtml(n.name)}</span></h4><div class="flex items-center space-x-2"><button onclick="bagikanKeWA('nutrisi', '${escapeJsString(n.name)}', '${escapeJsString(n.benefit)}')" class="text-emerald-600 hover:text-emerald-700 font-bold text-[10px] flex items-center space-x-1" title="Bagikan ke WA"><i class="fa-brands fa-whatsapp text-xs"></i> <span>Bagikan</span></button><span class="bg-lime-100 text-emerald-950 font-extrabold text-[9px] px-2.5 py-0.5 rounded-full flex items-center space-x-1 border border-lime-200"><i class="fa-solid fa-calendar-day text-[8px]"></i><span>Aplikasi: ${escapeHtml(n.schedule)}</span></span></div></div><p class="text-stone-600 font-medium text-[10.5px] leading-relaxed"><b class="text-stone-700 block mb-0.5"><i class="fa-solid fa-star text-amber-500 mr-1 text-[9px]"></i>Manfaat:</b>${escapeHtml(n.benefit)}</p><p class="text-stone-500 text-[10.5px] leading-relaxed bg-white p-3 rounded-2xl border border-stone-200 shadow-inner"><b class="text-emerald-800 block mb-1"><i class="fa-solid fa-gears mr-1 text-[9px]"></i>Takaran:</b>${escapeHtml(n.dosage)}</p></div>`; });
             listDiv.innerHTML = html;
         }
 
@@ -862,7 +866,7 @@
         function renderPlantCards() {
             const grid = document.getElementById('plantGrid'); if(!grid) return;
             if (filteredPlants.length === 0) { const empty = document.getElementById('plantEmpty'); if(empty) empty.classList.remove('hidden'); grid.innerHTML = ''; return; }
-            const empty = document.getElementById('plantEmpty'); if(empty) empty.引导ClassList = "hidden";
+            const empty = document.getElementById('plantEmpty'); if(empty) empty.classList.add("hidden");
             let html = '';
             filteredPlants.forEach(plant => {
                 const userRole = localStorage.getItem('ibu_kebun_role') || 'Anggota';
@@ -893,7 +897,7 @@
                 
                 let imageContainerHTML = "";
                 if (plant.image_url) {
-                    imageContainerHTML = `<img src="${plant.image_url}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy">`;
+                    imageContainerHTML = `<img src="${escapeHtml(plant.image_url)}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy">`;
                 } else {
                     imageContainerHTML = dapatkanTunasGraphicSVG(cat);
                 }
@@ -901,7 +905,7 @@
                 let actionButtons = `<button onclick="openModalDetail(${plant.id})" class="bg-stone-200 text-stone-700 font-bold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-stone-300 btn-press">Detail</button>`;
                 
                 if (isOwner) {
-                    actionButtons = `<button onclick="bagikanKeWA('tanam', '${plant.plant_name}')" class="bg-emerald-50 text-emerald-600 font-extrabold px-2 py-1.5 rounded-xl text-[10.5px] hover:bg-emerald-100 btn-press" title="Bagikan ke WA"><i class="fa-brands fa-whatsapp text-xs"></i></button>${actionButtons}`;
+                    actionButtons = `<button onclick="bagikanKeWA('tanam', '${escapeJsString(plant.plant_name)}')" class="bg-emerald-50 text-emerald-600 font-extrabold px-2 py-1.5 rounded-xl text-[10.5px] hover:bg-emerald-100 btn-press" title="Bagikan ke WA"><i class="fa-brands fa-whatsapp text-xs"></i></button>${actionButtons}`;
                 }
 
                 actionButtons = `<button onclick="quickWater(${plant.id})" class="bg-blue-50 text-blue-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-blue-100 btn-press" title="Bantu Siram"><i class="fa-solid fa-shower"></i></button>${actionButtons}`;
@@ -910,7 +914,7 @@
                     actionButtons = `<button onclick="openModalEdit(${plant.id})" class="bg-amber-50 text-amber-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-amber-100 btn-press" title="Perbarui"><i class="fa-solid fa-pen-to-square"></i></button>${actionButtons}`;
                 }
 
-                html += `<div class="plant-card bg-white rounded-[2rem] shadow-sm border border-stone-200/60 overflow-hidden flex flex-col justify-between"><div><div class="relative h-36 bg-stone-100 w-full overflow-hidden">${imageContainerHTML}<span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${colorBadge} backdrop-blur-sm">${statusIndo}</span><span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-white/80 text-stone-700 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-user mr-1 text-emerald-600"></i>${plant.pemilik || 'Anonim'}</span></div><div class="p-4 space-y-2.5"><div><h4 class="font-extrabold text-stone-800 text-xs leading-tight">${plant.plant_name}</h4><p class="text-[10px] text-emerald-700 font-extrabold mt-0.5"><i class="fa-solid fa-hourglass-half text-[9px]"></i> Umur: ${hss >= 0 ? hss : 0} Hari</p></div><div class="space-y-1 bg-stone-50 p-2 rounded-xl border border-stone-100 text-[10px]"><div class="flex justify-between items-center text-stone-500"><span>Pertumbuhan</span><span>${teksEstimasi}</span></div><div class="w-full bg-stone-200 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-emerald-500 to-lime-400 h-full rounded-full progress-fill" style="width: ${persenProgress}%"></div></div></div><p class="text-[10px] text-stone-500 line-clamp-1 italic">Tips: ${notesClean || '-'}</p></div></div><div class="bg-stone-50/70 px-4 py-2.5 border-t border-stone-100 flex items-center justify-between text-[11px]">${siramText}<div class="flex space-x-1">${actionButtons}</div></div></div>`;
+                html += `<div class="plant-card bg-white rounded-[2rem] shadow-sm border border-stone-200/60 overflow-hidden flex flex-col justify-between"><div><div class="relative h-36 bg-stone-100 w-full overflow-hidden">${imageContainerHTML}<span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${colorBadge} backdrop-blur-sm">${statusIndo}</span><span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-white/80 text-stone-700 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-user mr-1 text-emerald-600"></i>${escapeHtml(plant.pemilik || 'Anonim')}</span></div><div class="p-4 space-y-2.5"><div><h4 class="font-extrabold text-stone-800 text-xs leading-tight">${escapeHtml(plant.plant_name)}</h4><p class="text-[10px] text-emerald-700 font-extrabold mt-0.5"><i class="fa-solid fa-hourglass-half text-[9px]"></i> Umur: ${hss >= 0 ? hss : 0} Hari</p></div><div class="space-y-1 bg-stone-50 p-2 rounded-xl border border-stone-100 text-[10px]"><div class="flex justify-between items-center text-stone-500"><span>Pertumbuhan</span><span>${teksEstimasi}</span></div><div class="w-full bg-stone-200 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-emerald-500 to-lime-400 h-full rounded-full progress-fill" style="width: ${persenProgress}%"></div></div></div><p class="text-[10px] text-stone-500 line-clamp-1 italic">Tips: ${escapeHtml(notesClean || '-')}</p></div></div><div class="bg-stone-50/70 px-4 py-2.5 border-t border-stone-100 flex items-center justify-between text-[11px]">${siramText}<div class="flex space-x-1">${actionButtons}</div></div></div>`;
             });
             grid.innerHTML = html;
         }
@@ -980,11 +984,11 @@
                     <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-3 rounded-2xl border ${diff === 0 ? 'border-rose-300 shadow-md' : 'border-stone-200 shadow-sm'} relative">
                         <div class="absolute -top-2 -right-2 bg-slate-800 text-white text-[8px] font-bold px-2 py-0.5 rounded-lg shadow">${tglFormat}</div>
                         <div class="flex items-center justify-between space-x-2 mb-1 mt-1">
-                            <h4 class="font-bold text-stone-800 text-xs">${e.plant.plant_name}</h4>
+                            <h4 class="font-bold text-stone-800 text-xs">${escapeHtml(e.plant.plant_name)}</h4>
                             ${badgeHTML}
                         </div>
                         <div class="text-[10px] text-stone-500 font-medium">Jadwal: ${e.title}</div>
-                        <div class="text-[9px] text-stone-400 mt-1.5"><i class="fa-solid fa-user text-stone-300 mr-1"></i>Milik: ${e.plant.pemilik || 'Anonim'}</div>
+                        <div class="text-[9px] text-stone-400 mt-1.5"><i class="fa-solid fa-user text-stone-300 mr-1"></i>Milik: ${escapeHtml(e.plant.pemilik || 'Anonim')}</div>
                     </div>
                 </div>`;
             });
@@ -998,7 +1002,7 @@
             let html = '';
             filteredPlants.forEach(plant => {
                 const imgCadangan = "https://images.unsplash.com/photo-1595856417726-2d164506c9e0?auto=format&fit=crop&w=350&q=80";
-                html += `<div class="plant-card bg-white rounded-[2rem] shadow-md border border-amber-200 overflow-hidden flex flex-col justify-between"><div class="relative h-48 bg-stone-100 w-full overflow-hidden"><img src="${plant.image_url || imgCadangan}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onerror="this.src='${imgCadangan}'" loading="lazy"><span class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4 pt-12"><h4 class="font-black text-white text-sm leading-tight shadow-sm">${plant.plant_name}</h4><p class="text-[10px] text-amber-300 font-bold mt-1"><i class="fa-solid fa-crown mr-1"></i> Dipanen oleh: ${plant.pemilik || 'Anonim'}</p></span><div class="absolute top-3 right-3 bg-amber-400 text-amber-950 px-3 py-1 rounded-full text-[10px] font-black shadow-md flex items-center space-x-1"><i class="fa-solid fa-star"></i> <span>Panen!</span></div><button onclick="bagikanKeWA('panen', '${plant.plant_name}')" class="absolute top-3 left-3 bg-emerald-600 text-white px-2.5 py-1.5 rounded-full text-[10px] font-bold shadow-md flex items-center space-x-1 hover:bg-emerald-700 btn-press"><i class="fa-brands fa-whatsapp text-xs"></i> <span>Bagikan</span></button></div></div>`;
+                html += `<div class="plant-card bg-white rounded-[2rem] shadow-md border border-amber-200 overflow-hidden flex flex-col justify-between"><div class="relative h-48 bg-stone-100 w-full overflow-hidden"><img src="${escapeHtml(plant.image_url || imgCadangan)}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onerror="this.src='${imgCadangan}'" loading="lazy"><span class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4 pt-12"><h4 class="font-black text-white text-sm leading-tight shadow-sm">${escapeHtml(plant.plant_name)}</h4><p class="text-[10px] text-amber-300 font-bold mt-1"><i class="fa-solid fa-crown mr-1"></i> Dipanen oleh: ${escapeHtml(plant.pemilik || 'Anonim')}</p></span><div class="absolute top-3 right-3 bg-amber-400 text-amber-950 px-3 py-1 rounded-full text-[10px] font-black shadow-md flex items-center space-x-1"><i class="fa-solid fa-star"></i> <span>Panen!</span></div><button onclick="bagikanKeWA('panen', '${escapeJsString(plant.plant_name)}')" class="absolute top-3 left-3 bg-emerald-600 text-white px-2.5 py-1.5 rounded-full text-[10px] font-bold shadow-md flex items-center space-x-1 hover:bg-emerald-700 btn-press"><i class="fa-brands fa-whatsapp text-xs"></i> <span>Bagikan</span></button></div></div>`;
             });
             grid.innerHTML = html;
         }
@@ -1008,7 +1012,7 @@
             let targets = allPlants.filter(p => p.status !== 'Panen' && (!p.last_watered || new Date(p.last_watered).toDateString() !== new Date().toDateString()));
             if (targets.length === 0) return listDiv.innerHTML = '<div class="text-center py-4 text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> Alhamdulillah! Semua tanaman komunitas sudah selesai disiram hari ini.</div>';
             let html = '';
-            targets.forEach(p => { html += `<div class="flex items-center justify-between p-2.5 bg-stone-50 rounded-xl border border-stone-100"><div class="pr-2"><h5 class="font-bold text-stone-800 leading-tight">${p.plant_name}</h5><p class="text-[10px] text-stone-450">Milik: <b class="text-emerald-700">${p.pemilik || 'Anonim'}</b> • Media: ${p.planting_medium || '-'}</p></div><button onclick="quickWater(${p.id}, true)" class="bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-[11px] flex items-center space-x-1.5 hover:bg-emerald-700 btn-press shadow-sm"><i class="fa-solid fa-shower"></i> <span>Siram</span></button></div>`; });
+            targets.forEach(p => { html += `<div class="flex items-center justify-between p-2.5 bg-stone-50 rounded-xl border border-stone-100"><div class="pr-2"><h5 class="font-bold text-stone-800 leading-tight">${escapeHtml(p.plant_name)}</h5><p class="text-[10px] text-stone-450">Milik: <b class="text-emerald-700">${escapeHtml(p.pemilik || 'Anonim')}</b> • Media: ${escapeHtml(p.planting_medium || '-')}</p></div><button onclick="quickWater(${p.id}, true)" class="bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-[11px] flex items-center space-x-1.5 hover:bg-emerald-700 btn-press shadow-sm"><i class="fa-solid fa-shower"></i> <span>Siram</span></button></div>`; });
             listDiv.innerHTML = html;
         }
 
@@ -1031,7 +1035,7 @@
                 let html = '';
                 chats.forEach(c => {
                     if (c.is_ai) html += `<div class="max-w-[90%] flex flex-col mt-2 chat-bubble-enter"><span class="text-[9px] font-bold nyi-sari-badge ml-1">Nyi Sari</span><div class="bg-emerald-50 text-stone-700 p-3 rounded-2xl border border-emerald-100/60 leading-relaxed">${formatAiResponse(c.message)}</div></div>`;
-                    else html += `<div class="max-w-[90%] ml-auto text-right mt-2 chat-bubble-enter"><span class="text-[9px] font-bold text-emerald-700 mr-1">${c.sender}</span><div class="bg-white border border-emerald-200 text-stone-800 p-2.5 rounded-2xl text-left font-semibold shadow-sm">${c.message}</div></div>`;
+                    else html += `<div class="max-w-[90%] ml-auto text-right mt-2 chat-bubble-enter"><span class="text-[9px] font-bold text-emerald-700 mr-1">${escapeHtml(c.sender)}</span><div class="bg-white border border-emerald-200 text-stone-800 p-2.5 rounded-2xl text-left font-semibold shadow-sm">${escapeHtml(c.message)}</div></div>`;
                 });
                 logs.innerHTML = html; logs.scrollTop = logs.scrollHeight;
             } catch (e) { logs.innerHTML = '<p class="text-stone-400 text-center py-4 text-[11px]">Riwayat obrolan sudah siap ditampilkan.</p>'; }
@@ -1250,10 +1254,10 @@
             const m = document.getElementById('modalDetail');
 
             let detailImageHTML = plant.image_url 
-                ? `<img src="${plant.image_url}" class="w-full h-full object-cover">` 
+                ? `<img src="${escapeHtml(plant.image_url)}" class="w-full h-full object-cover">` 
                 : dapatkanTunasGraphicSVG(cat);
 
-            document.getElementById('detailBodyContent').innerHTML = `<div class="h-32 bg-stone-100 rounded-xl overflow-hidden border flex items-center justify-center">${detailImageHTML}</div><div class="space-y-1"><h4 class="font-extrabold text-stone-800 text-sm leading-tight">${plant.plant_name}</h4><p class="text-[10px] text-stone-400">Pemilik: <b class="text-emerald-600">${plant.pemilik || 'Anonim'}</b> • Kategori: ${cat}</p></div><div class="bg-stone-50 p-2.5 rounded-xl border border-stone-100 text-[11px] leading-relaxed text-stone-600"><b>Panduan Perawatan:</b><br>${notesClean || 'Belum ada catatan khusus.'}</div>`;
+            document.getElementById('detailBodyContent').innerHTML = `<div class="h-32 bg-stone-100 rounded-xl overflow-hidden border flex items-center justify-center">${detailImageHTML}</div><div class="space-y-1"><h4 class="font-extrabold text-stone-800 text-sm leading-tight">${escapeHtml(plant.plant_name)}</h4><p class="text-[10px] text-stone-400">Pemilik: <b class="text-emerald-600">${escapeHtml(plant.pemilik || 'Anonim')}</b> • Kategori: ${escapeHtml(cat)}</p></div><div class="bg-stone-50 p-2.5 rounded-xl border border-stone-100 text-[11px] leading-relaxed text-stone-600"><b>Panduan Perawatan:</b><br>${escapeHtml(notesClean || 'Belum ada catatan khusus.')}</div>`;
             const btnHapus = document.getElementById('detailHapusBtn');
             if(canManage) { btnHapus.classList.remove('hidden'); btnHapus.onclick = () => openModalHapus(); } else { btnHapus.classList.add('hidden'); }
             m.classList.remove('hidden'); setTimeout(() => m.classList.add('opacity-100'), 10);

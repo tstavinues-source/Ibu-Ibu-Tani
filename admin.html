@@ -171,6 +171,10 @@
         const SUPABASE_BASE_URL = "https://zaueuvplevtgkthqifsk.supabase.co";
         const SUPABASE_KEY = "sb_publishable_27mT7S6Eo9cBKN6xmujYqg_y2T20wSf";
         const authHeaders = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' };
+        // --- PEMBANTU KEAMANAN TEKS (ANTI-XSS) ---
+        function escapeHtml(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+        function escapeJsString(s) { return escapeHtml(String(s ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\r\n|\r|\n/g, '\\n')); }
+
 
         let globalUsersCache = [];
 
@@ -242,7 +246,7 @@
                     html += `
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 relative space-y-3 shadow-sm">
                         <div class="absolute top-2 right-2 text-[9px] text-slate-400 font-bold"><i class="fa-regular fa-calendar mr-1"></i>${tgl}</div>
-                        <h4 class="font-black text-sm text-slate-800 mt-1 flex items-center"><i class="fa-solid fa-user mr-1.5 text-emerald-600"></i>${user.nama_panggero}</h4>
+                        <h4 class="font-black text-sm text-slate-800 mt-1 flex items-center"><i class="fa-solid fa-user mr-1.5 text-emerald-600"></i>${escapeHtml(user.nama_panggero)}</h4>
                         
                         <div class="grid grid-cols-2 gap-2 text-xs">
                             <div class="bg-white p-2 rounded-lg border border-slate-200 flex flex-col justify-center">
@@ -260,8 +264,8 @@
                         </div>
                         
                         <div class="flex justify-between items-center text-[10px] pt-1 border-t border-slate-150">
-                            <button onclick="openEditSandiModal('${user.id}', '${user.nama_panggero}')" class="text-emerald-600 hover:text-emerald-800 font-bold transition-all"><i class="fa-solid fa-key mr-1"></i>Ganti Sandi</button>
-                            <button onclick="hapusAkun('${user.id}', '${user.nama_panggero}')" class="font-bold text-rose-500 hover:text-rose-700 transition-all"><i class="fa-solid fa-trash-can mr-1"></i>Hapus Akun</button>
+                            <button onclick="openEditSandiModal('${user.id}', '${escapeJsString(user.nama_panggero)}')" class="text-emerald-600 hover:text-emerald-800 font-bold transition-all"><i class="fa-solid fa-key mr-1"></i>Ganti Sandi</button>
+                            <button onclick="hapusAkun('${user.id}', '${escapeJsString(user.nama_panggero)}')" class="font-bold text-rose-500 hover:text-rose-700 transition-all"><i class="fa-solid fa-trash-can mr-1"></i>Hapus Akun</button>
                         </div>
                     </div>`;
                 });
@@ -340,7 +344,7 @@
                 let html = '';
                 plants.forEach(plant => {
                     let optionsHTML = globalUsersCache.map(u => {
-                        return `<option value="${u.nama_panggero}" ${plant.pemilik === u.nama_panggero ? 'selected' : ''}>${u.nama_panggero}</option>`;
+                        return `<option value="${escapeHtml(u.nama_panggero)}" ${plant.pemilik === u.nama_panggero ? 'selected' : ''}>${escapeHtml(u.nama_panggero)}</option>`;
                     }).join('');
 
                     html += `
@@ -348,8 +352,8 @@
                         <div class="flex items-center space-x-2.5">
                             <div class="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center text-sm"><i class="fa-solid fa-seedling"></i></div>
                             <div>
-                                <h4 class="font-black text-slate-800 text-xs">${plant.plant_name}</h4>
-                                <p class="text-[9px] text-slate-400 font-bold">Kategori: ${plant.category || 'Sayuran Daun'} • Status: ${plant.status}</p>
+                                <h4 class="font-black text-slate-800 text-xs">${escapeHtml(plant.plant_name)}</h4>
+                                <p class="text-[9px] text-slate-400 font-bold">Kategori: ${escapeHtml(plant.category || 'Sayuran Daun')} • Status: ${escapeHtml(plant.status)}</p>
                             </div>
                         </div>
                         <div class="flex items-center space-x-2 text-xs">
@@ -393,7 +397,7 @@
                     const statusBadge = p.aktif ? `<span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[8px] font-black uppercase">Aktif</span>` : `<span class="bg-slate-200 text-slate-500 px-2 py-0.5 rounded text-[8px] font-black uppercase">Arsip</span>`;
                     html += `
                     <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex justify-between items-start gap-3 shadow-sm">
-                        <div class="flex-1"><p class="text-slate-700 font-medium leading-relaxed">${p.pesan}</p><div class="mt-2">${statusBadge}</div></div>
+                        <div class="flex-1"><p class="text-slate-700 font-medium leading-relaxed">${escapeHtml(p.pesan)}</p><div class="mt-2">${statusBadge}</div></div>
                         <button onclick="hapusPengumuman('${p.id}')" class="text-rose-500 hover:text-rose-700 p-1 transition-colors"><i class="fa-solid fa-trash-can"></i></button>
                     </div>`;
                 });
@@ -440,8 +444,8 @@
                     html += `
                     <div class="p-2.5 rounded-xl border text-[11px] relative flex justify-between items-start gap-3 shadow-sm ${isAi ? 'bg-emerald-50 border-emerald-100' : 'bg-slate-50 border-slate-200'}">
                         <div class="flex-1 pr-4">
-                            <span class="font-black block text-[10px] ${isAi ? 'text-emerald-700' : 'text-slate-700'}">${c.sender} ${isAi ? '✨ (AI)' : ''}</span>
-                            <p class="text-slate-600 font-medium mt-0.5 leading-relaxed">${c.message}</p>
+                            <span class="font-black block text-[10px] ${isAi ? 'text-emerald-700' : 'text-slate-700'}">${escapeHtml(c.sender)} ${isAi ? '✨ (AI)' : ''}</span>
+                            <p class="text-slate-600 font-medium mt-0.5 leading-relaxed">${escapeHtml(c.message)}</p>
                         </div>
                         <button onclick="hapusChat('${c.id}')" class="text-rose-500 hover:text-rose-750 p-1 transition-colors" title="Hapus Obrolan"><i class="fa-solid fa-xmark text-xs font-bold"></i></button>
                     </div>`;
@@ -476,7 +480,7 @@
                     <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-150 flex justify-between items-center text-[10px] font-bold text-slate-700 shadow-sm hover:border-slate-200 transition-all">
                         <div class="flex items-center space-x-2">
                             <i class="fa-solid fa-right-to-bracket text-purple-500"></i>
-                            <span>${l.nama_panggero}</span>
+                            <span>${escapeHtml(l.nama_panggero)}</span>
                         </div>
                         <div class="text-slate-400 font-medium">
                             <span class="bg-slate-200/60 text-slate-600 px-1.5 py-0.5 rounded text-[9px] mr-1.5">${tgl}</span>
