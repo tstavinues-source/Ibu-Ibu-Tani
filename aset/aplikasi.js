@@ -428,7 +428,7 @@
                 const dSemai = document.getElementById('dashSemai'); if(dSemai) dSemai.innerText = semai;
                 const dSiap = document.getElementById('dashSiap'); if(dSiap) dSiap.innerText = siap;
                 const dGagal = document.getElementById('dashGagal'); if(dGagal) dGagal.innerText = gagal;
-                perbaruiIndikatorPanen();
+                perbaruiIndikatorPanen(); perbaruiPengingatPupuk();
                 
                 filterPlants(currentFilterStatus);
                 renderKalender();
@@ -494,21 +494,27 @@
                 }
                 
                 let warnaAksen = plant.status === 'Semai' ? 'border-l-amber-400' : (plant.status === 'Tumbuh Daun' ? 'border-l-blue-400' : (plant.status === 'Siap Pindah' ? 'border-l-lime-500' : (plant.status === 'Panen' ? 'border-l-amber-500' : 'border-l-rose-400')));
-                let actionButtons = `<button onclick="openModalDetail(${plant.id})" class="bg-stone-200 text-stone-700 font-bold px-3 py-2.5 rounded-xl text-xs hover:bg-stone-300 btn-press min-h-[44px]">Detail</button>`;
-                
-                if (isOwner) {
-                    actionButtons = `<button onclick="bagikanKeWA('tanam', '${escapeJsString(plant.plant_name)}')" class="bg-emerald-50 text-emerald-600 font-extrabold px-3 py-2.5 rounded-xl text-xs hover:bg-emerald-100 btn-press min-h-[44px]"><i class="fa-brands fa-whatsapp"></i> Bagikan</button>${actionButtons}`;
-                }
+                const sudahSiramHariIni = plant.last_watered && new Date(plant.last_watered).toDateString() === new Date().toDateString();
+                let tombolSiram = sudahSiramHariIni
+                    ? `<button disabled class="flex-1 bg-emerald-500 text-white font-extrabold px-3 py-3 rounded-2xl text-xs min-h-[48px]"><i class="fa-solid fa-check mr-1"></i> Sudah Disiram</button>`
+                    : `<button onclick="quickWater(${plant.id})" class="flex-1 bg-blue-600 text-white font-extrabold px-3 py-3 rounded-2xl text-xs hover:bg-blue-700 btn-press min-h-[48px]"><i class="fa-solid fa-droplet mr-1"></i> Siram</button>`;
+                let tombolBagikan = isOwner ? `<button onclick="bagikanKeWA('tanam', '${escapeJsString(plant.plant_name)}')" class="flex-1 bg-amber-100 text-amber-900 font-extrabold px-3 py-3 rounded-2xl text-xs hover:bg-amber-200 btn-press min-h-[48px]"><i class="fa-solid fa-share-nodes mr-1"></i> Bagikan</button>` : '';
+                let tombolUbah = canManage ? `<button onclick="openModalEdit(${plant.id})" class="absolute top-2 right-2 bg-white/90 text-amber-700 w-9 h-9 rounded-xl shadow btn-press flex items-center justify-center z-10" title="Ubah catatan"><i class="fa-solid fa-pen-to-square"></i></button>` : '';
+                const tglTanamFmt = new Date(plant.sowing_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 
-                actionButtons = `<button onclick="quickWater(${plant.id})" class="bg-blue-50 text-blue-700 font-extrabold px-3 py-2.5 rounded-xl text-xs hover:bg-blue-100 btn-press min-h-[44px]"><i class="fa-solid fa-shower"></i> Siram</button>${actionButtons}`;
-
-                if (canManage) {
-                    actionButtons = `<button onclick="openModalEdit(${plant.id})" class="bg-amber-50 text-amber-700 font-extrabold px-3 py-2.5 rounded-xl text-xs hover:bg-amber-100 btn-press min-h-[44px]"><i class="fa-solid fa-pen-to-square"></i> Ubah</button>${actionButtons}`;
-                }
-
-                html += `<div class="plant-card bg-white rounded-[2rem] shadow-sm border border-stone-200/60 border-l-8 ${warnaAksen} overflow-hidden flex flex-col justify-between"><div><div class="relative h-36 bg-stone-100 w-full overflow-hidden">${imageContainerHTML}<span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${colorBadge} backdrop-blur-sm">${statusIndo}</span><span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/80 text-stone-700 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-user mr-1 text-emerald-600"></i>${escapeHtml(plant.pemilik || 'Anonim')}</span></div><div class="p-4 space-y-2.5"><div><h4 class="font-extrabold text-stone-800 text-sm leading-tight">${escapeHtml(plant.plant_name)}</h4><p class="text-xs text-emerald-700 font-extrabold mt-0.5"><i class="fa-solid fa-hourglass-half text-[10px]"></i> Umur: ${hss >= 0 ? hss : 0} Hari</p></div><div class="space-y-1 bg-stone-50 p-2 rounded-xl border border-stone-100 text-xs"><div class="flex justify-between items-center text-stone-500"><span>Pertumbuhan</span><span>${teksEstimasi}</span></div><div class="w-full bg-stone-200 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-emerald-500 to-lime-400 h-full rounded-full progress-fill" style="width: ${persenProgress}%"></div></div></div><p class="text-xs text-stone-500 line-clamp-1 italic">Tips: ${escapeHtml(notesClean || '-')}</p></div></div><div class="bg-stone-50/70 px-4 py-2.5 border-t border-stone-100 flex items-center justify-between text-[11px]">${siramText}<div class="flex flex-wrap gap-1 justify-end">${actionButtons}</div></div></div>`;
+                html += `<div class="plant-card relative bg-white rounded-[1.75rem] shadow-sm border border-stone-200/60 border-l-8 ${warnaAksen} overflow-hidden p-3.5">${tombolUbah}<div class="flex space-x-3.5"><div class="w-24 h-24 rounded-2xl overflow-hidden bg-stone-100 shrink-0 relative">${imageContainerHTML}</div><div class="flex-1 min-w-0"><h4 class="font-extrabold text-stone-800 text-base leading-tight">${escapeHtml(plant.plant_name)}</h4><p class="text-xs text-stone-500 mt-1 leading-relaxed">Ditanam ${tglTanamFmt} • Umur ${hss >= 0 ? hss : 0} hari<br>Pemilik: ${escapeHtml(plant.pemilik || 'Anonim')}</p><span class="inline-block mt-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${colorBadge}">${statusIndo}</span></div></div><div class="mt-3 bg-stone-50 p-2.5 rounded-xl border border-stone-100 text-xs space-y-1"><div class="flex justify-between items-center text-stone-500"><span>Pertumbuhan</span><span>${teksEstimasi}</span></div><div class="w-full bg-stone-200 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-emerald-500 to-lime-400 h-full rounded-full progress-fill" style="width: ${persenProgress}%"></div></div><p class="text-stone-500 line-clamp-1 italic">Tips: ${escapeHtml(notesClean || '-')}</p><p>${siramText}</p></div><div class="flex space-x-2 mt-3">${tombolSiram}${tombolBagikan}<button onclick="openModalDetail(${plant.id})" class="flex-1 bg-stone-100 text-stone-700 font-extrabold px-3 py-3 rounded-2xl text-xs hover:bg-stone-200 btn-press min-h-[48px]">Detail <i class="fa-solid fa-chevron-right ml-0.5"></i></button></div></div>`;
             });
             grid.innerHTML = html;
+        }
+
+        function perbaruiPengingatPupuk() {
+            const el = document.getElementById('pupukReminder'); if (!el) return;
+            const kini = new Date(); kini.setHours(0, 0, 0, 0);
+            const batas = new Date(kini); batas.setDate(batas.getDate() + 1);
+            const jatuh = allPlants.filter(p => p.next_fertilize_date && p.status !== 'Panen' && p.status !== 'Gagal' && new Date(p.next_fertilize_date) <= batas);
+            if (!jatuh.length) { el.classList.add('hidden'); el.innerHTML = ''; return; }
+            el.innerHTML = '<i class="fa-solid fa-flask-vial mr-1"></i> Waktunya memupuk: ' + jatuh.map(p => escapeHtml(p.plant_name)).join(', ') + '. Jadwal lengkapnya ada di Kalender.';
+            el.classList.remove('hidden');
         }
 
         // --- RUANG KOMUNITAS: foto + keterangan dari semua anggota (tabel photos) ---
@@ -526,13 +532,30 @@
                 const rows = await res.json();
                 const peran = localStorage.getItem('ibu_kebun_role') || 'Anggota';
                 if (!rows.length) { grid.innerHTML = '<p class="text-xs text-stone-400 col-span-full text-center py-3">Belum ada foto komunitas. Jadilah yang pertama membagikan!</p>'; return; }
+                let daftarSuka = []; try { daftarSuka = JSON.parse(localStorage.getItem('ibu_kebun_suka') || '[]'); } catch (e) {}
                 grid.innerHTML = rows.map(r => {
                     const cocok = /^\[([^\]]+)\]\s*(.*)$/.exec(r.title || '');
                     const nama = cocok ? cocok[1] : 'Pengunjung'; const ket = cocok ? cocok[2] : (r.title || '');
                     const bolehHapus = (nama === currentUser) || peran === 'Ketua' || peran === 'Admin';
                     const tgl = r.created_at ? new Date(r.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
-                    return '<div class="bg-stone-50 rounded-2xl border border-stone-200/70 overflow-hidden">' + (r.image_url ? '<img src="' + escapeHtml(r.image_url) + '" class="w-full h-44 object-cover" loading="lazy">' : '') + '<div class="p-3 space-y-1"><p class="text-xs text-stone-700 font-medium">' + escapeHtml(ket || '(tanpa keterangan)') + '</p><p class="text-[11px] text-stone-400 flex items-center justify-between"><span><i class="fa-solid fa-user text-rose-500 mr-1"></i>' + escapeHtml(nama) + ' • ' + tgl + '</span>' + (bolehHapus ? '<button onclick="hapusFotoKomunitas(' + r.id + ')" class="text-rose-500 font-bold btn-press"><i class="fa-solid fa-trash-can mr-0.5"></i>Hapus</button>' : '') + '</p></div></div>';
+                    const sudahSuka = daftarSuka.includes(r.id);
+                    const kelasSuka = sudahSuka ? 'bg-rose-600 text-white' : 'bg-rose-50 text-rose-600';
+                    return '<div class="bg-stone-50 rounded-2xl border border-stone-200/70 overflow-hidden">'
+                        + (r.image_url ? '<img src="' + escapeHtml(r.image_url) + '" class="w-full h-auto" loading="lazy">' : '')
+                        + '<div class="p-3 space-y-2"><p class="text-xs text-stone-700 font-medium">' + escapeHtml(ket || '(tanpa keterangan)') + '</p>'
+                        + '<p class="text-[11px] text-stone-400 flex items-center justify-between"><span><i class="fa-solid fa-user text-rose-500 mr-1"></i>' + escapeHtml(nama) + ' • ' + tgl + '</span>' + (bolehHapus ? '<button onclick="hapusFotoKomunitas(' + r.id + ')" class="text-rose-500 font-bold btn-press"><i class="fa-solid fa-trash-can mr-0.5"></i>Hapus</button>' : '') + '</p>'
+                        + '<div class="flex items-center space-x-2">'
+                        + '<button onclick="sukaiFoto(' + r.id + ')" id="suka-btn-' + r.id + '" class="' + kelasSuka + ' font-extrabold px-3 py-2 rounded-xl text-xs btn-press min-h-[40px]"><i class="fa-solid fa-heart mr-1"></i><span id="suka-jml-' + r.id + '">' + (r.suka || 0) + '</span></button>'
+                        + '<button onclick="toggleKomentar(' + r.id + ')" class="bg-stone-100 text-stone-600 font-extrabold px-3 py-2 rounded-xl text-xs btn-press min-h-[40px]"><i class="fa-regular fa-comment mr-1"></i>Komentar (<span id="komentar-jml-' + r.id + '">0</span>)</button>'
+                        + '</div>'
+                        + '<div id="komentar-area-' + r.id + '" class="hidden space-y-2"><div id="komentar-list-' + r.id + '" class="space-y-1.5"></div>'
+                        + '<div class="flex space-x-1.5"><input id="komentar-input-' + r.id + '" type="text" placeholder="Tulis komentar..." class="flex-1 border border-stone-200 rounded-xl px-2.5 py-2 text-xs min-h-[40px]"><button onclick="kirimKomentar(' + r.id + ')" class="bg-rose-600 text-white px-3 rounded-xl font-bold text-xs btn-press min-h-[40px]">Kirim</button></div></div>'
+                        + '</div></div>';
                 }).join('');
+                try {
+                    const rk = await fetch(SUPABASE_BASE_URL + '/rest/v1/komentar_foto?select=photo_id', { headers: authHeaders });
+                    if (rk.ok) { const semua = await rk.json(); const hitung = {}; semua.forEach(k => { hitung[k.photo_id] = (hitung[k.photo_id] || 0) + 1; }); rows.forEach(r => { const el = document.getElementById('komentar-jml-' + r.id); if (el) el.innerText = hitung[r.id] || 0; }); }
+                } catch (e) {}
             } catch (e) { grid.innerHTML = '<p class="text-xs text-rose-400 col-span-full text-center py-3">Gagal memuat foto komunitas.</p>'; }
         }
         async function unggahFotoKomunitas() {
@@ -559,6 +582,45 @@
             try { const res = await fetch(SUPABASE_BASE_URL + '/rest/v1/photos?id=eq.' + id, { method: 'DELETE', headers: authHeaders }); if (!res.ok) throw new Error(); tunjukkanToast('Foto dihapus.', 'success'); muatFotoKomunitas(); } catch (e) { tunjukkanToast('Gagal menghapus foto.', 'error'); }
         }
 
+        async function sukaiFoto(id) {
+            let daftar = []; try { daftar = JSON.parse(localStorage.getItem('ibu_kebun_suka') || '[]'); } catch (e) {}
+            if (daftar.includes(id)) return tunjukkanToast('Foto ini sudah pernah disukai dari perangkat ini.', 'warning');
+            const el = document.getElementById('suka-jml-' + id); const sekarang = el ? (parseInt(el.innerText) || 0) : 0;
+            try {
+                const res = await fetch(SUPABASE_BASE_URL + '/rest/v1/photos?id=eq.' + id, { method: 'PATCH', headers: { 'apikey': SUPABASE_KEY, 'Authorization': authHeaders.Authorization, 'Content-Type': 'application/json' }, body: JSON.stringify({ suka: sekarang + 1 }) });
+                if (!res.ok) throw new Error();
+                if (el) el.innerText = sekarang + 1;
+                const btn = document.getElementById('suka-btn-' + id); if (btn) btn.className = 'bg-rose-600 text-white font-extrabold px-3 py-2 rounded-xl text-xs btn-press min-h-[40px]';
+                daftar.push(id); localStorage.setItem('ibu_kebun_suka', JSON.stringify(daftar));
+            } catch (e) { tunjukkanToast('Gagal memberi suka.', 'error'); }
+        }
+        async function muatKomentar(photoId) {
+            const list = document.getElementById('komentar-list-' + photoId); if (!list) return;
+            try {
+                const res = await fetch(SUPABASE_BASE_URL + '/rest/v1/komentar_foto?select=*&photo_id=eq.' + photoId + '&order=id.asc', { headers: authHeaders });
+                if (!res.ok) throw new Error();
+                const rows = await res.json();
+                list.innerHTML = rows.length ? rows.map(k => '<div class="bg-white border border-stone-200/70 rounded-xl px-2.5 py-2"><p class="text-xs text-stone-700"><b>' + escapeHtml(k.nama || 'Pengunjung') + ':</b> ' + escapeHtml(k.isi || '') + '</p></div>').join('') : '<p class="text-[11px] text-stone-400">Belum ada komentar. Tulis yang pertama!</p>';
+            } catch (e) { list.innerHTML = '<p class="text-[11px] text-rose-400">Gagal memuat komentar.</p>'; }
+        }
+        function toggleKomentar(id) {
+            const area = document.getElementById('komentar-area-' + id); if (!area) return;
+            const buka = area.classList.contains('hidden');
+            area.classList.toggle('hidden', !buka);
+            if (buka) muatKomentar(id);
+        }
+        async function kirimKomentar(photoId) {
+            const input = document.getElementById('komentar-input-' + photoId); if (!input) return;
+            const isi = input.value.trim(); if (!isi) return;
+            try {
+                const res = await fetch(SUPABASE_BASE_URL + '/rest/v1/komentar_foto', { method: 'POST', headers: { 'apikey': SUPABASE_KEY, 'Authorization': authHeaders.Authorization, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' }, body: JSON.stringify({ photo_id: photoId, nama: currentUser || 'Pengunjung', isi: isi }) });
+                if (!res.ok) throw new Error();
+                input.value = '';
+                muatKomentar(photoId);
+                const jml = document.getElementById('komentar-jml-' + photoId); if (jml) jml.innerText = (parseInt(jml.innerText) || 0) + 1;
+            } catch (e) { tunjukkanToast('Gagal mengirim komentar.', 'error'); }
+        }
+
         // RENDER KALENDER JADWAL
         let kalenderGeserBulan = 0; let kalenderTanggalPilih = null;
         function geserBulanKalender(delta) { kalenderGeserBulan += delta; renderKalender(); }
@@ -571,7 +633,7 @@
             if (judul) judul.innerText = dasar.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
             const peta = {};
             events.forEach(e => { const k = kunciTanggal(e.date); if (!peta[k]) peta[k] = []; if (!peta[k].includes(e.title)) peta[k].push(e.title); });
-            const warnaTitik = { 'Awal Tanam / Menanam': 'bg-emerald-500', 'Siap Tumbuh Daun': 'bg-blue-500', 'Pindah ke Pot Besar': 'bg-lime-500', 'Waktunya Panen!': 'bg-amber-500' };
+            const warnaTitik = { 'Awal Tanam / Menanam': 'bg-emerald-500', 'Siap Tumbuh Daun': 'bg-blue-500', 'Pindah ke Pot Besar': 'bg-lime-500', 'Waktunya Panen!': 'bg-amber-500', 'Waktunya Memupuk': 'bg-violet-500' };
             const hariPertama = new Date(tahun, bulan, 1).getDay();
             const jumlahHari = new Date(tahun, bulan + 1, 0).getDate();
             const kunciHariIni = kunciTanggal(new Date());
@@ -619,6 +681,10 @@
                 if(p.est_panen_date) {
                     let d = new Date(p.est_panen_date);
                     events.push({ plant: p, date: d, title: 'Waktunya Panen!', icon: 'fa-basket-shopping', color: 'text-amber-500', bg: 'bg-amber-100', isPast: d < today });
+                }
+                if(p.next_fertilize_date) {
+                    let d = new Date(p.next_fertilize_date);
+                    events.push({ plant: p, date: d, title: 'Waktunya Memupuk', icon: 'fa-flask-vial', color: 'text-violet-600', bg: 'bg-violet-100', isPast: d < today });
                 }
             });
 
@@ -849,6 +915,8 @@
             const eTumbuh = document.getElementById('formEstTumbuh').value;
             const ePindah = document.getElementById('formEstPindah').value;
             const ePanen = document.getElementById('formEstPanen').value;
+            const pupukJenis = document.getElementById('formPupukJenis').value.trim();
+            const pupukTanggal = document.getElementById('formPupukTanggal').value;
             
             let isKososng = false;
             if (!name) { nameInput.classList.add('input-error'); isKososng = true; }
@@ -881,7 +949,7 @@
                 const payload = { 
                     plant_name: name, sowing_date: sowingDate, planting_medium: medium || null, status: status, 
                     category: category, notes: notes, image_url: imgUrl || null, pemilik: editId ? (allPlants.find(p => p.id == editId)?.pemilik || currentUser) : currentUser,
-                    est_tumbuh_date: eTumbuh || null, est_pindah_date: ePindah || null, est_panen_date: ePanen || null
+                    est_tumbuh_date: eTumbuh || null, est_pindah_date: ePindah || null, est_panen_date: ePanen || null, next_fertilize_date: pupukTanggal || null, pupuk_jenis: pupukJenis || null
                 };
                 let url = `${SUPABASE_BASE_URL}/rest/v1/plant_farm`; let method = 'POST';
                 if (editId) { url += `?id=eq.${editId}`; method = 'PATCH'; }
@@ -910,7 +978,7 @@
             const alert = document.getElementById('formAlert'); if(alert) alert.classList.add('hidden'); 
             document.getElementById('formPlantName').classList.remove('input-error'); document.getElementById('formSowingDate').classList.remove('input-error');
             
-            document.getElementById('editPlantId').value = ""; document.getElementById('modalTitle').innerText = "Catat Tanaman Baru Ibu"; document.getElementById('formPlantName').value = ""; document.getElementById('formMedium').value = ""; document.getElementById('formStatus').value = "Semai"; document.getElementById('formCategory').value = "Sayuran Daun"; document.getElementById('formNotes').value = ""; formSelectedFile = null; document.getElementById('formImgLabel').innerText = "Belum ada foto"; document.getElementById('formImgPreviewContainer').classList.add('hidden');
+            document.getElementById('editPlantId').value = ""; document.getElementById('modalTitle').innerText = "Catat Tanaman Baru Ibu"; document.getElementById('formPlantName').value = ""; document.getElementById('formMedium').value = ""; document.getElementById('formStatus').value = "Semai"; document.getElementById('formCategory').value = "Sayuran Daun"; document.getElementById('formNotes').value = ""; document.getElementById('formPupukJenis').value = ""; document.getElementById('formPupukTanggal').value = ""; formSelectedFile = null; document.getElementById('formImgLabel').innerText = "Belum ada foto"; document.getElementById('formImgPreviewContainer').classList.add('hidden');
             document.getElementById('formEstTumbuh').value = ""; document.getElementById('formEstPindah').value = ""; document.getElementById('formEstPanen').value = "";
             
             document.getElementById('formImageFileCamera').value = "";
@@ -932,6 +1000,8 @@
             document.getElementById('formEstTumbuh').value = plant.est_tumbuh_date || "";
             document.getElementById('formEstPindah').value = plant.est_pindah_date || "";
             document.getElementById('formEstPanen').value = plant.est_panen_date || "";
+            document.getElementById('formPupukJenis').value = plant.pupuk_jenis || "";
+            document.getElementById('formPupukTanggal').value = plant.next_fertilize_date || "";
 
             document.getElementById('formImageFileCamera').value = "";
             document.getElementById('formImageFileGallery').value = "";
@@ -1087,6 +1157,7 @@
             if (plant.est_pindah_date) langkah.push({ ikon: '\u{1FAB4}', label: 'Perkiraan pindah tanam', tgl: plant.est_pindah_date });
             if (plant.last_watered) langkah.push({ ikon: '\u{1F4A7}', label: 'Terakhir disiram', tgl: plant.last_watered });
             if (plant.est_panen_date) langkah.push({ ikon: '\u{1F9FA}', label: 'Perkiraan panen', tgl: plant.est_panen_date });
+            if (plant.next_fertilize_date) langkah.push({ ikon: '\u{1F9EA}', label: 'Pemupukan' + (plant.pupuk_jenis ? ' (' + plant.pupuk_jenis + ')' : ''), tgl: plant.next_fertilize_date });
             const timelineHTML = langkah.length ? `<div class="bg-white border border-stone-200 rounded-xl p-2.5"><p class="font-extrabold text-stone-700 mb-1.5">\u{1F550} Garis Waktu Tumbuh</p><div class="space-y-1.5">${langkah.map(l => `<div class="flex justify-between text-[11px]"><span>${l.ikon} ${l.label}</span><b class="text-stone-500">${formatTanggalID(l.tgl)}</b></div>`).join('')}</div></div>` : '';
             const panenHTML = `<div class="bg-amber-50/60 border border-amber-100 rounded-xl p-2.5 space-y-2"><p class="font-extrabold text-stone-700">\u{1F9FA} Catat Hasil Panen</p><div class="flex space-x-1.5"><input type="number" id="panenJumlah" step="0.1" min="0" placeholder="Jumlah" class="w-20 bg-white border border-stone-300 rounded-lg px-2 py-1.5 text-[11px]"><select id="panenSatuan" class="bg-white border border-stone-300 rounded-lg px-2 py-1.5 text-[11px]"><option value="kg">kg</option><option value="ikat">ikat</option><option value="buah">buah</option><option value="pot">pot</option><option value="baskom">baskom</option></select><input type="date" id="panenTanggal" class="flex-1 bg-white border border-stone-300 rounded-lg px-2 py-1.5 text-[11px]" value="${new Date().toISOString().slice(0, 10)}"></div><button onclick="simpanHasilPanen(${plant.id})" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 rounded-xl btn-press">Simpan Hasil Panen</button><div id="detailPanenList" class="space-y-1.5"></div></div>`;
             document.getElementById('detailBodyContent').innerHTML = `<div class="h-32 bg-stone-100 rounded-xl overflow-hidden border flex items-center justify-center">${detailImageHTML}</div><div class="space-y-1"><h4 class="font-extrabold text-stone-800 text-sm leading-tight">${escapeHtml(plant.plant_name)}</h4><p class="text-xs text-stone-400">Pemilik: <b class="text-emerald-600">${escapeHtml(plant.pemilik || 'Anonim')}</b> • Kategori: ${escapeHtml(cat)}</p></div><div class="bg-stone-50 p-2.5 rounded-xl border border-stone-100 text-[11px] leading-relaxed text-stone-600"><b>Panduan Perawatan:</b><br>${escapeHtml(notesClean || 'Belum ada catatan khusus.')}</div>` + timelineHTML + panenHTML;
