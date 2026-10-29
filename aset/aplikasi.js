@@ -27,11 +27,11 @@
         let cuacaRingkasan = null;
         let currentTab = 'kebun'; let currentFilterStatus = 'Semua';
         let formSelectedFile = null; let doctorSelectedFile = null; let activeHapusId = null;
-        let isLargeText = false; let nutrisiDraftSaved = false; let currentUser = null;
+        let nutrisiDraftSaved = false; let currentUser = null;
 
         const DEFAULT_NUTRITION_RECIPES = [{ name: "Air Cucian Beras", benefit: "Menyuburkan bakteri baik di dalam tanah.", schedule: "Setiap Hari Senin", dosage: "Siramkan langsung air bilasan pertama." }];
 
-        window.onload = function() { buatPartikelDaun(); inisialisasiKunciDefaultLokal(); pariksaStatusLogin(); };
+        window.onload = function() { buatPartikelDaun(); inisialisasiKunciDefaultLokal(); aturSkalaHuruf(localStorage.getItem('ibu_kebun_skala_huruf') || 'sedang', false); pariksaStatusLogin(); };
 
         function buatPartikelDaun() {
             const container = document.getElementById('floatingLeaves'); const daunEmoji = ['🍃', '🌿', '☘️', '🍀', '🌱'];
@@ -44,10 +44,36 @@
 
         function segarSemuaData() { loadPlants(); loadChatHistory(); loadNutritionFromDb(); ambilDataCuacaMeteo(); loadPengumuman(); loadBankBenih(); tunjukkanToast("Data kebun sudah disegarkan!", "success"); }
 
-        function toggleUbahUkuranHuruf() {
-            isLargeText = !isLargeText; const body = document.getElementById('bodyApp'); const label = document.getElementById('textScaleLabel');
-            if (isLargeText) { if(body) body.style.fontSize = "15px"; if(label) label.innerText = "Huruf Normal"; } 
-            else { if(body) body.style.fontSize = ""; if(label) label.innerText = "Huruf Besar"; }
+        // --- UKURAN TULISAN 3 TINGKAT (tidak semua pengguna ibu-ibu) ---
+        const SKALA_HURUF = { kecil: 0.9, sedang: 1, besar: 1.16 };
+        function aturSkalaHuruf(nama, simpan = true) {
+            const nilai = SKALA_HURUF[nama] || 1;
+            const body = document.getElementById('bodyApp');
+            if (body) body.style.zoom = nilai;
+            if (simpan) localStorage.setItem('ibu_kebun_skala_huruf', nama);
+            ['kecil', 'sedang', 'besar'].forEach(k => {
+                const b = document.getElementById('skala-' + k);
+                if (b) b.className = 'px-2.5 py-1 font-bold btn-press ' + (k === nama ? 'bg-white text-emerald-900' : 'text-white/70');
+            });
+        }
+
+        // --- JAM DIGITAL + SAPAAN (fungsi ini dulu hilang sehingga jam membeku) ---
+        let jamIntervalId = null;
+        function startJamSapaan() {
+            const jamEl = document.getElementById('headerJamDigital');
+            const sapaEl = document.getElementById('headerSapaanIbu');
+            function perbaruiJam() {
+                const kini = new Date();
+                if (jamEl) jamEl.innerText = kini.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':');
+                if (sapaEl) {
+                    const j = kini.getHours();
+                    const sapa = j < 11 ? 'Selamat pagi' : (j < 15 ? 'Selamat siang' : (j < 19 ? 'Selamat sore' : 'Selamat malam'));
+                    sapaEl.innerText = currentUser ? sapa + ', Bu ' + currentUser + '!' : sapa + '!';
+                }
+            }
+            perbaruiJam();
+            if (jamIntervalId) clearInterval(jamIntervalId);
+            jamIntervalId = setInterval(perbaruiJam, 1000);
         }
 
         // --- GEMINI LEWAT SERVER ---
@@ -199,19 +225,19 @@
             let badgesHTML = "";
 
             if (userRole === 'Admin') {
-                badgesHTML += `<span class="bg-purple-600 border border-purple-400 text-white font-extrabold text-[9px] px-2.5 py-0.5 rounded-full flex items-center space-x-1" title="Peran: Admin Utama"><i class="fa-solid fa-user-shield text-[8px]"></i> <span>Admin Utama</span></span>`;
+                badgesHTML += `<span class="bg-purple-600 border border-purple-400 text-white font-extrabold text-[10px] px-2.5 py-0.5 rounded-full flex items-center space-x-1" title="Peran: Admin Utama"><i class="fa-solid fa-user-shield text-[8px]"></i> <span>Admin Utama</span></span>`;
             } else if (userRole === 'Ketua') {
-                badgesHTML += `<span class="bg-rose-600 border border-rose-400 text-white font-extrabold text-[9px] px-2.5 py-0.5 rounded-full flex items-center space-x-1" title="Peran: Ketua Komunitas"><i class="fa-solid fa-crown text-[8px]"></i> <span>Ketua Kebun</span></span>`;
+                badgesHTML += `<span class="bg-rose-600 border border-rose-400 text-white font-extrabold text-[10px] px-2.5 py-0.5 rounded-full flex items-center space-x-1" title="Peran: Ketua Komunitas"><i class="fa-solid fa-crown text-[8px]"></i> <span>Ketua Kebun</span></span>`;
             }
 
             if (hasWateredToday) {
-                badgesHTML += `<span class="bg-blue-500/25 border border-blue-400 text-blue-100 font-extrabold text-[9px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu rajin menyiram tanaman hari ini"><i class="fa-solid fa-shower text-[8px]"></i> <span>Penyiram Setia</span></span>`;
+                badgesHTML += `<span class="bg-blue-500/25 border border-blue-400 text-blue-100 font-extrabold text-[10px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu rajin menyiram tanaman hari ini"><i class="fa-solid fa-shower text-[8px]"></i> <span>Penyiram Setia</span></span>`;
             }
             if (hasHarvested) {
-                badgesHTML += `<span class="bg-amber-500/25 border border-amber-400 text-amber-100 font-extrabold text-[9px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu sudah berhasil panen kebun"><i class="fa-solid fa-crown text-[8px]"></i> <span>Ibu Panen Raya</span></span>`;
+                badgesHTML += `<span class="bg-amber-500/25 border border-amber-400 text-amber-100 font-extrabold text-[10px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu sudah berhasil panen kebun"><i class="fa-solid fa-crown text-[8px]"></i> <span>Ibu Panen Raya</span></span>`;
             }
             if (myPlantsCount > 2) {
-                badgesHTML += `<span class="bg-lime-500/25 border border-lime-400 text-lime-100 font-extrabold text-[9px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu rajin merawat bermacam-macam tanaman"><i class="fa-solid fa-seedling text-[8px]"></i> <span>Pakar Tani Dapur</span></span>`;
+                badgesHTML += `<span class="bg-lime-500/25 border border-lime-400 text-lime-100 font-extrabold text-[10px] px-2 py-0.5 rounded-full flex items-center space-x-1" title="Ibu rajin merawat bermacam-macam tanaman"><i class="fa-solid fa-seedling text-[8px]"></i> <span>Pakar Tani Dapur</span></span>`;
             }
 
             badgeContainer.innerHTML = badgesHTML;
@@ -260,7 +286,7 @@
                     
                     if(suhuText) suhuText.innerText = `${temp}°C`; 
                     if(kelembapanText) kelembapanText.innerText = `${hum}%`;
-                    if(hamaBadge) hamaBadge.className = hum > 80 ? "bg-rose-100/80 border border-rose-300/60 text-rose-800 px-2.5 py-1 rounded-xl text-[10px] font-bold flex items-center space-x-1" : "bg-green-100/80 border border-green-300/60 text-green-800 px-2.5 py-1 rounded-xl text-[10px] font-bold flex items-center space-x-1";
+                    if(hamaBadge) hamaBadge.className = hum > 80 ? "bg-rose-100/80 border border-rose-300/60 text-rose-800 px-2.5 py-1 rounded-xl text-xs font-bold flex items-center space-x-1" : "bg-green-100/80 border border-green-300/60 text-green-800 px-2.5 py-1 rounded-xl text-xs font-bold flex items-center space-x-1";
                     if(hamaStatus) hamaStatus.innerText = hum > 80 ? "Hama: WASPADA" : "Hama: Aman";
                     
                     let ikHTML = '<i class="fa-solid fa-cloud-sun text-amber-300 animate-pulse"></i>';
@@ -309,7 +335,7 @@
             const listDiv = document.getElementById('nutritionList'); if(!listDiv) return;
             if (nutritionData.length === 0) return listDiv.innerHTML = '<p class="text-stone-400 text-center py-4">Lemari resep nutrisi sedang kosong.</p>';
             let html = '';
-            nutritionData.forEach(n => { html += `<div class="bg-stone-50 border border-stone-200/80 p-4 rounded-3xl space-y-2 shadow-sm"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5"><h4 class="font-extrabold text-xs text-emerald-800 flex items-center space-x-1.5"><i class="fa-solid fa-flask-vial text-emerald-600"></i><span>${escapeHtml(n.name)}</span></h4><div class="flex items-center space-x-2"><button onclick="bagikanKeWA('nutrisi', '${escapeJsString(n.name)}', '${escapeJsString(n.benefit)}')" class="text-emerald-600 hover:text-emerald-700 font-bold text-[10px] flex items-center space-x-1" title="Bagikan ke WA"><i class="fa-brands fa-whatsapp text-xs"></i> <span>Bagikan</span></button><span class="bg-lime-100 text-emerald-950 font-extrabold text-[9px] px-2.5 py-0.5 rounded-full flex items-center space-x-1 border border-lime-200"><i class="fa-solid fa-calendar-day text-[8px]"></i><span>Aplikasi: ${escapeHtml(n.schedule)}</span></span></div></div><p class="text-stone-600 font-medium text-[10.5px] leading-relaxed"><b class="text-stone-700 block mb-0.5"><i class="fa-solid fa-star text-amber-500 mr-1 text-[9px]"></i>Manfaat:</b>${escapeHtml(n.benefit)}</p><p class="text-stone-500 text-[10.5px] leading-relaxed bg-white p-3 rounded-2xl border border-stone-200 shadow-inner"><b class="text-emerald-800 block mb-1"><i class="fa-solid fa-gears mr-1 text-[9px]"></i>Takaran:</b>${escapeHtml(n.dosage)}</p></div>`; });
+            nutritionData.forEach(n => { html += `<div class="bg-stone-50 border border-stone-200/80 p-4 rounded-3xl space-y-2 shadow-sm"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5"><h4 class="font-extrabold text-xs text-emerald-800 flex items-center space-x-1.5"><i class="fa-solid fa-flask-vial text-emerald-600"></i><span>${escapeHtml(n.name)}</span></h4><div class="flex items-center space-x-2"><button onclick="bagikanKeWA('nutrisi', '${escapeJsString(n.name)}', '${escapeJsString(n.benefit)}')" class="text-emerald-600 hover:text-emerald-700 font-bold text-xs flex items-center space-x-1" title="Bagikan ke WA"><i class="fa-brands fa-whatsapp text-xs"></i> <span>Bagikan</span></button><span class="bg-lime-100 text-emerald-950 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full flex items-center space-x-1 border border-lime-200"><i class="fa-solid fa-calendar-day text-[8px]"></i><span>Aplikasi: ${escapeHtml(n.schedule)}</span></span></div></div><p class="text-stone-600 font-medium text-xs leading-relaxed"><b class="text-stone-700 block mb-0.5"><i class="fa-solid fa-star text-amber-500 mr-1 text-[10px]"></i>Manfaat:</b>${escapeHtml(n.benefit)}</p><p class="text-stone-500 text-xs leading-relaxed bg-white p-3 rounded-2xl border border-stone-200 shadow-inner"><b class="text-emerald-800 block mb-1"><i class="fa-solid fa-gears mr-1 text-[10px]"></i>Takaran:</b>${escapeHtml(n.dosage)}</p></div>`; });
             listDiv.innerHTML = html;
         }
 
@@ -386,8 +412,8 @@
                 let colorBadge = plant.status === 'Semai' ? 'bg-amber-100 text-amber-800' : (plant.status === 'Tumbuh Daun' ? 'bg-blue-100 text-blue-800' : (plant.status === 'Siap Pindah' ? 'bg-lime-100 text-lime-800' : 'bg-rose-100 text-rose-800'));
                 let statusIndo = plant.status === 'Semai' ? 'Baru Tumbuh' : (plant.status === 'Tumbuh Daun' ? 'Banyak Daun' : (plant.status === 'Siap Pindah' ? 'Siap Pindah' : 'Layu'));
                 
-                let siramText = '<span class="text-stone-400 font-bold text-[10px]">Belum disiram</span>';
-                if (plant.last_watered && new Date(plant.last_watered).toDateString() === new Date().toDateString()) siramText = `<span class="text-emerald-600 font-bold text-[10px]"><i class="fa-solid fa-droplet"></i> Disiram ${new Date(plant.last_watered).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</span>`;
+                let siramText = '<span class="text-stone-400 font-bold text-xs">Belum disiram</span>';
+                if (plant.last_watered && new Date(plant.last_watered).toDateString() === new Date().toDateString()) siramText = `<span class="text-emerald-600 font-bold text-xs"><i class="fa-solid fa-droplet"></i> Disiram ${new Date(plant.last_watered).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</span>`;
                 
                 let imageContainerHTML = "";
                 if (plant.image_url) {
@@ -396,19 +422,20 @@
                     imageContainerHTML = dapatkanTunasGraphicSVG(cat);
                 }
                 
-                let actionButtons = `<button onclick="openModalDetail(${plant.id})" class="bg-stone-200 text-stone-700 font-bold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-stone-300 btn-press">Detail</button>`;
+                let warnaAksen = plant.status === 'Semai' ? 'border-l-amber-400' : (plant.status === 'Tumbuh Daun' ? 'border-l-blue-400' : (plant.status === 'Siap Pindah' ? 'border-l-lime-500' : (plant.status === 'Panen' ? 'border-l-amber-500' : 'border-l-rose-400')));
+                let actionButtons = `<button onclick="openModalDetail(${plant.id})" class="bg-stone-200 text-stone-700 font-bold px-3 py-2.5 rounded-xl text-xs hover:bg-stone-300 btn-press min-h-[44px]">Detail</button>`;
                 
                 if (isOwner) {
-                    actionButtons = `<button onclick="bagikanKeWA('tanam', '${escapeJsString(plant.plant_name)}')" class="bg-emerald-50 text-emerald-600 font-extrabold px-2 py-1.5 rounded-xl text-[10.5px] hover:bg-emerald-100 btn-press" title="Bagikan ke WA"><i class="fa-brands fa-whatsapp text-xs"></i></button>${actionButtons}`;
+                    actionButtons = `<button onclick="bagikanKeWA('tanam', '${escapeJsString(plant.plant_name)}')" class="bg-emerald-50 text-emerald-600 font-extrabold px-3 py-2.5 rounded-xl text-xs hover:bg-emerald-100 btn-press min-h-[44px]"><i class="fa-brands fa-whatsapp"></i> Bagikan</button>${actionButtons}`;
                 }
 
-                actionButtons = `<button onclick="quickWater(${plant.id})" class="bg-blue-50 text-blue-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-blue-100 btn-press" title="Bantu Siram"><i class="fa-solid fa-shower"></i></button>${actionButtons}`;
+                actionButtons = `<button onclick="quickWater(${plant.id})" class="bg-blue-50 text-blue-700 font-extrabold px-3 py-2.5 rounded-xl text-xs hover:bg-blue-100 btn-press min-h-[44px]"><i class="fa-solid fa-shower"></i> Siram</button>${actionButtons}`;
 
                 if (canManage) {
-                    actionButtons = `<button onclick="openModalEdit(${plant.id})" class="bg-amber-50 text-amber-700 font-extrabold px-2.5 py-1.5 rounded-xl text-[10.5px] hover:bg-amber-100 btn-press" title="Perbarui"><i class="fa-solid fa-pen-to-square"></i></button>${actionButtons}`;
+                    actionButtons = `<button onclick="openModalEdit(${plant.id})" class="bg-amber-50 text-amber-700 font-extrabold px-3 py-2.5 rounded-xl text-xs hover:bg-amber-100 btn-press min-h-[44px]"><i class="fa-solid fa-pen-to-square"></i> Ubah</button>${actionButtons}`;
                 }
 
-                html += `<div class="plant-card bg-white rounded-[2rem] shadow-sm border border-stone-200/60 overflow-hidden flex flex-col justify-between"><div><div class="relative h-36 bg-stone-100 w-full overflow-hidden">${imageContainerHTML}<span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${colorBadge} backdrop-blur-sm">${statusIndo}</span><span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-white/80 text-stone-700 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-user mr-1 text-emerald-600"></i>${escapeHtml(plant.pemilik || 'Anonim')}</span></div><div class="p-4 space-y-2.5"><div><h4 class="font-extrabold text-stone-800 text-xs leading-tight">${escapeHtml(plant.plant_name)}</h4><p class="text-[10px] text-emerald-700 font-extrabold mt-0.5"><i class="fa-solid fa-hourglass-half text-[9px]"></i> Umur: ${hss >= 0 ? hss : 0} Hari</p></div><div class="space-y-1 bg-stone-50 p-2 rounded-xl border border-stone-100 text-[10px]"><div class="flex justify-between items-center text-stone-500"><span>Pertumbuhan</span><span>${teksEstimasi}</span></div><div class="w-full bg-stone-200 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-emerald-500 to-lime-400 h-full rounded-full progress-fill" style="width: ${persenProgress}%"></div></div></div><p class="text-[10px] text-stone-500 line-clamp-1 italic">Tips: ${escapeHtml(notesClean || '-')}</p></div></div><div class="bg-stone-50/70 px-4 py-2.5 border-t border-stone-100 flex items-center justify-between text-[11px]">${siramText}<div class="flex space-x-1">${actionButtons}</div></div></div>`;
+                html += `<div class="plant-card bg-white rounded-[2rem] shadow-sm border border-stone-200/60 border-l-8 ${warnaAksen} overflow-hidden flex flex-col justify-between"><div><div class="relative h-36 bg-stone-100 w-full overflow-hidden">${imageContainerHTML}<span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${colorBadge} backdrop-blur-sm">${statusIndo}</span><span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/80 text-stone-700 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-user mr-1 text-emerald-600"></i>${escapeHtml(plant.pemilik || 'Anonim')}</span></div><div class="p-4 space-y-2.5"><div><h4 class="font-extrabold text-stone-800 text-sm leading-tight">${escapeHtml(plant.plant_name)}</h4><p class="text-xs text-emerald-700 font-extrabold mt-0.5"><i class="fa-solid fa-hourglass-half text-[10px]"></i> Umur: ${hss >= 0 ? hss : 0} Hari</p></div><div class="space-y-1 bg-stone-50 p-2 rounded-xl border border-stone-100 text-xs"><div class="flex justify-between items-center text-stone-500"><span>Pertumbuhan</span><span>${teksEstimasi}</span></div><div class="w-full bg-stone-200 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-emerald-500 to-lime-400 h-full rounded-full progress-fill" style="width: ${persenProgress}%"></div></div></div><p class="text-xs text-stone-500 line-clamp-1 italic">Tips: ${escapeHtml(notesClean || '-')}</p></div></div><div class="bg-stone-50/70 px-4 py-2.5 border-t border-stone-100 flex items-center justify-between text-[11px]">${siramText}<div class="flex flex-wrap gap-1 justify-end">${actionButtons}</div></div></div>`;
             });
             grid.innerHTML = html;
         }
@@ -458,14 +485,14 @@
                 let cardOpacity = "";
 
                 if(e.isPast) {
-                    badgeHTML = `<span class="bg-stone-200 text-stone-500 px-2 py-0.5 rounded-full text-[9px] font-black"><i class="fa-solid fa-check mr-1"></i>Selesai</span>`;
+                    badgeHTML = `<span class="bg-stone-200 text-stone-500 px-2 py-0.5 rounded-full text-[10px] font-black"><i class="fa-solid fa-check mr-1"></i>Selesai</span>`;
                     cardOpacity = "opacity-75";
                 } else if(diff === 0) {
-                    badgeHTML = `<span class="bg-rose-500 text-white px-2 py-0.5 rounded-full text-[9px] font-black animate-pulse">Hari Ini!</span>`;
+                    badgeHTML = `<span class="bg-rose-500 text-white px-2 py-0.5 rounded-full text-[10px] font-black animate-pulse">Hari Ini!</span>`;
                 } else if (diff === 1) {
-                    badgeHTML = `<span class="bg-amber-400 text-amber-950 px-2 py-0.5 rounded-full text-[9px] font-black">Besok</span>`;
+                    badgeHTML = `<span class="bg-amber-400 text-amber-950 px-2 py-0.5 rounded-full text-[10px] font-black">Besok</span>`;
                 } else {
-                    badgeHTML = `<span class="bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full text-[9px] font-black">${diff} Hari lagi</span>`;
+                    badgeHTML = `<span class="bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full text-[10px] font-black">${diff} Hari lagi</span>`;
                 }
                 
                 const tglFormat = e.date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
@@ -481,8 +508,8 @@
                             <h4 class="font-bold text-stone-800 text-xs">${escapeHtml(e.plant.plant_name)}</h4>
                             ${badgeHTML}
                         </div>
-                        <div class="text-[10px] text-stone-500 font-medium">Jadwal: ${e.title}</div>
-                        <div class="text-[9px] text-stone-400 mt-1.5"><i class="fa-solid fa-user text-stone-300 mr-1"></i>Milik: ${escapeHtml(e.plant.pemilik || 'Anonim')}</div>
+                        <div class="text-xs text-stone-500 font-medium">Jadwal: ${e.title}</div>
+                        <div class="text-[10px] text-stone-400 mt-1.5"><i class="fa-solid fa-user text-stone-300 mr-1"></i>Milik: ${escapeHtml(e.plant.pemilik || 'Anonim')}</div>
                     </div>
                 </div>`;
             });
@@ -497,7 +524,7 @@
             let html = '';
             filteredPlants.forEach(plant => {
                 const imgCadangan = "https://images.unsplash.com/photo-1595856417726-2d164506c9e0?auto=format&fit=crop&w=350&q=80";
-                html += `<div class="plant-card bg-white rounded-[2rem] shadow-md border border-amber-200 overflow-hidden flex flex-col justify-between"><div class="relative h-48 bg-stone-100 w-full overflow-hidden"><img src="${escapeHtml(plant.image_url || imgCadangan)}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onerror="this.src='${imgCadangan}'" loading="lazy"><span class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4 pt-12"><h4 class="font-black text-white text-sm leading-tight shadow-sm">${escapeHtml(plant.plant_name)}</h4><p class="text-[10px] text-amber-300 font-bold mt-1"><i class="fa-solid fa-crown mr-1"></i> Dipanen oleh: ${escapeHtml(plant.pemilik || 'Anonim')}</p></span><div class="absolute top-3 right-3 bg-amber-400 text-amber-950 px-3 py-1 rounded-full text-[10px] font-black shadow-md flex items-center space-x-1"><i class="fa-solid fa-star"></i> <span>Panen!</span></div><button onclick="bagikanKeWA('panen', '${escapeJsString(plant.plant_name)}')" class="absolute top-3 left-3 bg-emerald-600 text-white px-2.5 py-1.5 rounded-full text-[10px] font-bold shadow-md flex items-center space-x-1 hover:bg-emerald-700 btn-press"><i class="fa-brands fa-whatsapp text-xs"></i> <span>Bagikan</span></button></div></div>`;
+                html += `<div class="plant-card bg-white rounded-[2rem] shadow-md border border-amber-200 overflow-hidden flex flex-col justify-between"><div class="relative h-48 bg-stone-100 w-full overflow-hidden"><img src="${escapeHtml(plant.image_url || imgCadangan)}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onerror="this.src='${imgCadangan}'" loading="lazy"><span class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4 pt-12"><h4 class="font-black text-white text-sm leading-tight shadow-sm">${escapeHtml(plant.plant_name)}</h4><p class="text-xs text-amber-300 font-bold mt-1"><i class="fa-solid fa-crown mr-1"></i> Dipanen oleh: ${escapeHtml(plant.pemilik || 'Anonim')}</p></span><div class="absolute top-3 right-3 bg-amber-400 text-amber-950 px-3 py-1 rounded-full text-xs font-black shadow-md flex items-center space-x-1"><i class="fa-solid fa-star"></i> <span>Panen!</span></div><button onclick="bagikanKeWA('panen', '${escapeJsString(plant.plant_name)}')" class="absolute top-3 left-3 bg-emerald-600 text-white px-2.5 py-1.5 rounded-full text-xs font-bold shadow-md flex items-center space-x-1 hover:bg-emerald-700 btn-press"><i class="fa-brands fa-whatsapp text-xs"></i> <span>Bagikan</span></button></div></div>`;
             });
             grid.innerHTML = html;
         }
@@ -508,7 +535,7 @@
             let targets = allPlants.filter(p => p.status !== 'Panen' && (!p.last_watered || new Date(p.last_watered).toDateString() !== new Date().toDateString()));
             if (targets.length === 0) return listDiv.innerHTML = '<div class="text-center py-4 text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> Alhamdulillah! Semua tanaman komunitas sudah selesai disiram hari ini.</div>';
             let html = '';
-            targets.forEach(p => { html += `<div class="flex items-center justify-between p-2.5 bg-stone-50 rounded-xl border border-stone-100"><div class="pr-2"><h5 class="font-bold text-stone-800 leading-tight">${escapeHtml(p.plant_name)}</h5><p class="text-[10px] text-stone-500">Milik: <b class="text-emerald-700">${escapeHtml(p.pemilik || 'Anonim')}</b> • Media: ${escapeHtml(p.planting_medium || '-')}</p></div><button onclick="quickWater(${p.id}, true)" class="bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-[11px] flex items-center space-x-1.5 hover:bg-emerald-700 btn-press shadow-sm"><i class="fa-solid fa-shower"></i> <span>Siram</span></button></div>`; });
+            targets.forEach(p => { html += `<div class="flex items-center justify-between p-2.5 bg-stone-50 rounded-xl border border-stone-100"><div class="pr-2"><h5 class="font-bold text-stone-800 leading-tight">${escapeHtml(p.plant_name)}</h5><p class="text-xs text-stone-500">Milik: <b class="text-emerald-700">${escapeHtml(p.pemilik || 'Anonim')}</b> • Media: ${escapeHtml(p.planting_medium || '-')}</p></div><button onclick="quickWater(${p.id}, true)" class="bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-[11px] flex items-center space-x-1.5 hover:bg-emerald-700 btn-press shadow-sm"><i class="fa-solid fa-shower"></i> <span>Siram</span></button></div>`; });
             listDiv.innerHTML = html;
         }
 
@@ -550,8 +577,8 @@
                 if (chats.length === 0) return logs.innerHTML = '<p class="text-stone-400 p-2 text-center text-[11px]">Silakan Ibu, kalau ada yang ingin ditanyakan soal kebun, bisa ketik di sini...</p>';
                 let html = '';
                 chats.forEach(c => {
-                    if (c.is_ai) html += `<div class="max-w-[90%] flex flex-col mt-2 chat-bubble-enter"><span class="text-[9px] font-bold nyi-sari-badge ml-1">Nyi Sari</span><div class="bg-emerald-50 text-stone-700 p-3 rounded-2xl border border-emerald-100/60 leading-relaxed">${formatAiResponse(c.message)}</div></div>`;
-                    else html += `<div class="max-w-[90%] ml-auto text-right mt-2 chat-bubble-enter"><span class="text-[9px] font-bold text-emerald-700 mr-1">${escapeHtml(c.sender)}</span><div class="bg-white border border-emerald-200 text-stone-800 p-2.5 rounded-2xl text-left font-semibold shadow-sm">${escapeHtml(c.message)}</div></div>`;
+                    if (c.is_ai) html += `<div class="max-w-[90%] flex flex-col mt-2 chat-bubble-enter"><span class="text-[10px] font-bold nyi-sari-badge ml-1">Nyi Sari</span><div class="bg-emerald-50 text-stone-700 p-3 rounded-2xl border border-emerald-100/60 leading-relaxed">${formatAiResponse(c.message)}</div></div>`;
+                    else html += `<div class="max-w-[90%] ml-auto text-right mt-2 chat-bubble-enter"><span class="text-[10px] font-bold text-emerald-700 mr-1">${escapeHtml(c.sender)}</span><div class="bg-white border border-emerald-200 text-stone-800 p-2.5 rounded-2xl text-left font-semibold shadow-sm">${escapeHtml(c.message)}</div></div>`;
                 });
                 logs.innerHTML = html; logs.scrollTop = logs.scrollHeight;
             } catch (e) { logs.innerHTML = '<p class="text-stone-400 text-center py-4 text-[11px]">Riwayat obrolan sudah siap ditampilkan.</p>'; }
@@ -596,7 +623,7 @@
                 tunjukkanToast("Gagal tersambung ke Nyi Sari", "error");
                 const logs = document.getElementById('chatAiLogs');
                 if(logs) {
-                    logs.innerHTML += `<div class="max-w-[90%] flex flex-col mt-1 chat-bubble-enter"><span class="text-[9px] font-bold text-rose-700 ml-1">Sistem (Error)</span><div class="bg-rose-50 text-rose-800 p-2.5 rounded-2xl border border-rose-100 leading-relaxed font-semibold">Mohon maaf Ibu, Nyi Sari sedang tidak bisa dihubungi sebentar. Silakan dicoba lagi ya.</div></div>`;
+                    logs.innerHTML += `<div class="max-w-[90%] flex flex-col mt-1 chat-bubble-enter"><span class="text-[10px] font-bold text-rose-700 ml-1">Sistem (Error)</span><div class="bg-rose-50 text-rose-800 p-2.5 rounded-2xl border border-rose-100 leading-relaxed font-semibold">Mohon maaf Ibu, Nyi Sari sedang tidak bisa dihubungi sebentar. Silakan dicoba lagi ya.</div></div>`;
                     logs.scrollTop = logs.scrollHeight;
                 }
             } finally { btn.disabled = false; icon.classList.remove('hidden'); loading.classList.add('hidden'); }
@@ -629,31 +656,31 @@
         }
 
         // --- KOMPRESI GAMBAR CLIENT SIDE ---
-        function kompresiFileGambar(file) {
+        function kompresiFileGambar(file, maksByte = 1000000) {
             return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function(event) {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = function() {
+                if (!file || !file.type || !file.type.startsWith('image/')) return resolve(file);
+                if (file.size <= maksByte) return resolve(file);
+                const urlObjek = URL.createObjectURL(file);
+                const img = new Image();
+                img.onload = function() {
+                    let sisi = 1600; let kualitas = 0.85;
+                    function cobaLagi() {
+                        const skala = Math.min(1, sisi / Math.max(img.width, img.height));
                         const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 500; 
-                        let width = img.width;
-                        let height = img.height;
-                        if (width > MAX_WIDTH) {
-                            height *= MAX_WIDTH / width;
-                            width = MAX_WIDTH;
-                        }
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
+                        canvas.width = Math.max(1, Math.round(img.width * skala));
+                        canvas.height = Math.max(1, Math.round(img.height * skala));
+                        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
                         canvas.toBlob((blob) => {
-                            resolve(blob);
-                        }, 'image/jpeg', 0.6); 
-                    };
+                            if (blob && blob.size <= maksByte) { URL.revokeObjectURL(urlObjek); resolve(blob); }
+                            else if (kualitas > 0.5) { kualitas = Math.round((kualitas - 0.15) * 100) / 100; cobaLagi(); }
+                            else if (sisi > 640) { sisi = Math.round(sisi * 0.75); kualitas = 0.8; cobaLagi(); }
+                            else { URL.revokeObjectURL(urlObjek); resolve(blob || file); }
+                        }, 'image/jpeg', kualitas);
+                    }
+                    cobaLagi();
                 };
+                img.onerror = function() { URL.revokeObjectURL(urlObjek); resolve(file); };
+                img.src = urlObjek;
             });
         }
 
@@ -769,7 +796,7 @@
             const wadah = document.getElementById('detailPanenList'); if (!wadah) return;
             const rows = await muatCatatanPanen(plant.id);
             if (!rows.length) { wadah.innerHTML = '<p class="text-[11px] text-stone-400">Belum ada catatan panen untuk tanaman ini.</p>'; return; }
-            wadah.innerHTML = rows.map(r => `<div class="flex justify-between items-center bg-white border border-amber-100 rounded-xl px-2.5 py-1.5"><span class="font-bold text-stone-700">\u{1F9FA} ${escapeHtml(String(r.jumlah))} ${escapeHtml(r.satuan)}</span><span class="text-[10px] text-stone-400">${formatTanggalID(r.tanggal)}</span></div>`).join('');
+            wadah.innerHTML = rows.map(r => `<div class="flex justify-between items-center bg-white border border-amber-100 rounded-xl px-2.5 py-1.5"><span class="font-bold text-stone-700">\u{1F9FA} ${escapeHtml(String(r.jumlah))} ${escapeHtml(r.satuan)}</span><span class="text-xs text-stone-400">${formatTanggalID(r.tanggal)}</span></div>`).join('');
         }
 
         async function simpanHasilPanen(plantId) {
@@ -853,7 +880,7 @@
                     const tombol = bolehAtur ? (habis
                         ? `<button onclick="aturStokBenih(${b.id}, true)" class="bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-[11px] btn-press shrink-0">Ada Lagi</button>`
                         : `<button onclick="aturStokBenih(${b.id}, false)" class="bg-stone-100 text-stone-600 border border-stone-300 font-bold px-3 py-2 rounded-xl text-[11px] btn-press shrink-0">Tandai Habis</button>`) : '';
-                    return `<div class="flex items-center justify-between p-3 bg-stone-50 rounded-2xl border border-stone-100 ${habis ? 'opacity-60' : ''}"><div class="pr-2"><h5 class="font-bold text-stone-800 leading-tight">${escapeHtml(b.nama_benih)} ${habis ? '<span class="text-[9px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-black align-middle">HABIS</span>' : ''}</h5><p class="text-[10px] text-stone-500 mt-0.5">Stok: <b class="text-emerald-700">${escapeHtml(b.jumlah || '-')}</b> \u{2022} Milik: <b class="text-emerald-700">${escapeHtml(b.pemilik || 'Anonim')}</b></p>${b.catatan ? `<p class="text-[10px] text-stone-400 italic mt-0.5">${escapeHtml(b.catatan)}</p>` : ''}</div>${tombol}</div>`;
+                    return `<div class="flex items-center justify-between p-3 bg-stone-50 rounded-2xl border border-stone-100 ${habis ? 'opacity-60' : ''}"><div class="pr-2"><h5 class="font-bold text-stone-800 leading-tight">${escapeHtml(b.nama_benih)} ${habis ? '<span class="text-[10px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-black align-middle">HABIS</span>' : ''}</h5><p class="text-xs text-stone-500 mt-0.5">Stok: <b class="text-emerald-700">${escapeHtml(b.jumlah || '-')}</b> \u{2022} Milik: <b class="text-emerald-700">${escapeHtml(b.pemilik || 'Anonim')}</b></p>${b.catatan ? `<p class="text-xs text-stone-400 italic mt-0.5">${escapeHtml(b.catatan)}</p>` : ''}</div>${tombol}</div>`;
                 }).join('');
             } catch (e) { list.innerHTML = '<div class="text-center py-6 text-rose-500 font-medium">Bank benih belum bisa dimuat.</div>'; }
         }
@@ -907,7 +934,7 @@
             if (plant.est_panen_date) langkah.push({ ikon: '\u{1F9FA}', label: 'Perkiraan panen', tgl: plant.est_panen_date });
             const timelineHTML = langkah.length ? `<div class="bg-white border border-stone-200 rounded-xl p-2.5"><p class="font-extrabold text-stone-700 mb-1.5">\u{1F550} Garis Waktu Tumbuh</p><div class="space-y-1.5">${langkah.map(l => `<div class="flex justify-between text-[11px]"><span>${l.ikon} ${l.label}</span><b class="text-stone-500">${formatTanggalID(l.tgl)}</b></div>`).join('')}</div></div>` : '';
             const panenHTML = `<div class="bg-amber-50/60 border border-amber-100 rounded-xl p-2.5 space-y-2"><p class="font-extrabold text-stone-700">\u{1F9FA} Catat Hasil Panen</p><div class="flex space-x-1.5"><input type="number" id="panenJumlah" step="0.1" min="0" placeholder="Jumlah" class="w-20 bg-white border border-stone-300 rounded-lg px-2 py-1.5 text-[11px]"><select id="panenSatuan" class="bg-white border border-stone-300 rounded-lg px-2 py-1.5 text-[11px]"><option value="kg">kg</option><option value="ikat">ikat</option><option value="buah">buah</option><option value="pot">pot</option><option value="baskom">baskom</option></select><input type="date" id="panenTanggal" class="flex-1 bg-white border border-stone-300 rounded-lg px-2 py-1.5 text-[11px]" value="${new Date().toISOString().slice(0, 10)}"></div><button onclick="simpanHasilPanen(${plant.id})" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 rounded-xl btn-press">Simpan Hasil Panen</button><div id="detailPanenList" class="space-y-1.5"></div></div>`;
-            document.getElementById('detailBodyContent').innerHTML = `<div class="h-32 bg-stone-100 rounded-xl overflow-hidden border flex items-center justify-center">${detailImageHTML}</div><div class="space-y-1"><h4 class="font-extrabold text-stone-800 text-sm leading-tight">${escapeHtml(plant.plant_name)}</h4><p class="text-[10px] text-stone-400">Pemilik: <b class="text-emerald-600">${escapeHtml(plant.pemilik || 'Anonim')}</b> • Kategori: ${escapeHtml(cat)}</p></div><div class="bg-stone-50 p-2.5 rounded-xl border border-stone-100 text-[11px] leading-relaxed text-stone-600"><b>Panduan Perawatan:</b><br>${escapeHtml(notesClean || 'Belum ada catatan khusus.')}</div>` + timelineHTML + panenHTML;
+            document.getElementById('detailBodyContent').innerHTML = `<div class="h-32 bg-stone-100 rounded-xl overflow-hidden border flex items-center justify-center">${detailImageHTML}</div><div class="space-y-1"><h4 class="font-extrabold text-stone-800 text-sm leading-tight">${escapeHtml(plant.plant_name)}</h4><p class="text-xs text-stone-400">Pemilik: <b class="text-emerald-600">${escapeHtml(plant.pemilik || 'Anonim')}</b> • Kategori: ${escapeHtml(cat)}</p></div><div class="bg-stone-50 p-2.5 rounded-xl border border-stone-100 text-[11px] leading-relaxed text-stone-600"><b>Panduan Perawatan:</b><br>${escapeHtml(notesClean || 'Belum ada catatan khusus.')}</div>` + timelineHTML + panenHTML;
             bukaIsiPanenDetail(plant);
             const btnHapus = document.getElementById('detailHapusBtn');
             if(canManage) { btnHapus.classList.remove('hidden'); btnHapus.onclick = () => openModalHapus(); } else { btnHapus.classList.add('hidden'); }
@@ -920,10 +947,7 @@
         function switchTab(tId) {
             currentTab = tId; ['kebun', 'kalender', 'panen', 'tugas', 'nutrisi', 'ai', 'benih'].forEach(s => { const sec = document.getElementById(`section-${s}`); if(sec) sec.classList.add('hidden'); });
             const sec = document.getElementById(`section-${tId}`); if(sec) { sec.classList.remove('hidden'); sec.classList.remove('tab-section'); void sec.offsetWidth; sec.classList.add('tab-section'); }
-            ['kebun', 'kalender', 'panen', 'tugas', 'nutrisi', 'ai', 'benih'].forEach(t => { 
-                const btn = document.getElementById(`tab-${t}`);
-                if(btn) btn.className = t === tId ? "px-4 py-3 rounded-xl font-bold text-center bg-white text-emerald-900 shadow-sm transition-all flex items-center justify-center space-x-1 shrink-0" : "px-4 py-3 rounded-xl font-bold text-center text-emerald-100 hover:text-white transition-all flex items-center justify-center space-x-1 shrink-0"; 
-            });
+            document.querySelectorAll('.menu-tile').forEach(b => { b.classList.toggle('tile-aktif', b.getAttribute('data-tab') === tId); });
             if (tId === 'kalender') renderKalender();
             if (tId === 'tugas') renderWateringList();
             if (tId === 'benih') loadBankBenih();
@@ -1139,11 +1163,11 @@
             for (let line of lines) {
                 line = line.trim(); if (!line) continue;
                 if (line.startsWith("#") || line.startsWith("Kondisi:") || line.startsWith("Diagnosis:")) { resultHTML.push(`<h4 class="font-extrabold text-sm text-emerald-900 border-b border-emerald-100 pb-1.5 mb-2 mt-2 flex items-center space-x-1.5"><i class="fa-solid fa-seedling text-emerald-600"></i> <span>${line.replace(/[#*]/g, "").trim()}</span></h4>`); continue; }
-                if (line.match(/^\d+\.\s+\*\*([^*]+)\*\*:/) || line.match(/^\d+\.\s+([^*]+):/)) { let parts = line.replace(/^\d+\.\s*/, "").replace(/\*\*/g, "").trim().split(":"); resultHTML.push(`<div class="bg-white/80 border border-emerald-100 p-3 rounded-2xl my-2.5 shadow-sm space-y-1"><span class="font-black text-xs text-emerald-800 block flex items-center space-x-1.5"><i class="fa-solid fa-flask-vial text-lime-600"></i><span>${parts[0].trim()}</span></span><p class="text-[10.5px] text-stone-600 leading-relaxed">${parts.slice(1).join(":").trim()}</p></div>`); continue; }
+                if (line.match(/^\d+\.\s+\*\*([^*]+)\*\*:/) || line.match(/^\d+\.\s+([^*]+):/)) { let parts = line.replace(/^\d+\.\s*/, "").replace(/\*\*/g, "").trim().split(":"); resultHTML.push(`<div class="bg-white/80 border border-emerald-100 p-3 rounded-2xl my-2.5 shadow-sm space-y-1"><span class="font-black text-xs text-emerald-800 block flex items-center space-x-1.5"><i class="fa-solid fa-flask-vial text-lime-600"></i><span>${parts[0].trim()}</span></span><p class="text-xs text-stone-600 leading-relaxed">${parts.slice(1).join(":").trim()}</p></div>`); continue; }
                 if (line.startsWith("*") || line.startsWith("-")) {
                     let cleanBullet = line.replace(/^[*-\s]+/, "").trim();
-                    if (cleanBullet.startsWith("**Caranya:**") || cleanBullet.startsWith("Caranya:")) resultHTML.push(`<div class="bg-amber-50/70 border border-amber-200/50 p-2 rounded-xl my-1 text-[10.5px]"><b class="text-amber-800"><i class="fa-solid fa-circle-play mr-1"></i>Caranya:</b> ${cleanBullet.replace(/\*\*|:/g, "").replace(/^Caranya/i, "").trim()}</div>`);
-                    else if (cleanBullet.startsWith("**Kegunaan:**") || cleanBullet.startsWith("Kegunaan:")) resultHTML.push(`<div class="bg-blue-50/70 border border-blue-200/50 p-2 rounded-xl my-1 text-[10.5px]"><b class="text-blue-800"><i class="fa-solid fa-circle-check mr-1"></i>Manfaat:</b> ${cleanBullet.replace(/\*\*|:/g, "").replace(/^Kegunaan/i, "").trim()}</div>`);
+                    if (cleanBullet.startsWith("**Caranya:**") || cleanBullet.startsWith("Caranya:")) resultHTML.push(`<div class="bg-amber-50/70 border border-amber-200/50 p-2 rounded-xl my-1 text-xs"><b class="text-amber-800"><i class="fa-solid fa-circle-play mr-1"></i>Caranya:</b> ${cleanBullet.replace(/\*\*|:/g, "").replace(/^Caranya/i, "").trim()}</div>`);
+                    else if (cleanBullet.startsWith("**Kegunaan:**") || cleanBullet.startsWith("Kegunaan:")) resultHTML.push(`<div class="bg-blue-50/70 border border-blue-200/50 p-2 rounded-xl my-1 text-xs"><b class="text-blue-800"><i class="fa-solid fa-circle-check mr-1"></i>Manfaat:</b> ${cleanBullet.replace(/\*\*|:/g, "").replace(/^Kegunaan/i, "").trim()}</div>`);
                     else resultHTML.push(`<p class="pl-3.5 relative text-[11px] text-stone-600 leading-relaxed my-1"><span class="absolute left-1.5 text-emerald-500 font-bold">•</span>${cleanBullet.replace(/\*\*([^*]+)\*\*/g, '<b class="text-emerald-800 font-bold">$1</b>')}</p>`);
                     continue;
                 }
