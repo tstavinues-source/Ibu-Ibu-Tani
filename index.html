@@ -491,8 +491,6 @@
         function escapeJsString(s) { return escapeHtml(String(s ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\r\n|\r|\n/g, '\\n')); }
 
 
-        const OBFUSCATED_KEY_1 = [65, 81, 46, 65, 98, 56, 82, 78, 54, 76, 72, 81, 89, 65, 80, 52, 87, 88, 121, 117, 53, 121, 72, 55, 104, 95, 68, 112, 106, 79, 98, 112, 69, 77, 51, 55, 102, 85, 81, 115, 111, 48, 110, 69, 86, 65, 67, 70, 95, 122, 48, 70, 119];
-        const OBFUSCATED_KEY_2 = [65, 81, 46, 65, 98, 56, 82, 78, 54, 76, 121, 56, 80, 83, 81, 87, 121, 122, 111, 104, 81, 118, 106, 87, 111, 108, 82, 122, 108, 51, 74, 89, 52, 87, 85, 68, 78, 119, 51, 51, 52, 79, 80, 73, 115, 85, 80, 67, 100, 104, 98, 112, 81];
         
         let nyiSariStyle = 'sederhana'; // Default mode waleran singket
 
@@ -536,59 +534,31 @@
             else { if(body) body.style.fontSize = ""; if(label) label.innerText = "Huruf Besar"; }
         }
 
-        // --- GEMINI KEY HELPER FUNCTIONS ---
-        function dapatkanKunciPaten(index) {
-            return (index === 1 ? OBFUSCATED_KEY_1 : OBFUSCATED_KEY_2).map(c => String.fromCharCode(c)).join('');
-        }
+        // --- GEMINI LEWAT SERVER ---
+        // Kunci Gemini kini tersimpan sebagai rahasia di server Supabase dan tidak
+        // pernah ada di kode maupun peramban. Fungsi ini membersihkan sisa kunci
+        // lama dari penyimpanan lokal perangkat pengguna.
         function inisialisasiKunciDefaultLokal() {
-            if (!localStorage.getItem('ibu_kebun_gemini_key1')) localStorage.setItem('ibu_kebun_gemini_key1', dapatkanKunciPaten(1));
-            if (!localStorage.getItem('ibu_kebun_gemini_key2')) localStorage.setItem('ibu_kebun_gemini_key2', dapatkanKunciPaten(2));
-        }
-        function dapatkanApiKeyGemini() {
-            const key1 = localStorage.getItem('ibu_kebun_gemini_key1');
-            const key2 = localStorage.getItem('ibu_kebun_gemini_key2');
-            const keys = [key1, key2].filter(k => k && k.trim() !== "");
-            if (keys.length === 0) return "";
-            let idx = parseInt(localStorage.getItem('current_gemini_index') || "0", 10);
-            if (idx >= keys.length) idx = 0;
-            return keys[idx];
-        }
-        function rotasiApiKeyGemini() {
-            const key1 = localStorage.getItem('ibu_kebun_gemini_key1');
-            const key2 = localStorage.getItem('ibu_kebun_gemini_key2');
-            const keys = [key1, key2].filter(k => k && k.trim() !== "");
-            if (keys.length <= 1) return false;
-            let idx = parseInt(localStorage.getItem('current_gemini_index') || "0", 10);
-            localStorage.setItem('current_gemini_index', ((idx + 1) % keys.length).toString());
-            return true;
+            localStorage.removeItem('ibu_kebun_gemini_key1');
+            localStorage.removeItem('ibu_kebun_gemini_key2');
+            localStorage.removeItem('current_gemini_index');
         }
 
-        // PANGGIL GEMINI API (DILERESKEUN)
+        // PANGGIL GEMINI LEWAT FUNGSI SERVER (kunci tersimpan aman di server)
         async function panggilGeminiAPI(prompt, systemPrompt = "", fileData = null, jsonSchemaConfig = null) {
-            let retries = 3; let attempt = 0; const models = ["gemini-2.5-flash-preview-09-2025", "gemini-2.5-flash", "gemini-1.5-flash"];
-            while (attempt < retries) {
-                const gKey = dapatkanApiKeyGemini();
-                for (let model of models) {
-                    try {
-                        let payload; let endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${gKey}`;
-                        if (fileData) {
-                            payload = { contents: [{ role: "user", parts: [{ text: prompt }, { inlineData: { mimeType: fileData.mimeType, data: fileData.base64 } }]}]};
-                        } else if (Array.isArray(prompt)) {
-                            payload = { contents: prompt };
-                        } else {
-                            payload = { contents: [{ parts: [{ text: prompt }] }] };
-                        }
-                        
-                        if (systemPrompt) payload.systemInstruction = { parts: [{ text: systemPrompt }] };
-                        if (jsonSchemaConfig) payload.generationConfig = { responseMimeType: "application/json", responseSchema: jsonSchemaConfig };
-                        
-                        const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                        if (res.status === 429 || res.status === 400 || res.status === 403) { if (model === models[models.length - 1]) { rotasiApiKeyGemini(); attempt++; break; } continue; }
-                        if (!res.ok) throw new Error();
-                        const json = await res.json(); return json.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, Nyi Sari gagal menjawab.";
-                    } catch (error) { if (model === models[models.length - 1]) { rotasiApiKeyGemini(); attempt++; } }
-                }
-            } throw new Error("Sambungan terganggu.");
+            let payload;
+            if (fileData) {
+                payload = { contents: [{ role: "user", parts: [{ text: prompt }, { inlineData: { mimeType: fileData.mimeType, data: fileData.base64 } }]}]};
+            } else if (Array.isArray(prompt)) {
+                payload = { contents: prompt };
+            } else {
+                payload = { contents: [{ parts: [{ text: prompt }] }] };
+            }
+            if (systemPrompt) payload.systemInstruction = { parts: [{ text: systemPrompt }] };
+            if (jsonSchemaConfig) payload.generationConfig = { responseMimeType: "application/json", responseSchema: jsonSchemaConfig };
+            const res = await fetch(`${SUPABASE_BASE_URL}/functions/v1/nyi-sari`, { method: 'POST', headers: authHeaders, body: JSON.stringify(payload) });
+            if (!res.ok) throw new Error("Sambungan terganggu.");
+            const json = await res.json(); return json.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, Nyi Sari gagal menjawab.";
         }
 
         // --- AUTH ADMIN ---
