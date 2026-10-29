@@ -113,6 +113,8 @@
                 <button data-tab="dokter" onclick="bukaDokterDaun()" class="menu-tile flex flex-col items-center justify-center gap-1 py-3 rounded-2xl font-extrabold text-xs btn-press bg-rose-600 text-white shadow-md"><i class="fa-solid fa-leaf text-xl"></i><span>Periksa Daun</span></button>
             </nav>
 
+            <!-- SEKSYEN TANAMAN (KEBUN) -->
+            <div id="section-kebun" class="space-y-4 tab-section">
             <!-- Panel Cuaca -->
             <section id="panelCuacaIbu" class="bg-gradient-to-br from-sky-600 via-blue-600 to-indigo-700 text-white p-4 rounded-[2rem] shadow-md flex flex-col space-y-3 relative overflow-hidden">
                 <div class="absolute -top-8 -right-8 w-28 h-28 bg-white/5 rounded-full blur-xl"></div>
@@ -133,8 +135,8 @@
 
             <!-- Info Otomatis Kebun -->
             <section class="bg-white p-4 rounded-[2rem] shadow-sm border border-stone-200/60 space-y-3">
-                <h3 class="font-extrabold text-sm text-stone-800"><i class="fa-solid fa-gauge-high text-emerald-600 mr-1"></i> Info Kebun Hari Ini</h3>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+                <div class="flex items-center justify-between"><h3 class="font-extrabold text-sm text-stone-800"><i class="fa-solid fa-gauge-high text-emerald-600 mr-1"></i> Info Kebun Hari Ini</h3><button onclick="toggleInfoKebun()" id="btnToggleInfo" class="text-stone-400 btn-press px-2 py-1" title="Sembunyikan / tampilkan"><i class="fa-solid fa-chevron-up"></i></button></div>
+                <div id="infoKebunIsi" class="space-y-3"><div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
                     <div class="bg-sky-50 border border-sky-100 rounded-2xl p-2.5"><span class="text-[11px] text-sky-700 font-bold block uppercase">Angin</span><p id="indAngin" class="font-black text-stone-800 text-sm mt-0.5">-- km/jam</p></div>
                     <div class="bg-amber-50 border border-amber-100 rounded-2xl p-2.5"><span class="text-[11px] text-amber-700 font-bold block uppercase">Indeks UV</span><p id="indUV" class="font-black text-stone-800 text-sm mt-0.5">--</p></div>
                     <div class="bg-blue-50 border border-blue-100 rounded-2xl p-2.5"><span class="text-[11px] text-blue-700 font-bold block uppercase">Hujan Hari Ini</span><p id="indHujan" class="font-black text-stone-800 text-sm mt-0.5">-- • --</p></div>
@@ -144,7 +146,7 @@
                     <div class="bg-orange-50 border border-orange-100 rounded-2xl p-2.5"><span class="text-[11px] text-orange-700 font-bold block uppercase">Matahari</span><p id="indMatahari" class="font-black text-stone-800 text-sm mt-0.5">-- – --</p></div>
                     <div class="bg-lime-50 border border-lime-100 rounded-2xl p-2.5"><span class="text-[11px] text-lime-700 font-bold block uppercase">Panen ≤7 Hari</span><p id="indPanen" class="font-black text-stone-800 text-sm mt-0.5">-- tanaman</p></div>
                 </div>
-                <p class="text-[11px] text-stone-500">Risiko jamur adalah perkiraan dari kelembapan udara dan hujan — bukan kepastian. Fase bulan dan hari pasaran dihitung otomatis dari tanggal.</p>
+                <p class="text-[11px] text-stone-500">Risiko jamur adalah perkiraan dari kelembapan udara dan hujan — bukan kepastian. Fase bulan dan hari pasaran dihitung otomatis dari tanggal.</p></div>
             </section>
 
             <!-- Tombol Besar Periksa Daun -->
@@ -154,8 +156,6 @@
                 <i class="fa-solid fa-camera text-xl ml-auto shrink-0"></i>
             </button>
 
-            <!-- SEKSYEN TANAMAN (KEBUN) -->
-            <div id="section-kebun" class="space-y-4 tab-section">
                 <section class="grid grid-cols-4 gap-2 text-center">
                     <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-stone-200/50"><span class="text-[9px] text-stone-400 font-bold block uppercase">Semua Pot</span><p id="dashTotal" class="text-base font-black text-stone-800 mt-0.5">0</p></div>
                     <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-stone-200/50"><span class="text-[9px] text-amber-600 font-bold block uppercase">Semai</span><p id="dashSemai" class="text-base font-black text-amber-600 mt-0.5">0</p></div>
@@ -184,6 +184,22 @@
                         <div><h2 class="font-black text-lg">Kalender Pertanian</h2><p class="text-[11px] font-medium text-indigo-50">Jadwal kapan tanaman Ibu siap dipindah atau dipanen.</p></div>
                     </div>
                 </div>
+                <div class="bg-white p-4 rounded-3xl shadow-sm border border-stone-200/60 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <button onclick="geserBulanKalender(-1)" class="w-10 h-10 rounded-xl bg-stone-100 text-stone-600 btn-press flex items-center justify-center" title="Bulan sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+                        <h3 id="kalenderJudulBulan" class="font-extrabold text-sm text-stone-800">Bulan Ini</h3>
+                        <button onclick="geserBulanKalender(1)" class="w-10 h-10 rounded-xl bg-stone-100 text-stone-600 btn-press flex items-center justify-center" title="Bulan berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                    <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-stone-400"><span>Min</span><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span></div>
+                    <div id="kalenderGrid" class="grid grid-cols-7 gap-1"></div>
+                    <div class="flex flex-wrap gap-x-3 gap-y-1 text-[11px] font-bold text-stone-500">
+                        <span><span class="inline-block w-2 h-2 rounded-full bg-emerald-500 mr-1"></span>Tanam</span>
+                        <span><span class="inline-block w-2 h-2 rounded-full bg-blue-500 mr-1"></span>Tumbuh</span>
+                        <span><span class="inline-block w-2 h-2 rounded-full bg-lime-500 mr-1"></span>Pindah</span>
+                        <span><span class="inline-block w-2 h-2 rounded-full bg-amber-500 mr-1"></span>Panen</span>
+                    </div>
+                    <p id="kalenderInfoPilih" class="hidden text-xs text-stone-500 bg-indigo-50 border border-indigo-100 rounded-xl px-3 py-2"></p>
+                </div>
                 <div id="kalenderEmpty" class="hidden bg-white text-center p-8 rounded-3xl border border-stone-200/60 shadow-sm"><p class="text-xs text-stone-500 font-medium">Belum ada jadwal pertumbuhan ke depan.</p></div>
                 
                 <!-- Timeline Calendar -->
@@ -205,6 +221,17 @@
                 <div id="rekapPanenBulan" class="bg-white p-4 rounded-3xl shadow-sm border border-amber-200/70 text-xs text-stone-600">Sedang menghitung panen bulan ini...</div>
                 <button onclick="bagikanRekapWA()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-3xl shadow-md btn-press text-xs"><i class="fa-brands fa-whatsapp"></i> Bagikan Rekap Bulan Ini ke WhatsApp</button>
                 <div id="panenGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                <div class="bg-white p-4 rounded-3xl shadow-sm border border-stone-200/60 space-y-3">
+                    <div class="flex items-center space-x-2"><div class="w-9 h-9 bg-rose-100 rounded-xl flex items-center justify-center"><i class="fa-solid fa-users text-rose-600"></i></div><div><h2 class="font-extrabold text-sm text-stone-800 leading-tight">Ruang Komunitas</h2><p class="text-xs text-stone-500">Bagikan foto kebun dengan keterangan. Semua anggota bisa ikut membagikan.</p></div></div>
+                    <div class="flex items-center space-x-2 bg-stone-50 p-2.5 rounded-xl border border-stone-200">
+                        <label class="cursor-pointer bg-white border border-stone-300 text-stone-700 px-3 py-2 rounded-lg font-bold shadow-sm btn-press min-h-[44px] flex items-center shrink-0"><input type="file" id="komunitasImageFile" accept="image/*" class="hidden" onchange="previewKomunitasImage(event)"><i class="fa-solid fa-camera text-rose-500 mr-1"></i> Pilih Foto</label>
+                        <span id="komunitasImgLabel" class="text-xs text-stone-400 truncate">Belum ada foto</span>
+                    </div>
+                    <div class="hidden" id="komunitasImgContainer"><img id="komunitasImgPreview" class="w-full max-h-52 object-cover rounded-2xl border border-stone-200"></div>
+                    <input type="text" id="komunitasCaption" placeholder="Tulis keterangan foto ini..." class="w-full border border-stone-200 rounded-xl px-3 py-2.5 text-sm min-h-[44px]">
+                    <button onclick="unggahFotoKomunitas()" id="btnUnggahKomunitas" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-2xl shadow-md btn-press text-sm min-h-[48px]"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Bagikan ke Komunitas</button>
+                    <div id="komunitasGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+                </div>
             </div>
 
             <!-- SEKSYEN JADWAL SIRAM -->
@@ -244,7 +271,7 @@
             <!-- SEKSYEN AI -->
             <div id="section-ai" class="hidden space-y-4 tab-section">
                 <div class="flex space-x-2 bg-stone-200/60 p-1 rounded-xl text-xs">
-                    <button onclick="switchTab('ai')" class="flex-1 py-2.5 rounded-lg font-bold text-center bg-white text-stone-800 shadow-sm transition-all">Ruang Ngobrol Nyi Sari</button>
+                    <button onclick="switchSubAi('chat')" id="btn-sub-chat" class="flex-1 py-2.5 rounded-lg font-bold text-center bg-white text-stone-800 shadow-sm transition-all">Ruang Ngobrol Nyi Sari</button>
                     <button onclick="switchSubAi('doctor')" id="btn-sub-doctor" class="flex-1 py-2.5 rounded-lg font-bold text-center text-stone-600 transition-all">Periksa Penyakit Daun</button>
                 </div>
                 <div id="ai-sub-chat" class="bg-white p-4 rounded-3xl shadow-sm border border-stone-200/60 space-y-3">
