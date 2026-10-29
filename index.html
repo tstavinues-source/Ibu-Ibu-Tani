@@ -27,7 +27,9 @@
         <button onclick="openAdminPrompt()" class="absolute top-6 right-6 text-white/50 hover:text-white/90 text-2xl z-50 transition-colors btn-press" title="Portal Admin">
             <i class="fa-solid fa-user-shield"></i>
         </button>
-        <div class="bg-white/95 backdrop-blur-xl rounded-[2.5rem] p-6 max-w-sm w-full shadow-2xl border border-white/20 relative overflow-hidden">
+        <div class="bungkus-masuk">
+            <img src="https://zaueuvplevtgkthqifsk.supabase.co/storage/v1/object/public/images-bucket/nyi-sari-maskot-login.webp" onerror="this.onerror=null;this.src='https://zaueuvplevtgkthqifsk.supabase.co/storage/v1/object/public/images-bucket/nyi-sari-maskot-login.png'" alt="Nyi Sari, asisten pintar kebun" class="maskot-login">
+            <div class="bg-white/95 backdrop-blur-xl rounded-[2.5rem] p-6 max-w-sm w-full shadow-2xl border border-white/20 relative overflow-hidden kartu-masuk">
             <div class="absolute top-0 right-0 w-32 h-32 bg-lime-300/20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/4"></div>
             <div class="text-center space-y-2 mb-6 relative z-10">
                 <img src="https://zaueuvplevtgkthqifsk.supabase.co/storage/v1/object/public/images-bucket/logo-mekarwangi-v3-512.png" alt="Logo Mekarwangi — Kelompok Wanita Tani" class="logo-login">
@@ -49,6 +51,7 @@
                 <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Buat Kata Sandi</label><div class="relative"><input type="password" id="regPassword" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 pr-11 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Bebas, contoh: mawar123"><button type="button" onclick="intipSandi('regPassword', this)" class="absolute right-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 btn-press p-1.5" title="Tampilkan / sembunyikan kata sandi"><i class="fa-solid fa-eye text-sm"></i></button></div></div>
                 <button onclick="doRegister()" id="btnRegister" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 rounded-2xl shadow-md shadow-amber-500/20 btn-press transition-all flex items-center justify-center space-x-2 text-sm mt-2"><i class="fa-solid fa-user-plus"></i> <span id="btnRegText">Daftar Sekarang</span></button>
                 <div class="text-center mt-4"><button onclick="toggleAuthMode('login')" class="text-xs text-stone-500 font-bold hover:text-stone-700">Sudah daftar? Kembali ke menu Masuk.</button></div>
+            </div>
             </div>
         </div>
     </div>

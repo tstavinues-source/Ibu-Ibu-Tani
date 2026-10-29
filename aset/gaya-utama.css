@@ -109,3 +109,11 @@ body.tour-aktif .tab-section { animation: none !important; }
 /* Layar yang benar sejak gambar pertama (kelas sudah-login dari skrip awal di body) */
 html.sudah-login #authScreen { display: none !important; }
 html.sudah-login #appScreen { display: flex !important; }
+
+/* ===== Maskot Nyi Sari di layar masuk =====
+   Satu gambar utuh ditumpuk sederhana di atas kartu masuk (tanpa pelapisan):
+   tepi atas kartu sejajar garis siku maskot (86,3% tinggi gambar). */
+.bungkus-masuk { position: relative; width: 100%; max-width: 24rem; margin: auto; }
+.maskot-login { display: block; position: relative; z-index: 20; width: min(228px, 33vh); margin: 0 auto calc(min(228px, 33vh) * -0.166); filter: drop-shadow(0 10px 14px rgba(2, 44, 34, .35)); pointer-events: none; }
+#authScreen .kartu-masuk { padding-top: 62px; }
+.auth-container { overflow-y: auto; }
