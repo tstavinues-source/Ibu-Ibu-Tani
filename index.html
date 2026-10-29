@@ -24,6 +24,8 @@
                 <h1 class="font-black text-xl text-stone-800 tracking-tight">Catetan Kebon Ibu</h1>
                 <p class="text-xs font-black text-emerald-700" style="letter-spacing:.12em">MEKARWANGI &bull; KELOMPOK WANITA TANI</p>
                 <p class="text-xs text-stone-500 font-medium" id="authSubtitle">Silakan masukkan nama dan kata sandi Ibu.</p>
+                <p class="text-xs text-stone-500 leading-relaxed">Aplikasi catatan kebun bersama ibu-ibu <b class="text-stone-700">KWT Mekarwangi</b> — mencatat tanaman, jadwal siram &amp; pupuk, panen, dan berbagi foto kebun, dibantu asisten pintar <b class="text-stone-700">Nyi Sari</b>.</p>
+                <button onclick="bukaModalTentang()" class="mx-auto flex items-center space-x-1.5 border border-emerald-600 text-emerald-700 font-bold text-xs px-3.5 py-2 rounded-full btn-press bg-emerald-50"><i class="fa-solid fa-circle-info"></i><span>Kenali Aplikasi Ini</span></button>
             </div>
             <div id="loginForm" class="space-y-4 relative z-10">
                 <div><label class="block font-bold text-stone-600 text-xs mb-1.5 ml-1">Nama Pengguna (ID)</label><input type="text" id="loginName" class="w-full bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 text-xs focus:outline-emerald-500 focus:bg-white transition-all font-medium" placeholder="Contoh: Ibu Tati"></div>
@@ -92,6 +94,7 @@
                         </div>
                     </div>
                     <div class="flex items-center space-x-1">
+                        <button onclick="bukaModalTentang()" class="bg-white/10 hover:bg-white/20 btn-press p-2 rounded-xl border border-white/5" title="Tentang aplikasi ini"><i class="fa-solid fa-circle-info text-xs"></i></button>
                         <button onclick="mulaiTour()" class="bg-white/10 hover:bg-white/20 btn-press p-2 rounded-xl border border-white/5" title="Panduan fitur untuk pemula"><i class="fa-solid fa-compass text-xs"></i></button>
                         <button onclick="segarSemuaData()" class="bg-white/10 hover:bg-white/20 btn-press p-2 rounded-xl border border-white/5"><i class="fa-solid fa-rotate text-xs"></i></button>
                         <button onclick="openModalTambah()" class="bg-lime-300 hover:bg-lime-400 btn-press text-emerald-950 font-bold px-3 py-2 rounded-xl text-[11px] flex items-center space-x-1 shadow-md"><i class="fa-solid fa-plus text-xs"></i> <span>Tanam Baru</span></button>
@@ -553,6 +556,34 @@
     <!-- TOAST ALERT -->
     <div id="toast" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-stone-900 text-white text-[11px] px-3.5 py-2 rounded-full shadow-xl opacity-0 pointer-events-none transition-all duration-300 flex items-center space-x-1.5 z-[70]">
         <span id="toastIcon"></span> <span id="toastMessage">Sistem Sudah Siap</span>
+    </div>
+
+    <!-- ================= MODAL TENTANG APLIKASI ================= -->
+    <div id="modalTentang" class="fixed inset-0 bg-stone-900/60 modal-backdrop flex items-center justify-center p-4 z-50 hidden opacity-0 transition-opacity duration-200">
+        <div id="tentangKartu" class="bg-white rounded-[2rem] max-w-sm w-full p-6 shadow-2xl relative max-h-[88vh] overflow-y-auto">
+            <button onclick="tutupModalTentang()" class="absolute top-4 right-4 text-stone-400 btn-press" title="Tutup"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center space-y-2">
+                <img src="https://zaueuvplevtgkthqifsk.supabase.co/storage/v1/object/public/images-bucket/logo-mekarwangi-v3-512.png" alt="Logo Mekarwangi" class="logo-tentang">
+                <h3 class="font-black text-lg text-stone-800">Catetan Kebon Ibu</h3>
+                <p class="text-xs font-black text-emerald-700" style="letter-spacing:.1em">KWT MEKARWANGI &bull; KELOMPOK WANITA TANI</p>
+                <p class="text-[11px] text-stone-400 font-bold">Cibeuti &bull; Kawalu &bull; Kota Tasikmalaya</p>
+            </div>
+            <div class="text-xs text-stone-600 leading-relaxed space-y-3 mt-4">
+                <p><b class="text-stone-800">Apa aplikasi ini?</b><br>Catetan Kebon Ibu adalah buku catatan kebun bersama untuk ibu-ibu KWT Mekarwangi. Semua catatan tanaman kelompok tersimpan di sini, jadi tidak ada lagi jadwal siram, pupuk, atau panen yang terlewat.</p>
+                <p><b class="text-stone-800">Apa saja yang bisa dilakukan?</b></p>
+                <ul class="space-y-1.5">
+                    <li><i class="fa-solid fa-seedling text-emerald-600 mr-1.5"></i>Mencatat tanaman — jadwal tanamnya dibantu hitung otomatis</li>
+                    <li><i class="fa-solid fa-droplet text-blue-500 mr-1.5"></i>Pengingat menyiram dan memupuk</li>
+                    <li><i class="fa-solid fa-calendar-days text-indigo-500 mr-1.5"></i>Kalender jadwal kebun bersama</li>
+                    <li><i class="fa-solid fa-camera text-amber-500 mr-1.5"></i>Galeri panen dan ruang berbagi foto</li>
+                    <li><i class="fa-solid fa-box-open text-lime-600 mr-1.5"></i>Bank benih bersama, boleh saling meminta</li>
+                    <li><i class="fa-solid fa-cloud-sun text-sky-500 mr-1.5"></i>Cuaca dan saran perawatan setiap hari</li>
+                </ul>
+                <p><b class="text-stone-800">Siapa Nyi Sari?</b><br>Nyi Sari adalah asisten pintar di aplikasi ini. Ibu bisa bertanya cara merawat tanaman, meminta jadwal tanam dan pupuk dibuatkan otomatis, dan memeriksakan penyakit daun cukup lewat foto.</p>
+                <p><b class="text-stone-800">Siapa saja yang memakai?</b><br>Seluruh anggota KWT Mekarwangi. Catatannya bersifat bersama: tanaman yang dicatat satu ibu bisa dilihat dan dibantu rawat oleh ibu lainnya.</p>
+            </div>
+            <button onclick="tutupModalTentang()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-2xl shadow-md btn-press text-sm mt-5">Mengerti, Terima Kasih</button>
+        </div>
     </div>
 
     <!-- ================= PANDUAN FITUR (TUR PEMULA) ================= -->
