@@ -71,3 +71,37 @@
 
 /* Selama panduan berjalan, matikan animasi pudar tab agar layar tidak berkedip saat berpindah langkah */
 body.tour-aktif .tab-section { animation: none !important; }
+
+/* Pilihan periode pada modal ekspor */
+.ekspor-periode-btn { background: #fff; color: #44403c; border-color: #e7e5e4; }
+.ekspor-periode-aktif { background: #065f46 !important; color: #fff !important; border-color: #065f46 !important; }
+
+/* Laporan cetak / PDF */
+#laporanCetak { display: none; }
+#laporanCetak .lap-kop { display: flex; align-items: center; gap: 14px; border-bottom: 3px solid #065f46; padding-bottom: 10px; margin-bottom: 12px; }
+#laporanCetak .lap-logo { width: 84px; height: 84px; object-fit: contain; }
+#laporanCetak .lap-nama { font-size: 20px; font-weight: 900; color: #065f46; letter-spacing: .04em; }
+#laporanCetak .lap-sub { font-size: 11px; font-weight: 700; color: #57534e; }
+#laporanCetak .lap-judul { font-size: 15px; font-weight: 900; color: #1c1917; margin-top: 2px; }
+#laporanCetak .lap-meta { font-size: 10.5px; color: #78716c; }
+#laporanCetak .lap-ringkasan { display: flex; gap: 8px; margin: 10px 0 4px; }
+#laporanCetak .lap-kotak { flex: 1; border: 1.5px solid #a7f3d0; background: #ecfdf5; border-radius: 10px; padding: 8px 6px; text-align: center; }
+#laporanCetak .lap-kotak b { display: block; font-size: 16px; color: #065f46; }
+#laporanCetak .lap-kotak span { font-size: 9.5px; font-weight: 700; color: #57534e; text-transform: uppercase; }
+#laporanCetak h3.lap-h3 { font-size: 12.5px; font-weight: 900; color: #065f46; border-left: 4px solid #84cc16; padding-left: 7px; margin: 14px 0 6px; }
+#laporanCetak table.lap-tabel { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+#laporanCetak table.lap-tabel th { background: #065f46; color: #fff; text-align: left; padding: 5px 6px; font-size: 10px; }
+#laporanCetak table.lap-tabel td { border: 1px solid #e7e5e4; padding: 4.5px 6px; color: #292524; }
+#laporanCetak table.lap-tabel tr:nth-child(even) td { background: #fafaf9; }
+#laporanCetak .lap-total td { font-weight: 900; background: #ecfdf5 !important; }
+#laporanCetak .lap-bar-baris { display: flex; align-items: center; gap: 8px; font-size: 10.5px; margin: 3px 0; }
+#laporanCetak .lap-bar-label { width: 130px; font-weight: 700; color: #44403c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#laporanCetak .lap-bar-track { flex: 1; background: #f5f5f4; border-radius: 6px; height: 12px; }
+#laporanCetak .lap-bar-isi { background: linear-gradient(90deg, #059669, #84cc16); height: 12px; border-radius: 6px; }
+#laporanCetak .lap-bar-nilai { width: 64px; font-weight: 700; color: #065f46; }
+#laporanCetak .lap-kaki { margin-top: 16px; border-top: 1px solid #e7e5e4; padding-top: 6px; font-size: 9.5px; color: #a8a29e; text-align: center; }
+@media print {
+    body > *:not(#laporanCetak) { display: none !important; }
+    #laporanCetak { display: block !important; color: #1c1917; font-family: 'Plus Jakarta Sans', Arial, sans-serif; }
+    @page { margin: 11mm; }
+}

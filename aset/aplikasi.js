@@ -1478,6 +1478,120 @@
         }
         function fileToBase64(file) { return new Promise((res, rej) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => res(reader.result.split(',')[1]); reader.onerror = error => rej(error); }); }
 
+        // --- EKSPOR LAPORAN (PDF & EXCEL) ---
+        const BULAN_ID = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        const BULAN_ID_SINGKAT = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        let eksporPeriode = 'bulan-ini';
+        function bukaModalEkspor() { const m = document.getElementById('modalEkspor'); if (!m) return; pilihPeriodeEkspor(eksporPeriode); m.classList.remove('hidden'); setTimeout(() => m.classList.add('opacity-100'), 10); }
+        function tutupModalEkspor() { const m = document.getElementById('modalEkspor'); if (!m) return; m.classList.remove('opacity-100'); setTimeout(() => m.classList.add('hidden'), 200); }
+        function pilihPeriodeEkspor(p) { eksporPeriode = p; document.querySelectorAll('.ekspor-periode-btn').forEach(b => b.classList.toggle('ekspor-periode-aktif', b.getAttribute('data-periode') === p)); }
+        function rentangPeriodeEkspor() {
+            if (eksporPeriode === 'semua') return null;
+            const kini = new Date(); let y = kini.getFullYear(); let m = kini.getMonth();
+            if (eksporPeriode === 'bulan-lalu') { m -= 1; if (m < 0) { m = 11; y -= 1; } }
+            const akhirDate = new Date(y, m + 1, 0);
+            return { awal: y + '-' + String(m + 1).padStart(2, '0') + '-01', akhir: y + '-' + String(m + 1).padStart(2, '0') + '-' + String(akhirDate.getDate()).padStart(2, '0'), label: BULAN_ID[m] + ' ' + y };
+        }
+        function dalamPeriode(tanggal, rentang) { if (!rentang) return true; if (!tanggal) return false; const t = String(tanggal).slice(0, 10); return t >= rentang.awal && t <= rentang.akhir; }
+        function tglID(iso) { if (!iso) return '-'; const b = String(iso).slice(0, 10).split('-'); if (b.length !== 3) return String(iso); return parseInt(b[2], 10) + ' ' + (BULAN_ID_SINGKAT[parseInt(b[1], 10) - 1] || '') + ' ' + b[0]; }
+        function hariIniID() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+        async function ambilDataEkspor() {
+            const ambil = async (path) => { try { const r = await fetch(SUPABASE_BASE_URL + '/rest/v1/' + path, { headers: authHeaders }); if (!r.ok) return []; return await r.json(); } catch (e) { return []; } };
+            const hasil = await Promise.all([
+                ambil('plant_farm?select=plant_name,pemilik,status,sowing_date,est_panen_date,next_fertilize_date,pupuk_jenis&order=sowing_date.asc'),
+                ambil('catatan_panen?select=plant_name,pemilik,jumlah,satuan,tanggal&order=tanggal.asc'),
+                ambil('bank_benih?select=nama_benih,jumlah,pemilik,masih_ada&order=nama_benih.asc'),
+                ambil('photos?select=title,created_at&order=created_at.asc')
+            ]);
+            const rentang = rentangPeriodeEkspor();
+            return { rentang, labelPeriode: rentang ? rentang.label : 'Semua Data', tanaman: hasil[0].filter(p => dalamPeriode(p.sowing_date, rentang)), tanamanSemua: hasil[0], panen: hasil[1].filter(p => dalamPeriode(p.tanggal, rentang)), benih: hasil[2], foto: hasil[3].filter(f => dalamPeriode(f.created_at, rentang)) };
+        }
+        function totalPanenPerSatuan(panen) { const tot = {}; panen.forEach(r => { const s = r.satuan || 'satuan'; tot[s] = (tot[s] || 0) + (parseFloat(r.jumlah) || 0); }); return Object.keys(tot).map(s => (Math.round(tot[s] * 100) / 100) + ' ' + s).join(' \u2022 '); }
+        function jadwalTerdekatEkspor(tanamanSemua) {
+            const kini = hariIniID(); const batas = nambihDinten(kini, 14); const ev = [];
+            tanamanSemua.forEach(p => {
+                if (p.status === 'Panen' || p.status === 'Gagal') return;
+                if (p.next_fertilize_date && p.next_fertilize_date >= kini && p.next_fertilize_date <= batas) ev.push({ tanggal: p.next_fertilize_date, acara: 'Pemupukan ' + p.plant_name, ket: p.pupuk_jenis || 'Ikuti jadwal' });
+                if (p.est_panen_date && p.est_panen_date >= kini && p.est_panen_date <= batas) ev.push({ tanggal: p.est_panen_date, acara: 'Panen ' + p.plant_name, ket: 'Perkiraan panen' });
+            });
+            return ev.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
+        }
+        function aktivitasAnggotaEkspor(d) {
+            const peta = {};
+            const sentuh = (nama) => { if (!nama) return null; if (!peta[nama]) peta[nama] = { nama, tanaman: 0, panen: 0, foto: 0 }; return peta[nama]; };
+            d.tanaman.forEach(p => { const a = sentuh(p.pemilik); if (a) a.tanaman++; });
+            d.panen.forEach(r => { const a = sentuh(r.pemilik); if (a) a.panen++; });
+            d.foto.forEach(f => { const m = /^\[(.+?)\]/.exec(f.title || ''); const a = sentuh(m ? m[1] : null); if (a) a.foto++; });
+            return Object.values(peta).sort((a, b) => a.nama.localeCompare(b.nama));
+        }
+        function barisKosong(cols, teks) { return '<tr><td colspan="' + cols + '" style="text-align:center;color:#a8a29e">' + teks + '</td></tr>'; }
+        function bangunLaporanHtml(d) {
+            const jadwal = jadwalTerdekatEkspor(d.tanamanSemua); const anggota = aktivitasAnggotaEkspor(d);
+            const totalPanen = totalPanenPerSatuan(d.panen) || '0'; const benihAda = d.benih.filter(b => b.masih_ada).length;
+            let h = '';
+            h += '<div class="lap-kop"><img class="lap-logo" src="https://zaueuvplevtgkthqifsk.supabase.co/storage/v1/object/public/images-bucket/logo-mekarwangi-v3-512.png" alt="Logo Mekarwangi"><div><div class="lap-nama">MEKARWANGI</div><div class="lap-sub">KELOMPOK WANITA TANI (KWT) MEKARWANGI</div><div class="lap-judul">Laporan Kebun Komunitas</div><div class="lap-meta">Cibeuti, Kawalu, Kota Tasikmalaya &bull; Periode: ' + escapeHtml(d.labelPeriode) + ' &bull; Dibuat: ' + tglID(hariIniID()) + '</div></div></div>';
+            h += '<div class="lap-ringkasan"><div class="lap-kotak"><b>' + d.tanaman.length + '</b><span>Tanaman Periode Ini</span></div><div class="lap-kotak"><b>' + d.panen.length + '</b><span>Kejadian Panen</span></div><div class="lap-kotak"><b>' + escapeHtml(totalPanen) + '</b><span>Total Hasil Panen</span></div><div class="lap-kotak"><b>' + benihAda + '</b><span>Stok Benih Tersedia</span></div></div>';
+            h += '<h3 class="lap-h3">Daftar Tanaman</h3><table class="lap-tabel"><tr><th style="width:26px">No</th><th>Tanaman</th><th>Pemilik</th><th>Status</th><th>Ditanam</th><th>Perkiraan Panen</th></tr>';
+            h += d.tanaman.length ? d.tanaman.map((p, i) => '<tr><td>' + (i + 1) + '</td><td>' + escapeHtml(p.plant_name || '-') + '</td><td>' + escapeHtml(p.pemilik || '-') + '</td><td>' + escapeHtml(p.status || '-') + '</td><td>' + tglID(p.sowing_date) + '</td><td>' + tglID(p.est_panen_date) + '</td></tr>').join('') : barisKosong(6, 'Tidak ada tanaman pada periode ini.');
+            h += '</table>';
+            h += '<h3 class="lap-h3">Jadwal Terdekat (14 Hari)</h3><table class="lap-tabel"><tr><th style="width:110px">Tanggal</th><th>Acara</th><th>Keterangan</th></tr>';
+            h += jadwal.length ? jadwal.map(e => '<tr><td>' + tglID(e.tanggal) + '</td><td>' + escapeHtml(e.acara) + '</td><td>' + escapeHtml(e.ket) + '</td></tr>').join('') : barisKosong(3, 'Tidak ada jadwal dalam 14 hari ke depan.');
+            h += '</table>';
+            h += '<h3 class="lap-h3">Rekap Panen \u2014 ' + escapeHtml(d.labelPeriode) + '</h3><table class="lap-tabel"><tr><th>Tanaman</th><th>Pemilik</th><th style="width:80px">Jumlah</th><th style="width:70px">Satuan</th><th style="width:100px">Tanggal</th></tr>';
+            h += d.panen.length ? d.panen.map(r => '<tr><td>' + escapeHtml(r.plant_name || '-') + '</td><td>' + escapeHtml(r.pemilik || '-') + '</td><td>' + escapeHtml(String(r.jumlah)) + '</td><td>' + escapeHtml(r.satuan || '-') + '</td><td>' + tglID(r.tanggal) + '</td></tr>').join('') : barisKosong(5, 'Belum ada panen pada periode ini.');
+            if (d.panen.length) h += '<tr class="lap-total"><td colspan="2">Total Hasil Panen</td><td colspan="3">' + escapeHtml(totalPanenPerSatuan(d.panen)) + '</td></tr>';
+            h += '</table>';
+            const perTanaman = {};
+            d.panen.filter(r => (r.satuan || '').toLowerCase() === 'kg').forEach(r => { perTanaman[r.plant_name] = (perTanaman[r.plant_name] || 0) + (parseFloat(r.jumlah) || 0); });
+            const grafik = Object.keys(perTanaman).map(k => ({ nama: k, nilai: perTanaman[k] })).sort((a, b) => b.nilai - a.nilai).slice(0, 6);
+            if (grafik.length) { const maks = Math.max.apply(null, grafik.map(g => g.nilai)) || 1; h += '<div style="margin-top:8px">' + grafik.map(g => '<div class="lap-bar-baris"><div class="lap-bar-label">' + escapeHtml(g.nama) + '</div><div class="lap-bar-track"><div class="lap-bar-isi" style="width:' + Math.round(g.nilai / maks * 100) + '%"></div></div><div class="lap-bar-nilai">' + (Math.round(g.nilai * 100) / 100) + ' kg</div></div>').join('') + '</div>'; }
+            h += '<h3 class="lap-h3">Bank Benih</h3><table class="lap-tabel"><tr><th>Benih</th><th style="width:80px">Jumlah</th><th>Pemilik</th><th style="width:80px">Keadaan</th></tr>';
+            h += d.benih.length ? d.benih.map(b => '<tr><td>' + escapeHtml(b.nama_benih || '-') + '</td><td>' + escapeHtml(String(b.jumlah == null ? '-' : b.jumlah)) + '</td><td>' + escapeHtml(b.pemilik || '-') + '</td><td>' + (b.masih_ada ? 'Ada' : 'Habis') + '</td></tr>').join('') : barisKosong(4, 'Bank benih masih kosong.');
+            h += '</table>';
+            h += '<h3 class="lap-h3">Aktivitas Anggota</h3><table class="lap-tabel"><tr><th>Anggota</th><th style="width:110px">Tanaman Dicatat</th><th style="width:90px">Panen</th><th style="width:100px">Foto Dibagikan</th></tr>';
+            h += anggota.length ? anggota.map(a => '<tr><td>' + escapeHtml(a.nama) + '</td><td>' + a.tanaman + '</td><td>' + a.panen + '</td><td>' + a.foto + '</td></tr>').join('') : barisKosong(4, 'Belum ada aktivitas pada periode ini.');
+            h += '</table>';
+            h += '<div class="lap-kaki">Laporan ini dibuat otomatis dari aplikasi Catetan Kebon Ibu \u2014 KWT Mekarwangi, Kelompok Wanita Tani. Terima kasih untuk semua ibu yang merawat kebun.</div>';
+            document.getElementById('laporanCetak').innerHTML = h;
+        }
+        async function unduhPdfEkspor() {
+            tutupModalEkspor(); tunjukkanToast('Menyiapkan laporan PDF...', 'warning');
+            try { const d = await ambilDataEkspor(); bangunLaporanHtml(d); setTimeout(() => window.print(), 500); }
+            catch (e) { tunjukkanToast('Gagal menyiapkan laporan. Periksa sambungan internet Ibu.', 'error'); }
+        }
+        function buatLembarTabel(X, wb, namaSheet, judul, headers, rows, widths) {
+            const aoa = [[judul], headers].concat(rows);
+            const ws = X.utils.aoa_to_sheet(aoa);
+            ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: headers.length - 1 } }];
+            ws['!cols'] = widths.map(w => ({ wch: w }));
+            if (rows.length) ws['!autofilter'] = { ref: 'A2:' + X.utils.encode_col(headers.length - 1) + (rows.length + 2) };
+            const gayaJudul = { font: { bold: true, sz: 13, color: { rgb: '065F46' } } };
+            const gayaKepala = { font: { bold: true, color: { rgb: 'FFFFFF' } }, fill: { fgColor: { rgb: '065F46' } }, alignment: { horizontal: 'center', vertical: 'center' } };
+            const gayaGaris = { fill: { fgColor: { rgb: 'F5F5F4' } } };
+            for (let c = 0; c < headers.length; c++) {
+                const selJudul = ws[X.utils.encode_cell({ r: 0, c: 0 })]; if (c === 0 && selJudul) selJudul.s = gayaJudul;
+                const selKepala = ws[X.utils.encode_cell({ r: 1, c })]; if (selKepala) selKepala.s = gayaKepala;
+                for (let r = 0; r < rows.length; r++) { if (r % 2 === 1) { const sel = ws[X.utils.encode_cell({ r: r + 2, c })]; if (sel) sel.s = gayaGaris; } }
+            }
+            X.utils.book_append_sheet(wb, ws, namaSheet);
+        }
+        async function unduhExcelEkspor() {
+            if (typeof XLSX === 'undefined') { tunjukkanToast('Pustaka Excel belum termuat. Periksa sambungan internet lalu coba lagi.', 'error'); return; }
+            tutupModalEkspor(); tunjukkanToast('Menyiapkan berkas Excel...', 'warning');
+            try {
+                const d = await ambilDataEkspor();
+                const wb = XLSX.utils.book_new();
+                const judulUmum = 'Laporan KWT Mekarwangi \u2014 ' + d.labelPeriode;
+                buatLembarTabel(XLSX, wb, 'Tanaman', judulUmum + ' \u2022 Daftar Tanaman', ['No', 'Tanaman', 'Pemilik', 'Status', 'Ditanam', 'Perkiraan Panen'], d.tanaman.map((p, i) => [i + 1, p.plant_name || '-', p.pemilik || '-', p.status || '-', tglID(p.sowing_date), tglID(p.est_panen_date)]), [6, 26, 18, 15, 14, 16]);
+                buatLembarTabel(XLSX, wb, 'Panen', judulUmum + ' \u2022 Rekap Panen', ['Tanaman', 'Pemilik', 'Jumlah', 'Satuan', 'Tanggal'], d.panen.map(r => [r.plant_name || '-', r.pemilik || '-', parseFloat(r.jumlah) || 0, r.satuan || '-', tglID(r.tanggal)]), [26, 18, 10, 10, 14]);
+                buatLembarTabel(XLSX, wb, 'Bank Benih', judulUmum + ' \u2022 Bank Benih', ['Benih', 'Jumlah', 'Pemilik', 'Keadaan'], d.benih.map(b => [b.nama_benih || '-', b.jumlah == null ? '-' : b.jumlah, b.pemilik || '-', b.masih_ada ? 'Ada' : 'Habis']), [26, 10, 18, 12]);
+                const anggota = aktivitasAnggotaEkspor(d);
+                buatLembarTabel(XLSX, wb, 'Aktivitas Anggota', judulUmum + ' \u2022 Aktivitas Anggota', ['Anggota', 'Tanaman Dicatat', 'Panen', 'Foto Dibagikan'], anggota.map(a => [a.nama, a.tanaman, a.panen, a.foto]), [22, 16, 10, 15]);
+                XLSX.writeFile(wb, 'Laporan-KWT-Mekarwangi-' + d.labelPeriode.replace(/\s+/g, '-') + '.xlsx');
+                tunjukkanToast('Berkas Excel berhasil dibuat.', 'success');
+            } catch (e) { tunjukkanToast('Gagal membuat berkas Excel. Periksa sambungan internet Ibu.', 'error'); }
+        }
+
         // --- MODAL TENTANG APLIKASI ---
         function bukaModalTentang() { const m = document.getElementById('modalTentang'); if (!m) return; m.classList.remove('hidden'); setTimeout(() => m.classList.add('opacity-100'), 10); }
         function tutupModalTentang() { const m = document.getElementById('modalTentang'); if (!m) return; m.classList.remove('opacity-100'); setTimeout(() => m.classList.add('hidden'), 200); }
@@ -1495,6 +1609,7 @@
             { tab: 'kebun', target: '#infoKebunIsi', judul: 'Info Kebun Hari Ini', teks: 'Kotak-kotak ini berisi info cepat: angin, sinar matahari (UV), hujan, risiko jamur pada tanaman, fase bulan, hari pasaran, dan tanaman yang sebentar lagi panen.' },
             { tab: 'kebun', target: '#pupukReminder', judul: 'Pengingat Pupuk', teks: 'Kalau ada tanaman yang sudah waktunya dipupuk, pengingat ungu ini muncul di sini. Setelah memupuk, ketuk tombol Sudah Dipupuk — jadwal berikutnya akan maju sendiri.' },
             { tab: 'kebun', target: '#btnSiramSemua', judul: 'Siram Semua Tanaman', teks: 'Tidak perlu menyiram satu per satu dari daftar: tombol ini menyiram semua tanaman yang belum disiram hari ini, sekaligus. Praktis!' },
+            { tab: 'kebun', target: '#btnEksporLaporan', judul: 'Ekspor Laporan', teks: 'Tombol ini menarik data kebun menjadi laporan resmi KWT Mekarwangi. Ibu bisa memilih bulannya, lalu mengunduhnya sebagai PDF untuk dicetak atau Excel berbentuk tabel — cocok untuk laporan kelompok.' },
             { tab: 'kebun', target: '#plantGrid', alt: '#plantEmpty', judul: 'Kartu Tanaman', teks: 'Setiap tanaman tampil sebagai kartu. Di kartu ada tombol Siram, Bagikan, dan Detail. Garis warna di sisi kartu menunjukkan keadaannya: masih semai, sedang tumbuh, atau siap panen.' },
             { tab: 'kalender', target: '#kalenderGrid', judul: 'Kalender Pertanian', teks: 'Titik berwarna pada tanggal adalah jadwal kebun: hijau tanam, biru tumbuh, kuning panen, ungu pupuk. Ketuk tanggalnya untuk melihat daftar jadwal di bawah kalender.' },
             { tab: 'panen', target: 'button[onclick="bagikanRekapWA()"]', judul: 'Galeri Panen & Rekap', teks: 'Di halaman Galeri, hasil panen ibu-ibu terkumpul. Tombol hijau ini membagikan rekap panen bulan ini ke grup WhatsApp.' },

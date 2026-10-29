@@ -163,6 +163,7 @@
 
                 <section id="pupukReminder" class="hidden bg-violet-600 text-white p-3.5 rounded-3xl shadow-md text-xs font-bold leading-relaxed"></section>
                 <button id="btnSiramSemua" onclick="siramSemuaTanaman()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3.5 rounded-3xl shadow-md btn-press text-sm min-h-[52px]"><i class="fa-solid fa-shower mr-1"></i> Siram Semua Tanaman</button>
+                <button id="btnEksporLaporan" onclick="bukaModalEkspor()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold py-3.5 rounded-3xl shadow-md btn-press text-sm min-h-[52px]"><i class="fa-solid fa-file-export mr-1"></i> Ekspor Laporan (PDF / Excel)</button>
                 <section class="grid grid-cols-4 gap-2 text-center">
                     <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-stone-200/50"><span class="text-[9px] text-stone-400 font-bold block uppercase">Semua Pot</span><p id="dashTotal" class="text-base font-black text-stone-800 mt-0.5">0</p></div>
                     <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-stone-200/50"><span class="text-[9px] text-amber-600 font-bold block uppercase">Semai</span><p id="dashSemai" class="text-base font-black text-amber-600 mt-0.5">0</p></div>
@@ -586,6 +587,33 @@
         </div>
     </div>
 
+    <!-- ================= MODAL EKSPOR LAPORAN ================= -->
+    <div id="modalEkspor" class="fixed inset-0 bg-stone-900/60 modal-backdrop flex items-center justify-center p-4 z-50 hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-[2rem] max-w-sm w-full p-6 shadow-2xl relative space-y-4">
+            <button onclick="tutupModalEkspor()" class="absolute top-4 right-4 text-stone-400 btn-press" title="Tutup"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 bg-emerald-50 text-emerald-700 rounded-full flex items-center justify-center mx-auto text-xl"><i class="fa-solid fa-file-export"></i></div>
+                <h3 class="font-black text-base text-stone-800">Ekspor Laporan Kebun</h3>
+                <p class="text-xs text-stone-500">Tarik data kebun menjadi berkas laporan resmi KWT Mekarwangi.</p>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-stone-600 mb-1.5 ml-1">Pilih Periode</p>
+                <div class="grid grid-cols-3 gap-1.5" id="eksporPeriodePilihan">
+                    <button data-periode="bulan-ini" onclick="pilihPeriodeEkspor('bulan-ini')" class="ekspor-periode-btn py-2.5 rounded-xl font-bold text-xs btn-press border">Bulan Ini</button>
+                    <button data-periode="bulan-lalu" onclick="pilihPeriodeEkspor('bulan-lalu')" class="ekspor-periode-btn py-2.5 rounded-xl font-bold text-xs btn-press border">Bulan Lalu</button>
+                    <button data-periode="semua" onclick="pilihPeriodeEkspor('semua')" class="ekspor-periode-btn py-2.5 rounded-xl font-bold text-xs btn-press border">Semua Data</button>
+                </div>
+                <p class="text-[11px] text-stone-400 mt-2 leading-relaxed">Daftar tanaman &amp; panen disaring menurut periode. Bank benih dan jadwal terdekat selalu keadaan terbaru.</p>
+            </div>
+            <button onclick="unduhPdfEkspor()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3.5 rounded-2xl shadow-md btn-press text-sm min-h-[52px]"><i class="fa-solid fa-file-pdf mr-1"></i> Unduh PDF</button>
+            <button onclick="unduhExcelEkspor()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl shadow-md btn-press text-sm min-h-[52px]"><i class="fa-solid fa-file-excel mr-1"></i> Unduh Excel (Tabel)</button>
+            <p class="text-[11px] text-stone-400 text-center leading-relaxed">Untuk PDF: setelah pratinjau cetak terbuka, pilih <b>Simpan sebagai PDF</b>. Untuk Excel: berkas tabel .xlsx langsung terunduh.</p>
+        </div>
+    </div>
+
+    <!-- Wadah laporan khusus cetak/PDF (diisi otomatis saat ekspor) -->
+    <div id="laporanCetak"></div>
+
     <!-- ================= PANDUAN FITUR (TUR PEMULA) ================= -->
     <div id="tourLayar" class="hidden"></div>
     <div id="tourSorot" class="hidden"></div>
@@ -602,6 +630,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
     <script src="aset/aplikasi.js"></script>
 </body>
 </html>
