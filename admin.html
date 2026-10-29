@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #faf6ee; color: #1c1917; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .btn-press:active { transform: scale(0.95); }
@@ -20,20 +20,20 @@
 <body class="min-h-screen flex flex-col">
 
     <!-- SCREEN PROTEKSI KATA SANDI JIKA BYPASS URL -->
-    <div id="authOverlay" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
+    <div id="authOverlay" class="fixed inset-0 bg-emerald-950 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4">
             <div class="w-16 h-16 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center mx-auto text-2xl"><i class="fa-solid fa-lock"></i></div>
             <h2 class="font-black text-xl text-slate-800">Verifikasi Admin</h2>
             <p class="text-xs text-slate-500">Punten lebetkeun deui sandi admin pikeun mastikeun kaamanan.</p>
             <input type="password" id="fallbackPassword" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-slate-500 text-center tracking-widest" placeholder="Sandi Admin">
-            <button onclick="checkFallbackAuth()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl shadow-md btn-press transition-all">Lajengkeun</button>
+            <button onclick="checkFallbackAuth()" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-3 rounded-xl shadow-md btn-press transition-all">Lajengkeun</button>
             <button onclick="window.location.href='index.html'" class="w-full text-xs text-slate-500 font-bold hover:text-slate-700 underline pt-2">Uih ka Aplikasi Utama</button>
         </div>
     </div>
 
     <!-- MAIN APP SCREEN -->
     <div id="mainAdmin" class="hidden flex-1 flex flex-col">
-        <header class="bg-slate-900 text-white p-4 shadow-lg sticky top-0 z-40">
+        <header class="bg-emerald-950 text-white p-4 shadow-lg sticky top-0 z-40">
             <div class="max-w-4xl mx-auto flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <div class="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center"><i class="fa-solid fa-user-shield text-emerald-400"></i></div>
