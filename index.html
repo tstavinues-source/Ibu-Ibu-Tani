@@ -594,9 +594,15 @@
             if(m) { m.classList.remove('hidden'); setTimeout(() => m.classList.add('opacity-100'), 10); }
         }
         function closeAdminPrompt() { const m = document.getElementById('adminAuthModal'); if(m) { m.classList.remove('opacity-100'); setTimeout(() => m.classList.add('hidden'), 200); } }
-        function verifyAdmin() {
-            if(document.getElementById('adminPasswordInput').value === "Mekarwangi1") { sessionStorage.setItem('admin_auth_kebun', 'true'); window.location.href = "admin.html"; } 
-            else { tunjukkanToast("Hapunten, sandi admin lepat!", "error"); }
+        async function verifyAdmin() {
+            const pwd = document.getElementById('adminPasswordInput').value;
+            if (!pwd) return tunjukkanToast("Punten eusian sandi admin!", "error");
+            try {
+                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/rpc/cek_admin`, { method: 'POST', headers: authHeaders, body: JSON.stringify({ p_sandi: pwd }) });
+                const leres = res.ok ? await res.json() : false;
+                if (leres === true) { sessionStorage.setItem('admin_auth_kebun', 'true'); sessionStorage.setItem('admin_sandi_kebun', pwd); window.location.href = "admin.html"; }
+                else { tunjukkanToast("Hapunten, sandi admin lepat!", "error"); }
+            } catch (e) { tunjukkanToast("Teu tiasa nyambung kana server.", "error"); }
         }
 
         // --- AUTHENTICATION USER ---
@@ -629,24 +635,13 @@
             const btn = document.getElementById('btnRegister'); const btnText = document.getElementById('btnRegText');
             if(btn) btn.disabled = true; if(btnText) btnText.innerText = "Nuju Mariksa...";
             try {
-                const checkRes = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengguna_kebun?nama_panggero=eq.${encodeURIComponent(name)}`, { headers: authHeaders });
-                if (!checkRes.ok) throw new Error("Gagal nyambung kana Supabase. Parantos di-disable RLS-na Ibu?");
-                const checkData = await checkRes.json();
-                if (checkData.length > 0) throw new Error("Nami ieu parantos dianggo ku ibu sanés.");
-                
-                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengguna_kebun`, { method: 'POST', headers: { ...authHeaders, 'Prefer': 'return=representation' }, body: JSON.stringify({ nama_panggero: name, sandi: password, peran: 'Anggota' }) });
-                if (!res.ok) { const errInfo = await res.json().catch(()=>({})); throw new Error(errInfo.message || "Gagal ngadamel akun kana server."); }
+                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/rpc/daftar_pengguna`, { method: 'POST', headers: authHeaders, body: JSON.stringify({ p_nama: name, p_sandi: password }) });
+                if (!res.ok) throw new Error("Gagal nyambung kana Supabase.");
+                const hasilDaftar = await res.json();
+                if (!hasilDaftar.sukses) throw new Error(hasilDaftar.pesan || "Gagal ngadamel akun kana server.");
                 
                 localStorage.setItem('ibu_kebun_user', name); 
-                localStorage.setItem('ibu_kebun_role', 'Anggota');
-                
-                try {
-                    await fetch(`${SUPABASE_BASE_URL}/rest/v1/log_masuk_kebun`, {
-                        method: 'POST',
-                        headers: authHeaders,
-                        body: JSON.stringify({ nama_penggero: name, kaping_masuk: new Date().toISOString() })
-                    });
-                } catch (e) { console.log("Gagal nyerat log masuk:", e); }
+                localStorage.setItem('ibu_kebun_role', hasilDaftar.peran || 'Anggota');
 
                 tunjukkanToast("Hatur nuhun, akun parantos suksés didamel!", "success"); pariksaStatusLogin();
             } catch (err) { tununjukkanToast("Pendaftaran Gagal: " + err.message, "error"); } 
@@ -659,21 +654,13 @@
             const btn = document.getElementById('btnLogin'); const btnText = document.getElementById('btnLoginText');
             if(btn) btn.disabled = true; if(btnText) btnText.innerText = "Nuju Lebet...";
             try {
-                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/pengguna_kebun?nama_panggero=eq.${encodeURIComponent(name)}&sandi=eq.${encodeURIComponent(password)}`, { headers: authHeaders });
+                const res = await fetch(`${SUPABASE_BASE_URL}/rest/v1/rpc/masuk_pengguna`, { method: 'POST', headers: authHeaders, body: JSON.stringify({ p_nama: name, p_sandi: password }) });
                 if (!res.ok) throw new Error("Teu tiasa nyambung kana database.");
-                const data = await res.json();
-                if (data.length === 0) throw new Error("Nami atanapi sandi anu dilebetkeun lepat.");
+                const hasilMasuk = await res.json();
+                if (!hasilMasuk.sukses) throw new Error("Nami atanapi sandi anu dilebetkeun lepat.");
                 
                 localStorage.setItem('ibu_kebun_user', name); 
-                localStorage.setItem('ibu_kebun_role', data[0].peran || 'Anggota');
-
-                try {
-                    await fetch(`${SUPABASE_BASE_URL}/rest/v1/log_masuk_kebun`, {
-                        method: 'POST',
-                        headers: authHeaders,
-                        body: JSON.stringify({ nama_penggero: name, kaping_masuk: new Date().toISOString() })
-                    });
-                } catch (e) { console.log("Gagal nyerat log masuk:", e); }
+                localStorage.setItem('ibu_kebun_role', hasilMasuk.peran || 'Anggota');
 
                 tunjukkanToast("Suksés lebet! Wilujeng sumping.", "success"); pariksaStatusLogin();
             } catch (err) { tununjukkanToast("Login Gagal: " + err.message, "error"); } 
