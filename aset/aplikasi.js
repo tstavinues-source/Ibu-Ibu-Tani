@@ -191,7 +191,7 @@
                 const as = document.getElementById('authScreen'); if(as) as.classList.add('hidden'); 
                 const aps = document.getElementById('appScreen'); if(aps) aps.classList.remove('hidden');
                 const sd = document.getElementById('formSowingDate'); if(sd) sd.value = new Date().toISOString().split('T')[0];
-                segarSemuaData(); startJamSapaan();
+                segarSemuaData(); startJamSapaan(); mungkinMulaiTour();
             } else {
                 const aps = document.getElementById('appScreen'); if(aps) aps.classList.add('hidden'); 
                 const as = document.getElementById('authScreen'); if(as) as.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
@@ -1475,3 +1475,65 @@
             } return `<div class="space-y-2.5 font-medium">${resultHTML.join("")}</div>`;
         }
         function fileToBase64(file) { return new Promise((res, rej) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => res(reader.result.split(',')[1]); reader.onerror = error => rej(error); }); }
+
+        // --- PANDUAN FITUR UNTUK PEMULA (tur penunjuk antar-fitur) ---
+        const LANGKAH_TOUR = [
+            { judul: 'Selamat Datang di Catetan Kebon Ibu! 🌿', teks: 'Aplikasi ini membantu Ibu mencatat tanaman, jadwal siram dan pupuk, sampai panen. Ikuti panduan singkat ini — penunjuknya berjalan sendiri dari satu fitur ke fitur lain. Tekan Lanjut untuk mulai.' },
+            { tab: 'kebun', target: 'nav[aria-label="Menu utama"]', judul: 'Menu Utama', teks: 'Delapan tombol berwarna ini adalah jalan ke semua fitur: Tanaman, Kalender, Galeri, Siram, Nutrisi, Benih, Nyi Sari, dan Periksa Daun. Ketuk salah satu untuk membuka halamannya.' },
+            { tab: 'kebun', target: 'button[onclick="openModalTambah()"]', judul: 'Tombol Tanam Baru', teks: 'Baru menanam sesuatu? Ketuk tombol ini untuk mencatatnya. Di dalam formulir ada tombol Tanya AI yang membantu mengisi jadwal tanam dan pupuknya secara otomatis.' },
+            { tab: 'kebun', target: 'div[title="Ukuran tulisan"]', judul: 'Ukuran Tulisan', teks: 'Tulisan terasa kecil? Ketuk A+ untuk memperbesar dan A- untuk memperkecil. Pilih yang paling nyaman untuk mata Ibu.' },
+            { tab: 'kebun', target: '#panelCuacaIbu', judul: 'Cuaca & Saran Siram', teks: 'Di sini ada prakiraan cuaca di lokasi kebun Ibu, lengkap dengan saran: hari ini perlu menyiram atau boleh libur. Lokasinya bisa diganti lewat tombol Ubah Lokasi.' },
+            { tab: 'kebun', target: '#infoKebunIsi', judul: 'Info Kebun Hari Ini', teks: 'Kotak-kotak ini berisi info cepat: angin, sinar matahari (UV), hujan, risiko jamur pada tanaman, fase bulan, hari pasaran, dan tanaman yang sebentar lagi panen.' },
+            { tab: 'kebun', target: '#pupukReminder', judul: 'Pengingat Pupuk', teks: 'Kalau ada tanaman yang sudah waktunya dipupuk, pengingat ungu ini muncul di sini. Setelah memupuk, ketuk tombol Sudah Dipupuk — jadwal berikutnya akan maju sendiri.' },
+            { tab: 'kebun', target: '#btnSiramSemua', judul: 'Siram Semua Tanaman', teks: 'Tidak perlu menyiram satu per satu dari daftar: tombol ini menyiram semua tanaman yang belum disiram hari ini, sekaligus. Praktis!' },
+            { tab: 'kebun', target: '#plantGrid', alt: '#plantEmpty', judul: 'Kartu Tanaman', teks: 'Setiap tanaman tampil sebagai kartu. Di kartu ada tombol Siram, Bagikan, dan Detail. Garis warna di sisi kartu menunjukkan keadaannya: masih semai, sedang tumbuh, atau siap panen.' },
+            { tab: 'kalender', target: '#kalenderGrid', judul: 'Kalender Pertanian', teks: 'Titik berwarna pada tanggal adalah jadwal kebun: hijau tanam, biru tumbuh, kuning panen, ungu pupuk. Ketuk tanggalnya untuk melihat daftar jadwal di bawah kalender.' },
+            { tab: 'panen', target: 'button[onclick="bagikanRekapWA()"]', judul: 'Galeri Panen & Rekap', teks: 'Di halaman Galeri, hasil panen ibu-ibu terkumpul. Tombol hijau ini membagikan rekap panen bulan ini ke grup WhatsApp.' },
+            { tab: 'panen', target: '#btnUnggahKomunitas', judul: 'Ruang Komunitas', teks: 'Bagikan foto kebun Ibu di sini: pilih foto, tulis keterangan, lalu ketuk Bagikan ke Komunitas. Foto Ibu bisa disukai dan dikomentari anggota lain.' },
+            { tab: 'tugas', target: '#wateringList', judul: 'Daftar Siram', teks: 'Halaman Siram mendaftar semua tanaman dan siapa yang belum disiram hari ini. Ibu juga boleh membantu menyiram tanaman milik ibu lain.' },
+            { tab: 'nutrisi', target: '#nutritionList', judul: 'Buku Nutrisi Dapur', teks: 'Kumpulan resep pupuk organik dari bahan dapur, misalnya POC dan eco-enzyme. Ketuk tombol Racik Baru bila ingin membuat resep baru dibantu Nyi Sari.' },
+            { tab: 'benih', target: '#benihList', judul: 'Bank Benih Bersama', teks: 'Di sini tercatat benih dan bibit milik bersama. Ada tanda Ada (boleh diminta) dan Habis. Ibu juga bisa menambah stok lewat tombol Tambah Stok Benih.' },
+            { tab: 'ai', target: '#chatAiInput', judul: 'Ngobrol dengan Nyi Sari', teks: 'Nyi Sari adalah asisten kebun yang pintar. Tulis pertanyaan apa saja soal tanaman di kotak ini — misalnya cara merawat cabai — lalu ketuk tombol kirim berwarna hijau.' },
+            { tab: 'ai', sub: 'doctor', target: '#btnDiagnose', judul: 'Periksa Penyakit Daun', teks: 'Daun tanaman Ibu bercak atau menguning? Foto daunnya di sini. Nyi Sari akan memeriksa penyakitnya dan memberi saran pengobatannya.' },
+            { judul: 'Selesai! Selamat Berkebun 🌱', teks: 'Panduan selesai. Kalau nanti ingin mengulang panduan ini, ketuk tombol kompas di bagian atas aplikasi. Selamat berkebun, Ibu!' }
+        ];
+        let tourIdx = -1; let tourJalan = false;
+        function elemenTourTerlihat(el) { if (!el) return false; const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; }
+        function cariTargetTour(langkah) { let el = langkah.target ? document.querySelector(langkah.target) : null; if (!elemenTourTerlihat(el) && langkah.alt) el = document.querySelector(langkah.alt); return elemenTourTerlihat(el) ? el : null; }
+        function mungkinMulaiTour() { try { if (!localStorage.getItem('ibu_kebun_tour_selesai')) setTimeout(() => mulaiTour(), 900); } catch (e) {} }
+        function mulaiTour() { if (tourJalan) return; tourJalan = true; document.getElementById('tourLayar').classList.remove('hidden'); document.getElementById('tourKartu').classList.remove('hidden'); tourKe(0, 1); }
+        function tourKe(i, arah) {
+            if (i < 0) i = 0;
+            if (i >= LANGKAH_TOUR.length) { selesaiTour(false); return; }
+            tourIdx = i; const langkah = LANGKAH_TOUR[i];
+            if (langkah.tab) { switchTab(langkah.tab); if (langkah.sub && typeof switchSubAi === 'function') switchSubAi(langkah.sub); }
+            setTimeout(() => {
+                const el = langkah.target ? cariTargetTour(langkah) : null;
+                if (langkah.target && !el) { tourKe(i + arah, arah); return; }
+                gambarTour(el, langkah, i);
+            }, langkah.target ? 420 : 30);
+        }
+        function gambarTour(el, langkah, i) {
+            const sorot = document.getElementById('tourSorot'); const kartu = document.getElementById('tourKartu');
+            document.getElementById('tourJudul').innerText = langkah.judul;
+            document.getElementById('tourTeks').innerText = langkah.teks;
+            document.getElementById('tourLangkah').innerText = 'Langkah ' + (i + 1) + ' dari ' + LANGKAH_TOUR.length;
+            document.getElementById('tourBtnKembali').style.visibility = i === 0 ? 'hidden' : 'visible';
+            document.getElementById('tourBtnLanjut').innerText = i === LANGKAH_TOUR.length - 1 ? 'Selesai' : 'Lanjut';
+            if (!el) { sorot.classList.add('hidden'); kartu.style.left = '50%'; kartu.style.top = '50%'; kartu.style.transform = 'translate(-50%,-50%)'; return; }
+            kartu.style.transform = 'none';
+            el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            setTimeout(() => {
+                const r = el.getBoundingClientRect(); const pad = 6;
+                sorot.classList.remove('hidden');
+                sorot.style.left = (r.left - pad) + 'px'; sorot.style.top = (r.top - pad) + 'px';
+                sorot.style.width = (r.width + pad * 2) + 'px'; sorot.style.height = (r.height + pad * 2) + 'px';
+                const kw = kartu.offsetWidth; const kh = kartu.offsetHeight;
+                let kx = Math.min(Math.max(8, r.left + r.width / 2 - kw / 2), window.innerWidth - kw - 8);
+                let ky = r.bottom + 14; if (ky + kh > window.innerHeight - 8) ky = r.top - kh - 14; if (ky < 8) ky = Math.max(8, window.innerHeight - kh - 8);
+                kartu.style.left = kx + 'px'; kartu.style.top = ky + 'px';
+            }, 380);
+        }
+        function tourGeser(arah) { tourKe(tourIdx + arah, arah); }
+        function selesaiTour(dilewati) { tourJalan = false; tourIdx = -1; try { localStorage.setItem('ibu_kebun_tour_selesai', '1'); } catch (e) {} ['tourLayar', 'tourSorot', 'tourKartu'].forEach(id => document.getElementById(id).classList.add('hidden')); if (typeof switchTab === 'function') switchTab('kebun'); if (!dilewati) tunjukkanToast('Panduan selesai. Selamat berkebun! 🌿', 'success'); }
+        window.addEventListener('resize', () => { if (tourJalan && tourIdx >= 0) { const langkah = LANGKAH_TOUR[tourIdx]; gambarTour(langkah.target ? cariTargetTour(langkah) : null, langkah, tourIdx); } });

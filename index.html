@@ -92,6 +92,7 @@
                         </div>
                     </div>
                     <div class="flex items-center space-x-1">
+                        <button onclick="mulaiTour()" class="bg-white/10 hover:bg-white/20 btn-press p-2 rounded-xl border border-white/5" title="Panduan fitur untuk pemula"><i class="fa-solid fa-compass text-xs"></i></button>
                         <button onclick="segarSemuaData()" class="bg-white/10 hover:bg-white/20 btn-press p-2 rounded-xl border border-white/5"><i class="fa-solid fa-rotate text-xs"></i></button>
                         <button onclick="openModalTambah()" class="bg-lime-300 hover:bg-lime-400 btn-press text-emerald-950 font-bold px-3 py-2 rounded-xl text-[11px] flex items-center space-x-1 shadow-md"><i class="fa-solid fa-plus text-xs"></i> <span>Tanam Baru</span></button>
                     </div>
@@ -552,6 +553,22 @@
     <!-- TOAST ALERT -->
     <div id="toast" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-stone-900 text-white text-[11px] px-3.5 py-2 rounded-full shadow-xl opacity-0 pointer-events-none transition-all duration-300 flex items-center space-x-1.5 z-[70]">
         <span id="toastIcon"></span> <span id="toastMessage">Sistem Sudah Siap</span>
+    </div>
+
+    <!-- ================= PANDUAN FITUR (TUR PEMULA) ================= -->
+    <div id="tourLayar" class="hidden"></div>
+    <div id="tourSorot" class="hidden"></div>
+    <div id="tourKartu" class="hidden fixed bg-white rounded-3xl shadow-2xl border border-emerald-100 p-4 space-y-2" style="width:min(92vw,340px)">
+        <div class="flex items-center justify-between">
+            <span id="tourLangkah" class="text-[11px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">Langkah 1</span>
+            <button onclick="selesaiTour(true)" class="text-[11px] font-bold text-stone-400 btn-press">Lewati ✕</button>
+        </div>
+        <h4 id="tourJudul" class="font-black text-sm text-stone-800"></h4>
+        <p id="tourTeks" class="text-xs text-stone-600 leading-relaxed"></p>
+        <div class="flex space-x-2 pt-1">
+            <button id="tourBtnKembali" onclick="tourGeser(-1)" class="flex-1 py-2.5 rounded-xl border border-stone-300 font-bold text-stone-600 text-xs btn-press min-h-[44px]">Kembali</button>
+            <button id="tourBtnLanjut" onclick="tourGeser(1)" class="flex-1 py-2.5 rounded-xl bg-emerald-700 text-white font-bold text-xs btn-press min-h-[44px]">Lanjut</button>
+        </div>
     </div>
 
     <script src="aset/aplikasi.js"></script>
